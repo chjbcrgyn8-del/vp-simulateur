@@ -1,0 +1,1 @@
+document.addEventListener('click',e=>{const t=e.target.closest('.tip[data-g]');document.querySelectorAll('.tip[data-g].open').forEach(x=>{if(x!==t)x.classList.remove('open');});if(t){e.preventDefault();t.classList.toggle('open');}});

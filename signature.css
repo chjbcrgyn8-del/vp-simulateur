@@ -1,0 +1,144 @@
+/* =====================================================================
+   Vella Partners · Signature (chargé après premium.css sur toutes les pages)
+   Direction : « maison d'ingénierie » — encre, ivoire, cuivre champagne.
+   Titres en serif éditorial, filets fins, rayons sobres.
+   Apparence uniquement : aucun calcul, aucun contenu modifié.
+   ===================================================================== */
+:root{
+  --bg:#f5f2eb;--panel:#fffdf9;--ink:#0b111c;--muted:#5a6270;
+  --line:#e4ded2;--line2:#cfc6b6;
+  --night:#0a0f19;--night2:#111a29;
+  --accent:#9a5f28;--copper:#b47a3e;--orange:#c98a4b;
+  --champ1:#e3b47c;--champ2:#b77a3d;
+  --serif:'Instrument Serif','Cormorant Garamond',Georgia,serif;
+  --r:6px;--r-lg:8px;
+  --shadow:0 1px 0 rgba(11,17,28,.03),0 12px 32px -18px rgba(11,17,28,.18);
+  --shadow-lg:0 1px 0 rgba(11,17,28,.04),0 30px 60px -30px rgba(11,17,28,.32);
+  --hair:rgba(11,17,28,.09);
+}
+body{background:var(--bg)}
+::selection{background:rgba(201,138,75,.28)}
+
+/* ---------- Titres éditoriaux ---------- */
+h1,.hsec>h2,.hsec>div>h2,.final h2,h2.ser{font-family:var(--serif)!important;font-weight:400!important;letter-spacing:-.012em!important}
+h2:not(.ser){letter-spacing:-.015em}
+h1{line-height:.98!important}
+.hsec>h2,.final h2,h2.ser{line-height:1.04!important}
+.hhero h1{font-size:clamp(48px,6.6vw,96px)!important;max-width:12ch!important;letter-spacing:-.018em!important}
+.hsec>h2,.hsec>div>h2{font-size:clamp(38px,4.6vw,64px)!important;max-width:20ch}
+.hsec>h2::before,.hsec>div>h2::before{font-family:var(--mono)!important;font-weight:500;letter-spacing:.16em}
+.lead{color:var(--muted)}
+.eyebrow{letter-spacing:.18em!important}
+
+/* ---------- En-tête ---------- */
+.top{background:rgba(10,15,25,.95)!important;border-bottom:1px solid rgba(227,180,124,.12)!important;padding-top:16px!important;padding-bottom:16px!important}
+.top.sc{background:rgba(10,15,25,.97)!important}
+.brand{font-family:var(--serif)!important;font-weight:400!important;font-size:24px!important;letter-spacing:-.005em!important}
+.brand::before{background:linear-gradient(135deg,var(--champ1),var(--champ2))!important}
+.brand span{font-family:var(--serif)!important;font-style:italic;color:rgba(255,255,255,.92)!important;margin-left:6px!important}
+.top .tabs a{font-size:13.5px!important;letter-spacing:.01em}
+.top .tabs.menu a[aria-current=page]{box-shadow:inset 0 -1px 0 var(--champ1)!important}
+.top .tabs.sector{border-color:rgba(227,180,124,.22)!important}
+.top .tabs.sector a[aria-current]{background:rgba(227,180,124,.14)!important;color:#f6e6d2!important}
+
+/* ---------- Boutons ---------- */
+.btn{border-radius:4px!important;letter-spacing:.01em}
+.btn.primary{background:var(--night)!important;border-color:var(--night)!important;color:#fff!important}
+.btn.primary:hover{background:#18233a!important}
+.hhero .btn.primary,.final .btn.primary{background:linear-gradient(180deg,var(--champ1),var(--champ2))!important;border-color:transparent!important;color:#160d04!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 12px 28px -14px rgba(201,138,75,.7)!important}
+.hhero .btn.primary:hover,.final .btn.primary:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn.ghost{border-color:var(--line2)!important}
+.hhero .btn.ghost,.final .btn.ghost{border-color:rgba(227,180,124,.32)!important;color:#f6ede2!important}
+.hhero .btn.ghost:hover,.final .btn.ghost:hover{border-color:var(--champ1)!important;background:rgba(227,180,124,.06)!important}
+
+/* ---------- Héros ---------- */
+.hhero{background:radial-gradient(60% 70% at 85% 10%,rgba(201,138,75,.13),transparent 60%),radial-gradient(50% 60% at 0% 100%,rgba(60,90,140,.18),transparent 60%),linear-gradient(180deg,#0a0f19 0%,#0d1524 100%)!important}
+.hhero::before{background-size:96px 96px!important;opacity:.7}
+.hhero .eyebrow{color:var(--champ1)!important}
+.hhero .lead{color:#b4bccb!important;font-size:clamp(17px,1.35vw,19px)!important}
+.hhero .himg{border-radius:2px!important;outline:1px solid rgba(227,180,124,.35);outline-offset:14px;filter:saturate(.82) contrast(1.05) brightness(.97)!important}
+.hhero .htxt>ul,.hhero .htxt>.who,.hhero .who{color:#9aa4b4!important}
+
+/* Grain discret sur les fonds sombres */
+.hhero,.final,.sitefoot,.offer.main{position:relative}
+.hhero>*,.final>*{position:relative;z-index:1}
+.final::after,.sitefoot::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.05;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ---------- Démonstration (graphique + téléphone) ---------- */
+.lv-screen{border-radius:var(--r-lg)!important;border:1px solid var(--hair)!important;background:var(--panel)!important}
+.lv-phone{border-radius:28px!important;box-shadow:0 40px 70px -30px rgba(0,0,0,.55)!important}
+
+/* ---------- Chiffres de preuve ---------- */
+.kpis{border-top:1px solid var(--line)!important}
+.proof strong{font-family:var(--serif)!important;font-weight:400!important;font-size:clamp(52px,5.4vw,76px)!important;letter-spacing:-.02em!important;line-height:1!important;color:var(--ink)!important}
+.proof>div{border-left:1px solid var(--line)!important}
+.proof span{color:var(--muted)!important;font-size:14px!important}
+
+/* ---------- Cartes ---------- */
+.tool,.offer{border-radius:var(--r)!important;background:var(--panel)!important;border:1px solid var(--line)!important}
+.tool{position:relative}
+.tool::after,.offer::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--champ1),var(--champ2));transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.2,.7,.2,1);pointer-events:none;border-radius:var(--r) var(--r) 0 0}
+.tool:hover::after,.offer:hover::after{transform:scaleX(1)}
+.tool:hover,.offer:hover{box-shadow:var(--shadow-lg)!important;transform:translateY(-3px)!important}
+.tool strong{font-size:19px!important}
+.tool strong::after{color:var(--copper)!important}
+.probs .tool img{filter:saturate(.78) contrast(1.04)!important}
+.offer{position:relative;padding:36px 30px!important}
+.offer h3{font-family:var(--serif)!important;font-weight:400!important;font-size:36px!important;letter-spacing:-.01em!important}
+.offer .oic{border-radius:4px!important}
+.offer.main{background:radial-gradient(90% 60% at 100% 0%,rgba(201,138,75,.16),transparent 60%),var(--night)!important;border-color:rgba(227,180,124,.22)!important}
+.offer.main::after{transform:scaleX(1)}
+.offer.main .ot,.offer.main .under summary{color:var(--champ1)!important}
+.offer .ot{color:var(--accent)!important}
+
+/* Tableaux */
+table{border-collapse:collapse}
+th{font-weight:600}
+.who,.whyg{border-radius:var(--r)!important}
+.whyg{border-color:var(--line)!important;background:var(--panel)!important}
+.whyg>*{border-color:var(--line)!important}
+
+/* Panneaux génériques des autres pages */
+.card,.panel,.box,.block,.res,.result,.kpi,.step,.q,.qcard{border-radius:var(--r)!important}
+
+/* ---------- FAQ ---------- */
+.faq details{border-color:var(--line)!important}
+.faq summary{font-family:var(--serif)!important;font-weight:400!important;font-size:clamp(22px,2vw,28px)!important;letter-spacing:-.005em}
+.faq summary::after{color:var(--copper)!important}
+
+/* ---------- Appel final + pied de page, sans rupture ---------- */
+main:has(>.final:last-child){padding-bottom:0!important;margin-bottom:0!important}
+.final{background:radial-gradient(60% 120% at 100% 0%,rgba(201,138,75,.16),transparent 60%),var(--night)!important;border-bottom:1px solid rgba(227,180,124,.12)}
+.final h2{color:#fff!important;font-size:clamp(44px,5.4vw,80px)!important}
+.final .eyebrow{color:var(--champ1)!important}
+.final+*,.home .sitefoot{margin-top:0!important}
+.sitefoot{background:var(--night)!important}
+.sitefoot h4,.sitefoot .eyebrow,.sitefoot p.kl{color:var(--champ1)!important}
+.sitefoot a:hover{color:#fff!important}
+.sitefoot .brand,.sitefoot strong:first-child{font-family:var(--serif)!important;font-weight:400!important}
+
+/* ---------- Mobile ---------- */
+@media (max-width:760px){
+  .hhero h1{font-size:clamp(44px,12.5vw,58px)!important}
+  .hsec>h2,.hsec>div>h2{font-size:clamp(34px,9.6vw,44px)!important}
+  .final h2{font-size:clamp(40px,11vw,52px)!important}
+  .offer h3{font-size:32px!important}
+  .proof strong{font-size:48px!important}
+  .proof>div{border-left:0!important}
+  .brand{font-size:21px!important}
+  .hhero .himg{outline-offset:8px}
+}
+
+/* Logo v2 : monogramme V et courbe de dérive */
+.brand::before{width:30px!important;height:30px!important;border-radius:0!important;background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22%3E%3Cpath d=%22M5 8.5 L16.5 31.5 L21.5 20.5%22 fill=%22none%22 stroke=%22%23e3b47c%22 stroke-width=%223.8%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M21.5 20.5 C25 13.5, 29 10.5, 34.5 8.5%22 fill=%22none%22 stroke=%22%23fff%22 stroke-width=%223%22 stroke-linecap=%22round%22/%3E%3Ccircle cx=%2234.5%22 cy=%228.5%22 r=%223.6%22 fill=%22%23e3b47c%22 stroke=%22%230a0f19%22 stroke-width=%221.6%22/%3E%3C/svg%3E") center/contain no-repeat!important;-webkit-mask:none!important;mask:none!important}
+.brand{gap:9px!important;white-space:nowrap}
+.brand span{margin-left:0!important}
+@media(max-width:640px){.brand::before{width:26px!important;height:26px!important}}
+
+/* ---------- Logo officiel Vella Partners (v9.4) ---------- */
+.brand::before{display:none!important}
+.brand img{height:48px;width:auto;display:block}
+.top{padding-top:12px!important;padding-bottom:12px!important}
+@media(max-width:640px){.brand img{height:38px}}
+.sitefoot img.flogo{height:60px;width:auto;display:block;margin-bottom:14px}
+@media print{.top{background:var(--night)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}

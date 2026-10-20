@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mesures presse plastique · Savoir technique · Vella Partners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="st.css">
+<link rel="stylesheet" href="premium.css?v=9">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="signature.css?v=2">
+<link rel="stylesheet" href="industrie.css?v=5">
+<link rel="icon" type="image/png" href="img/favicon.png">
+</head>
+<body class="stp">
+<header class="top">
+  <a class="brand" href="index.html" aria-label="Vella Partners, accueil"><img src="img/logo-vella-partners.png" alt="Vella Partners" width="517" height="150"></a>
+  <nav class="tabs menu" aria-label="Menu"><a href="index.html">Accueil</a><a href="index.html#offres">Nos offres</a><a href="index.html#essayer">Essayer</a><a href="savoir.html" aria-current="page">Savoir technique</a></nav>
+</header>
+<main class="st"><p class="crumb"><a href="savoir.html">Savoir technique</a> › Mesures presse plastique</p>
+
+<header class="ds-hero">
+ <div class="eyebrow">PLASTURGIE · POUR ALLER PLUS LOIN</div>
+ <h1>Mesures presse · plasturgie</h1>
+ <p class="ds-lead">Ce que nous mesurons sur une presse à injection, d’où viennent les données, et qui agit à chaque dérive.</p>
+ <ul class="ds-toc" aria-label="Sur cette page">
+  <li><a href="#donnees-suivies"><span>01</span>Ce qui est suivi</a></li>
+  <li><a href="#terrain"><span>02</span>Ce qui reste au terrain</a></li>
+  <li><a href="#defauts"><span>03</span>Lien avec les défauts</a></li>
+  <li><a href="#niveaux"><span>04</span>Qui agit</a></li>
+ </ul>
+ <a class="ds-switch" href="st-mesures-caoutchouc.html">Voir l’équivalent caoutchouc →</a>
+ <div class="ds-brief">
+  <div><b>Cycle par cycle</b><p>Le MES CYCLADES (SISE) et l’acquisition SYDAC remontent les mesures de la presse, rattachées à la presse, à l’OF, à l’outillage et à la référence matière. S’ils manquent, le diagnostic le dit avant tout pilote. <a href="https://open-prod.com/base-de-connaissances-erp/cyclade-de-sise-gestion-de-donnees-pour-lindustrie/" target="_blank" rel="noopener">En savoir plus sur CYCLADES →</a></p></div>
+  <div><b>Sans rien remplacer</b><p>Les données disponibles sont identifiées lors d’un audit de votre équipement (EUROMAP 77 / OPC UA, export ou relevé manuel), avec vos équipements et vos fournisseurs existants.</p></div>
+  <div><b>Une unité pour démarrer</b><p>Le pilote et la démonstration portent sur une seule unité d’injection. Le suivi peut s’étendre jusqu’au tri-matière.</p></div>
+ </div>
+</header>
+
+<section class="rv" id="donnees-suivies" aria-labelledby="t1">
+ <div class="ds-head"><span class="ds-num">01</span><h2 id="t1">Ce qui est suivi, en trois niveaux de disponibilité.</h2><p>Du plus sûr au plus dépendant de votre équipement.</p></div>
+ <div class="ds-cols">
+  <article class="ds-card"><span class="ds-tag">Toujours · CYCLADES et SYDAC</span><h3>Paramètres suivis en base</h3><p>Remontés cycle par cycle, avec la presse, la référence matière, le N° d’OF et le N° d’outillage.</p>
+   <ul class="ds-list"><li>Température matière</li><li>Température masse outillage</li><li>Temps de dosage</li><li>Temps d’injection</li><li>Pression ou point de commutation</li><li>Matelas</li><li>Temps de cycle</li></ul></article>
+  <article class="ds-card"><span class="ds-tag mut">Selon votre presse</span><h3>Données presse complémentaires</h3><p>Exploitables si votre presse les fournit.</p>
+   <ul class="ds-list"><li>Volume injecté dynamique</li><li>Volume injecté maintien</li><li>Durée d’injection dynamique</li><li>Viscosité phase dynamique</li></ul>
+   <p class="ds-foot"><b>Presses bi et tri-matière :</b> mêmes paramètres pour les unités d’injection 2 et 3, si elles sont actives.</p></article>
+  <article class="ds-card"><span class="ds-tag warn">Selon vos outillages</span><h3>Capteurs dans le moule</h3><p>Relevés si les capteurs sont présents. Jusqu’à 8 températures et 8 pressions, sur deux boîtiers.</p>
+   <ul class="ds-list"><li>Pression matière en empreinte</li><li>Température réelle en empreinte</li><li>Températures outillage, parties fixe et mobile</li></ul>
+   <p class="ds-foot">Détail des voies ci-dessous.</p></article>
+ </div>
+ <details><summary>Détail des voies des boîtiers capteurs</summary>
+  <div class="ds-detail">
+   <div><h4>Boîtier 1 · partie mobile</h4><table><thead><tr><th>Voie</th><th>Type</th><th>Usage courant</th></tr></thead><tbody>
+    <tr><td>Température 1</td><td>J</td><td>Outillage partie mobile</td></tr><tr><td>Température 2</td><td>J</td><td>Capteur 2</td></tr><tr><td>Température 3</td><td>K</td><td>Empreinte partie mobile</td></tr><tr><td>Température 4</td><td>K</td><td>Libre</td></tr><tr><td>Pression 1 à 4</td><td>–</td><td>Capteurs de pression en empreinte</td></tr></tbody></table></div>
+   <div><h4>Boîtier 2 · partie fixe</h4><table><thead><tr><th>Voie</th><th>Type</th><th>Usage courant</th></tr></thead><tbody>
+    <tr><td>Température 41</td><td>J</td><td>Outillage partie fixe</td></tr><tr><td>Température 42</td><td>J</td><td>Température matière</td></tr><tr><td>Température 43</td><td>K</td><td>Empreinte partie fixe</td></tr><tr><td>Température 44</td><td>K</td><td>Libre</td></tr><tr><td>Pression 5 à 8</td><td>–</td><td>Capteurs de pression en empreinte</td></tr></tbody></table></div>
+  </div>
+  <p class="ds-micro" style="padding:0 var(--s5) var(--s5)">J et K : types de thermocouple. Les désignations s’adaptent au repérage de chaque site.</p>
+ </details>
+</section>
+
+<section class="rv" id="terrain" aria-labelledby="t2">
+ <div class="ds-head"><span class="ds-num">02</span><h2 id="t2">Ce qui reste au terrain.</h2><p>Relier les mesures presse au lot matière, à l’outillage, aux périphériques et aux conditions d’atelier aide à orienter les vérifications. Quelques courbes ne suffisent pas à démontrer une cause ni à garantir la maîtrise du procédé.</p></div>
+ <div class="ds-cols">
+  <article class="ds-card"><span class="ds-tag mut">Autour de la presse</span><h3>Périphériques et atelier</h3><ul class="ds-list"><li>Broyeur</li><li>Étuve</li><li>Réchauffeur</li><li>Variation de lot matière</li><li>Robot</li><li>Réseau d’air (pression, humidité)</li><li>Tour de refroidissement</li><li>Température atelier</li></ul></article>
+  <article class="ds-card"><span class="ds-tag mut">Sur la presse et l’outillage</span><h3>Réglages et entretien</h3><ul class="ds-list"><li>Paramètres de réglage</li><li>Paramètres fixes</li><li>Paramètres de consigne</li><li>Paramètres de compensation</li><li>Outillage (préventif 1 et 2)</li></ul></article>
+  <article class="ds-card"><span class="ds-tag mut">Organisation</span><h3>Méthodes et équipes</h3><ul class="ds-list"><li>Organisation des processus</li><li>Formation du personnel</li><li>Mise en place des standards</li><li>Application des procédures</li></ul></article>
+ </div>
+ <div class="ds-note"><b>Pas dans la base aujourd’hui</b><p><strong>Canaux chauds, buses séquentielles, thermorégulation.</strong> Une zone de chauffe monte pendant le remplissage avant de se stabiliser, et les temps d’ouverture et de fermeture demanderaient des contacts dédiés, très rares en injection. Ce sont des causes racines possibles derrière les mesures remontées : elles sont vérifiées sur le terrain quand le diagnostic les désigne.</p></div>
+</section>
+
+<section class="rv" id="defauts" aria-labelledby="t3">
+ <div class="ds-head"><span class="ds-num">03</span><h2 id="t3">Le lien entre ces mesures et les défauts de pièces.</h2><p>Sur 24 défauts types de la matrice de référence plasturgie, établie avec notre expert plasturgie partenaire. <b>20 sur 24 ont au moins une mesure associée</b> dans le suivi des données, selon notre expert plasturgie partenaire. C’est une couverture du référentiel, pas un taux de détection : celui-ci se mesure pendant le pilote, avec le taux de fausses alertes.</p></div>
+ <div class="ds-kpis"><div><b>20</b>liés à une irrégularité du temps de cycle</div><div><b>20</b>liés à une irrégularité du temps de dosage</div><div><b>20</b>liés à la température réelle d’outillage</div><div><b>15</b>liés à la température matière</div><div><b>12</b>liés à une commutation irrégulière</div></div>
+ <p class="ds-micro">Un même défaut peut être lié à plusieurs mesures ; leur pouvoir d’annonce reste à confirmer sur vos propres données.</p>
+ <div class="ds-note"><b>Prioriser avec l’audit AMDEC</b><p>Le référentiel métier recense 85 causes de dérive, dont 61 rattachées à l’acquisition dans le tableau transmis. Les autres demandent des contrôles terrain et d’organisation. Ces causes ne sont pas les 24 défauts types de pièces ci-dessus. <a href="st-amdec.html">Lire l’IPR, les deux références d’usine et les limites du périmètre →</a></p></div>
+</section>
+
+<section class="rv" id="niveaux" aria-labelledby="t4">
+ <div class="ds-head"><span class="ds-num">04</span><h2 id="t4">À chaque dérive, la bonne personne et le bon horizon.</h2></div>
+ <div class="ds-levels">
+  <article><small>COURT TERME</small><h3>Le régleur</h3><p>Action immédiate sur les paramètres, ou vérification de la bonne application des instructions de travail (IT) et documents de réglage. L’efficacité est mesurée sur les cycles suivants.</p></article>
+  <article><small>MOYEN TERME</small><h3>Un service tiers</h3><p>Maintenance ou méthodes interviennent, par exemple sur les lames d’un broyeur. L’efficacité est mesurée après l’intervention, la cause racine reste à traiter.</p></article>
+  <article><small>LONG TERME</small><h3>La hiérarchie</h3><p>Le régleur constate et compense dans les tolérances. Un bilan mensuel des constats appuie les décisions d’organisation, d’investissement ou de moyens.</p></article>
+ </div>
+ <p class="ds-micro">Pour les actions sur les paramètres machine, l’efficacité est vérifiée sur les cycles suivants. Pour l’organisation et les moyens de l’usine, les résultats seront mesurés pendant un pilote, à partir des cas validés. <a href="index.html#offres">Voir jusqu’où le système peut aller →</a></p>
+</section>
+
+<section class="rv" aria-labelledby="t5">
+ <div class="ds-head"><h2 id="t5">Pour aller plus loin</h2></div>
+ <nav class="ds-next" aria-label="Pages liées">
+  <a href="presse.html">Simulateur presse<span>Ces mesures en situation, avec des dérives à provoquer.</span></a>
+  <a href="savoir.html">Arbre de diagnostic<span>Les contrôles terrain, dans l’ordre.</span></a>
+  <a href="st-amdec.html">Audit AMDEC<span>Les 85 causes de dérive et leur priorité.</span></a>
+  <a href="presse.html">Application mobile<span>L’alerte et la fiche d’action du régleur.</span></a>
+ </nav>
+</section>
+
+</main>
+<script src="tips.js"></script>
+<script src="typo.js"></script>
+<script src="anim.js?v=13"></script><script data-pplx-inline-edit>
+(function () {
+  if (window === window.top) return;
+
+  const allowedParentOrigins = ["https://www.perplexity.ai","https://perplexity.ai","https://testing.perplexity.ai","https://staging.perplexity.ai","https://*.preview.i.perplexity.ai","http://perplexity.localhost","http://localhost:1420","http://127.0.0.1:1420","http://localhost:3000","http://127.0.0.1:3000","http://localhost:5173","http://127.0.0.1:5173"];
+  const MAX_FONT_BYTES = 500 * 1024;
+  const MAX_TOTAL_FONT_BYTES = 2 * 1024 * 1024;
+  const DEFAULT_LINE_HEIGHT = 16;
+  let scrollForwarding = false;
+  let scrollRaf = 0;
+  let trustedTopOrigin = null;
+
+  // Allow entries like "https://*.preview.i.perplexity.ai" — the wildcard
+  // matches a single DNS label (no dots), so "https://*.foo" cannot stretch
+  // across multiple labels.
+  function matchesAllowedOrigin(origin) {
+    if (!origin) return false;
+    for (const entry of allowedParentOrigins) {
+      if (!entry.includes("*")) {
+        if (entry === origin) return true;
+        continue;
+      }
+      const pattern = new RegExp(
+        "^" +
+          entry.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[^.]+") +
+          "$",
+      );
+      if (pattern.test(origin)) return true;
+    }
+    return false;
+  }
+
+  // Trust decision: when the sender is same-origin-visible (event.origin is a
+  // real origin like https://www.perplexity.ai) we trust event.origin directly.
+  // When event.origin is "null" (opaque broker srcdoc), we fall back to the
+  // broker's stamped `parentOrigin` to identify the top window. The fallback
+  // is claim-only — we rely on the browser's native `targetOrigin` enforcement
+  // on the response path (see postToTrustedTop) to ensure replies can't be
+  // delivered to anyone but the actual top window of that claimed origin.
+  function getTrustedParentOrigin(event) {
+    const forwardedParentOrigin =
+      typeof event.data.parentOrigin === "string" ? event.data.parentOrigin : null;
+    const parentOrigin = event.origin === "null" ? forwardedParentOrigin : event.origin;
+    return matchesAllowedOrigin(parentOrigin) ? parentOrigin : null;
+  }
+
+  // All responses go to window.top with targetOrigin = the allowlisted origin.
+  // An attacker that iframes us inside their own null-origin broker can claim
+  // any parentOrigin they like, but the browser will drop the reply whenever
+  // the real top's origin doesn't match — so the screenshot never leaves.
+  function postToTrustedTop(message) {
+    if (!trustedTopOrigin) return;
+    try {
+      window.top.postMessage(message, trustedTopOrigin);
+    } catch (_error) {}
+  }
+
+  const PICK_CAPABILITIES = ["pick"];
+  const PICK_CHAIN_LENGTH = 4;
+  const PICK_MAX_TEXT_CHARS = 120;
+  const PICK_MAX_HTML_CHARS = 300;
+
+  function truncate(value, maxChars) {
+    return value.length > maxChars ? value.slice(0, maxChars - 1) + "…" : value;
+  }
+
+  function isPickableElement(element) {
+    return (
+      element instanceof Element &&
+      element !== document.documentElement &&
+      element !== document.body
+    );
+  }
+
+  function resolvePickTarget(x, y) {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+    const element = document.elementFromPoint(x, y);
+    return isPickableElement(element) ? element.closest("svg") || element : null;
+  }
+
+  function pickLabel(element) {
+    if (element.id) return element.localName + "#" + element.id;
+    return [element.localName].concat(Array.from(element.classList).slice(0, 2)).join(".");
+  }
+
+  // Only attributes that help find the element in source. data-* values and URL
+  // query strings or fragments can carry tokens.
+  const PICK_ATTRIBUTES = new Set([
+    "id",
+    "class",
+    "name",
+    "type",
+    "role",
+    "alt",
+    "aria-label",
+    "href",
+    "src",
+  ]);
+
+  function pickAttributeValue(attribute) {
+    return attribute.name === "href" || attribute.name === "src"
+      ? attribute.value.split(/[?#]/)[0]
+      : attribute.value;
+  }
+
+  function describePickElement(element) {
+    const chain = [];
+    for (
+      let current = element;
+      isPickableElement(current) && chain.length < PICK_CHAIN_LENGTH;
+      current = current.parentElement
+    ) {
+      chain.unshift(current);
+    }
+    const attributes = Array.from(element.attributes)
+      .filter((attribute) => PICK_ATTRIBUTES.has(attribute.name))
+      .map((attribute) => ` ${attribute.name}="${pickAttributeValue(attribute).replace(/"/g, "&quot;")}"`)
+      .join("");
+    const text = (element.innerText || element.textContent || "").replace(/\s+/g, " ").trim();
+    return {
+      chain: chain.map(pickLabel),
+      html: truncate(`<${element.localName}${attributes}>`, PICK_MAX_HTML_CHARS),
+      text: text ? truncate(text, PICK_MAX_TEXT_CHARS) : undefined,
+    };
+  }
+
+  // Hover asks once per frame, and innerText on a large section forces layout,
+  // so only the rect is re-read while the pointer stays on the same element.
+  // Clicks ask for fresh details since the page may have changed the element.
+  let lastPick = null;
+
+  function describePickTarget(element, fresh) {
+    if (fresh || lastPick?.element !== element) {
+      lastPick = { element, details: describePickElement(element) };
+    }
+    const rect = element.getBoundingClientRect();
+    return {
+      rect: { x: rect.left, y: rect.top, width: rect.width, height: rect.height },
+      ...lastPick.details,
+    };
+  }
+
+  function inlineAll(original, clone) {
+    if (original.nodeType !== 1 || clone.nodeType !== 1) return;
+
+    try {
+      const computedStyle = getComputedStyle(original);
+      // cssText on a computed style is the serialized declaration in modern
+      // Chromium/Safari — a single read beats enumerating ~400 longhand
+      // properties. Firefox returns "" here, so we fall back on empty.
+      const serialized = computedStyle.cssText;
+      if (serialized) {
+        clone.style.cssText = serialized;
+      } else {
+        const parts = new Array(computedStyle.length);
+        for (let index = 0; index < computedStyle.length; index += 1) {
+          const property = computedStyle[index];
+          parts[index] = `${property}:${computedStyle.getPropertyValue(property)};`;
+        }
+        clone.style.cssText = parts.join("");
+      }
+    } catch (_error) {}
+
+    const originalChildren = original.children;
+    const clonedChildren = clone.children;
+    for (
+      let index = 0;
+      index < originalChildren.length && index < clonedChildren.length;
+      index += 1
+    ) {
+      inlineAll(originalChildren[index], clonedChildren[index]);
+    }
+  }
+
+  function extractFontUrl(srcValue) {
+    const matches = [
+      ...srcValue.matchAll(
+        /url\(["']?([^"')]+)["']?\)(?:\s*format\(["']?([^"')]+)["']?\))?/gi,
+      ),
+    ];
+    if (matches.length === 0) return null;
+    const woff2 = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff2"));
+    if (woff2) return woff2[1];
+    const woff = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff"));
+    if (woff) return woff[1];
+    return matches[0][1];
+  }
+
+  // Cache resolved font URL -> data URI across captures. Fonts on a page
+  // essentially never change, and a batch run emits multiple captures back to
+  // back — without this we'd refetch + re-base64 every time.
+  const fontDataUriCache = new Map();
+  const SRC_DECLARATION_RE = /src\s*:\s*[^;}]+/i;
+
+  async function fetchAsDataUri(url) {
+    if (fontDataUriCache.has(url)) return fontDataUriCache.get(url);
+    let dataUri = null;
+    try {
+      const response = await fetch(url, { mode: "cors", credentials: "omit" });
+      if (response.ok) {
+        const blob = await response.blob();
+        if (blob.size <= MAX_FONT_BYTES) {
+          dataUri = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () =>
+              resolve(typeof reader.result === "string" ? reader.result : null);
+            reader.onerror = () => resolve(null);
+            reader.readAsDataURL(blob);
+          });
+        }
+      }
+    } catch (_error) {
+      dataUri = null;
+    }
+    fontDataUriCache.set(url, dataUri);
+    return dataUri;
+  }
+
+  function collectFontFaceRuleTexts() {
+    const rules = [];
+    for (const sheet of document.styleSheets) {
+      let cssRules;
+      try {
+        cssRules = sheet.cssRules;
+      } catch (_error) {
+        continue;
+      }
+      if (!cssRules) continue;
+      for (const rule of cssRules) {
+        const cssText = rule.cssText || "";
+        if (cssText.startsWith("@font-face")) rules.push(cssText);
+      }
+    }
+    return rules;
+  }
+
+  async function buildInlinedFontCss() {
+    const ruleTexts = collectFontFaceRuleTexts();
+    if (ruleTexts.length === 0) return null;
+
+    const resolved = ruleTexts.map((cssText) => {
+      if (!SRC_DECLARATION_RE.test(cssText)) return null;
+      const srcMatch = cssText.match(/src\s*:\s*([^;}]+)[;}]/i);
+      if (!srcMatch) return null;
+      const url = extractFontUrl(srcMatch[1]);
+      if (!url) return null;
+      try {
+        return { cssText, url: new URL(url, document.baseURI).href };
+      } catch (_error) {
+        return null;
+      }
+    });
+
+    const dataUris = await Promise.all(
+      resolved.map((entry) => (entry ? fetchAsDataUri(entry.url) : Promise.resolve(null))),
+    );
+
+    const inlined = [];
+    let totalBytes = 0;
+    for (let index = 0; index < resolved.length; index += 1) {
+      const entry = resolved[index];
+      const dataUri = dataUris[index];
+      if (!entry || !dataUri) continue;
+      const approxBytes = dataUri.length * 0.75;
+      if (totalBytes + approxBytes > MAX_TOTAL_FONT_BYTES) break;
+      totalBytes += approxBytes;
+      inlined.push(entry.cssText.replace(SRC_DECLARATION_RE, `src: url("${dataUri}")`));
+    }
+    return inlined.length > 0 ? inlined.join("\n") : null;
+  }
+
+  function stripExternal(clone) {
+    const images = clone.querySelectorAll("img");
+    for (let index = 0; index < images.length; index += 1) {
+      const src = images[index].getAttribute("src");
+      if (src && !src.startsWith("data:")) images[index].removeAttribute("src");
+    }
+
+    const elements = clone.querySelectorAll("*");
+    for (let index = 0; index < elements.length; index += 1) {
+      const style = elements[index].style.cssText;
+      if (style && style.includes("url(")) {
+        elements[index].style.cssText = style.replace(
+          /url\(["']?(?!data:)[^)"']*["']?\)/gi,
+          "none",
+        );
+      }
+    }
+  }
+
+  function emitScroll() {
+    scrollRaf = 0;
+    if (!scrollForwarding) return;
+    postToTrustedTop({
+      type: "INLINE_EDIT_SCROLL",
+      scrollX: window.scrollX,
+      scrollY: window.scrollY,
+      capabilities: PICK_CAPABILITIES,
+    });
+  }
+
+  window.addEventListener(
+    "scroll",
+    function () {
+      if (!scrollForwarding || scrollRaf) return;
+      scrollRaf = requestAnimationFrame(emitScroll);
+    },
+    { passive: true, capture: true },
+  );
+
+  async function handleCaptureRequest(event) {
+    const requestId = event.data.requestId;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    function postResult(dataUrl) {
+      postToTrustedTop({
+        type: "INLINE_EDIT_SCREENSHOT_RESULT",
+        requestId,
+        dataUrl,
+        scrollX,
+        scrollY,
+      });
+    }
+
+    try {
+      // Wait for any pending web fonts to resolve so both inline metrics and
+      // the @font-face inlining below see the same loaded faces.
+      if (document.fonts && document.fonts.ready) {
+        try {
+          await document.fonts.ready;
+        } catch (_error) {}
+      }
+
+      const clone = document.documentElement.cloneNode(true);
+      inlineAll(document.documentElement, clone);
+
+      const removedNodes = clone.querySelectorAll("script,link[rel=\"stylesheet\"],style");
+      for (let index = 0; index < removedNodes.length; index += 1) {
+        removedNodes[index].remove();
+      }
+
+      stripExternal(clone);
+
+      // Re-embed web fonts as data-URI @font-face rules so the SVG rasterizer
+      // can resolve them — external font URLs aren't fetched during
+      // foreignObject rendering, which would otherwise force a fallback face
+      // and change text metrics.
+      const inlinedFontCss = await buildInlinedFontCss();
+      if (inlinedFontCss) {
+        const styleEl = document.createElement("style");
+        styleEl.textContent = inlinedFontCss;
+        const head = clone.querySelector("head");
+        if (head) head.appendChild(styleEl);
+        else clone.insertBefore(styleEl, clone.firstChild);
+      }
+
+      const html = new XMLSerializer().serializeToString(clone);
+      const svg =
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">` +
+        '<foreignObject width="100%" height="100%">' +
+        `<div xmlns="http://www.w3.org/1999/xhtml" style="width:${width}px;height:${height}px;overflow:hidden">` +
+        `<div style="position:relative;left:-${scrollX}px;top:-${scrollY}px">` +
+        html +
+        "</div></div></foreignObject></svg>";
+      const svgUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      const image = new Image();
+      image.onload = function () {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(image, 0, 0);
+        postResult(canvas.toDataURL("image/png"));
+      };
+      image.onerror = function () {
+        postResult(null);
+      };
+      image.src = svgUrl;
+    } catch (_error) {
+      postResult(null);
+    }
+  }
+
+  window.addEventListener("message", function (event) {
+    if (!event.data) return;
+    // Only accept messages from the direct parent frame. Blocks sibling /
+    // unrelated-window postMessage senders that could otherwise reach us.
+    if (event.source !== window.parent) return;
+
+    const trustedParentOrigin = getTrustedParentOrigin(event);
+    if (!trustedParentOrigin) return;
+    trustedTopOrigin = trustedParentOrigin;
+
+    if (event.data.type === "INLINE_EDIT_PICK") {
+      const element = resolvePickTarget(event.data.x, event.data.y);
+      postToTrustedTop({
+        type: "INLINE_EDIT_PICK_RESULT",
+        seq: event.data.seq,
+        target: element ? describePickTarget(element, event.data.fresh === true) : null,
+      });
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_START") {
+      scrollForwarding = true;
+      emitScroll();
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_STOP") {
+      scrollForwarding = false;
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
+      scrollRaf = 0;
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_BY") {
+      const { deltaX, deltaY, deltaMode } = event.data;
+      if (!scrollForwarding || !Number.isFinite(deltaX) || !Number.isFinite(deltaY)) return;
+      if (deltaMode !== 0 && deltaMode !== 1 && deltaMode !== 2) return;
+      const lineHeight =
+        parseFloat(getComputedStyle(document.documentElement).lineHeight) || DEFAULT_LINE_HEIGHT;
+      const scaleX = deltaMode === 1 ? lineHeight : deltaMode === 2 ? window.innerWidth : 1;
+      const scaleY = deltaMode === 1 ? lineHeight : deltaMode === 2 ? window.innerHeight : 1;
+      // The selection overlay receives the wheel event instead of this iframe.
+      // Instant scrolling preserves trackpad deltas even on smooth-scroll sites.
+      window.scrollBy({ left: deltaX * scaleX, top: deltaY * scaleY, behavior: "instant" });
+      emitScroll();
+      return;
+    }
+
+    if (event.data.type !== "INLINE_EDIT_CAPTURE_REQUEST") return;
+
+    handleCaptureRequest(event);
+  });
+})();
+
+
+</script><script src="signature.js?v=2"></script>
+</body>
+</html>

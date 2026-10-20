@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Savoir technique · Vella Partners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="st.css">
+<link rel="stylesheet" href="premium.css?v=9">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="signature.css?v=2">
+<link rel="stylesheet" href="industrie.css?v=5">
+<link rel="icon" type="image/png" href="img/favicon.png">
+</head>
+<body class="stp">
+<header class="top">
+  <a class="brand" href="index.html" aria-label="Vella Partners, accueil"><img src="img/logo-vella-partners.png" alt="Vella Partners" width="517" height="150"></a>
+  <nav class="tabs sector" aria-label="Secteur"><span class="seclab">Secteur :</span><a href="#" data-sec="p" aria-current="page">Injection plastique</a><a href="#" data-sec="c">Caoutchouc</a></nav><nav class="tabs menu" aria-label="Menu"><a href="index.html">Accueil</a><a href="index.html#offres">Nos offres</a><a href="index.html#essayer">Essayer</a><a href="savoir.html" aria-current="page">Savoir technique</a></nav>
+</header>
+<main class="st sv">
+<header class="ds-hero svhero"><div class="svht"><p class="eyebrow" id="svsec">Injection plastique</p>
+<h1>Savoir technique</h1>
+<p class="lead">Le savoir de nos experts plasturgie et caoutchouc, rangé pour être trouvé en quelques secondes : défauts, contrôles dans l’ordre, mesures suivies. C’est ce référentiel qui guide VP Expert et VP Predict. Quelques exemples sont ouverts ici ; la base complète est livrée avec VP Expert.</p>
+</div><img class="svimg" src="img/savoir.jpg" alt="Joints caoutchouc, pièces plastiques, pied à coulisse et carnet de contrôle sur un établi" width="1600" height="900">
+</header>
+<label class="svs"><span>Chercher un défaut, une mesure, un réglage</span><input type="search" id="q" placeholder="ex. bavure, matelas, température du moule"></label>
+<nav class="svtoc" id="toc"></nav>
+<div id="sv"></div>
+</main>
+<script src="v21ref.js"></script><script src="expertise.js"></script><script src="ref-caoutchouc.js?v=8"></script>
+<script>
+(function(){const T=t=>`<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="${t}"></span></button>`;
+let sec=new URLSearchParams(location.search).get('secteur')==='caoutchouc'?'c':'p';
+const SYL=[['Lot de mélange au rhéomètre','ML, puis Ts2 ou T10, puis T90. Sans viscosimètre Mooney, le ML du rhéomètre donne l’indication de viscosité.'],['Température matière en sortie de buse','En sortie de buse machine, ou aux busettes si la presse a un BCR.'],['Unité d’injection','Température et vitesse de rotation de la boudineuse, puis température du pot et vitesse d’injection, consigne et réelle.'],['Température réelle du moule','Au pyromètre de contact, à comparer à l’affichage des sondes.'],['Encrassement','Busettes si BCR, sinon canaux du moule.']];
+const RUBP=[['Pression d’injection dynamique','bar','Souvent une pression hydraulique au sommet du piston, pas la pression matière.'],['Température du pot','°C','Sonde dans l’acier ou le circuit de régulation.'],['Température des busettes BCR','°C','BCR : bloc à canaux régulés. La sonde peut être loin dans le circuit d’huile.'],['Température moule plateau fixe','°C','À vérifier au pyromètre de contact.'],['Temps de vulcanisation','s','Se raccourcit seulement après validation au rhéomètre (T90).']];
+const EXD=['Incomplet','Bavure','Retassure','Brûlure'],EXC=['clapet','humidite','tmoule'],EXR=['Manque matière','Matière grillée','Sous-vulcanisation'];
+function plast(){const D=window.DEF,L=window.DLAB,C=window.V21C,DF=window.V21DEF,P=window.PRESS_P;
+ return [{id:'defauts',t:'Les 24 défauts et leurs mesures',n:Object.keys(D).length,lead:'Pour chaque défaut de pièce, les écarts de mesure presse associés dans la matrice établie avec notre expert plasturgie. 20 des 24 défauts ont au moins une mesure. Quatre exemples sont ouverts ici.'+T('Une mesure associée aide à orienter le contrôle. Ce n’est pas un taux de détection : il se mesure pendant le pilote.'),
+  items:Object.entries(D).map(([d,codes])=>!EXD.includes(d)?{h:d,s:'Détail livré avec VP Expert',lock:1,b:''}:({h:d,s:'Exemple · '+(codes.length?codes.length+' mesure'+(codes.length>1?'s':'')+' associée'+(codes.length>1?'s':''):'Aucune mesure : contrôle visuel ou outillage'),b:codes.length?'<ul>'+codes.map(c=>`<li>${L[c]||c}</li>`).join('')+'</ul>':'<p>Ce défaut se traite par les contrôles terrain : moule, matière, manutention.</p>'}))},
+ {id:'causes',t:'13 causes racines documentées',n:C.length,lead:'Pour chaque cause : le contrôle à faire, ce qu’il montre, l’action, la limite à respecter et comment vérifier. Trois exemples sont ouverts ici.',
+  items:C.map(c=>!EXC.includes(c.id)?{h:c.n,s:c.m+' · détail livré avec VP Expert',lock:1,b:''}:({h:c.n,s:'Exemple · '+c.m+' · défauts : '+c.def.map(x=>DF[x]).join(', '),b:`<dl><dt>Contrôle</dt><dd>${c.ctrl} <i>(${c.who})</i></dd><dt>Si non conforme</dt><dd>${c.ko}</dd><dt>Action</dt><dd>${c.act} <i>(${c.role})</i></dd><dt>Limite</dt><dd>${c.lim}</dd><dt>Vérification</dt><dd>${c.ver}</dd></dl>`}))},
+ {id:'ecosysteme',t:'L’écosystème de la presse',n:13,lead:'Retour d’expérience de notre expert plasturgie : quand l’atelier réagit au défaut, environ 50 % des causes viennent de l’environnement de production, de la machine et des réglages, 20 % du facteur humain et de la méthode, 15 % de l’outillage et 15 % de la matière. Dans environ 8 dérives sur 10, le défaut ne vient pas du réglage lui-même : il faut regarder tout le flux, de la matière au broyage.'+T('Répartition issue de l’expérience terrain de notre expert, pas d’une étude statistique. Elle se vérifie sur vos données pendant le pilote.'),items:[],
+  html:'<div class="eco"><ol class="ecof">'+[['Matière première','p'],['Transport et séchage','pt'],['Coloration','d'],['Transformation · vis, clapet','pt'],['Écoulement · buse','p'],['Mise en forme · moule','t'],['Méthode calorifique','t'],['Moyen calorifique','t'],['Broyage des déchets','p'],['Réintégration du broyé','p']].map(([h,k],i)=>`<li class="k-${k}"><b>${i+1}</b><span>${h}</span></li>`).join('')+'</ol><p class="ecou"><span>Utilités qui touchent plusieurs étapes :</span><em>Compresseur d’air</em><em>Sécheur d’air</em><em>Tour de refroidissement</em></p><p class="ecol"><i class="k-p"></i>Pression matière <i class="k-t"></i>Thermique <i class="k-pt"></i>Les deux <i class="k-d"></i>Dosage</p></div>'},
+ {id:'signature',t:'La signature d’injection',n:5,lead:'Classer les paramètres de la presse pour séparer le critique du secondaire, puis fixer une fenêtre de process sur les consignes avec tolérance, les compensations et les mesures. VP Predict alerte sur la limite de dérive, avant la limite de non-conformité.'+T('Méthode présentée par notre expert plasturgie : figer les fenêtres optimales, les faire valider par la maîtrise du process, puis définir qui intervient à chaque niveau de dérive.'),items:[],
+  html:'<div class="pyr">'+[['Données de lecture','Le résultat mesuré à chaque cycle : c’est ce qu’on surveille.'],['Compensations','Ce que la presse ajuste seule : leur dérive est un signal précoce.'],['Réglages','Ce que le régleur ajuste pour atteindre les données de lecture.'],['Paramètres fixes','Ne bougent pas en production.'],['Consignes avec tolérances','La base : chaque consigne a sa fenêtre autorisée.']].map(([h,b],i)=>`<div class="pl l${i}"><b>${h}</b><span>${b}</span></div>`).join('')+'</div><p class="pyrn"><b>Deux limites :</b> VP Predict alerte à la limite de dérive, avant la limite de non-conformité. Le niveau d’intervention dépend de l’habilitation.</p>'},
+ {id:'mesures',t:'Les mesures suivies',n:P.length,lead:'Ce que la presse transmet à chaque cycle, avec sa tolérance de démonstration.',items:P.map(p=>({h:p.n,s:`${p.c} ${p.u} ± ${p.tol} ${p.u}${p.opt?' · si capteurs dans le moule':''}`,b:''})),more:['st-mesures-plastique.html','Tout le détail : niveaux de disponibilité, boîtiers capteurs, qui agit']},
+ {id:'amdec',t:'Audit AMDEC',lead:'85 causes racines de dérive cotées en sévérité, fréquence et détectabilité pour préparer l’audit de votre atelier.'+T('AMDEC : analyse des modes de défaillance, de leurs effets et de leur criticité. L’indice de priorité (IPR) = sévérité × fréquence × détectabilité.'),items:[],more:['st-amdec.html','Lire la méthode et les situations de référence']}];}
+function rub(){const R=window.VELLA_REF_DEFAUTS,dir={hausse:'↑ hausse',baisse:'↓ baisse','hausse ou baisse':'↑↓ hausse ou baisse · à confirmer','AV / hausse':'AV / hausse · à confirmer','AV /hausse':'AV / hausse · à confirmer','à vérifier':'à vérifier'};
+ return [{id:'ordre',t:'Pression qui monte : l’ordre de contrôle',n:5,lead:'L’ordre appliqué par notre expert caoutchouc. Une seule vérification à la fois, avant toute retouche du réglage.',items:SYL.map((x,i)=>({h:(i+1)+'. '+x[0],s:x[1],b:''}))},
+ {id:'defauts',t:'Les 16 défauts et leurs leviers classés',n:R.length,lead:'Pour chaque défaut, les leviers dans l’ordre où les vérifier, avec le sens du réglage. Trois exemples sont ouverts ici.'+T('« à vérifier » : un contrôle, pas un réglage. « hausse » ou « baisse » : le sens dans lequel essayer le réglage, un pas franc, puis attendre au moins 3 cycles.'),
+  items:R.map(d=>!EXR.some(x=>d.defect.startsWith(x))?{h:d.defect,s:d.levers.length+' leviers classés · détail livré avec VP Expert',lock:1,b:''}:({h:d.defect,s:'Exemple · '+d.levers.length+' leviers classés',b:'<ol class="lev">'+d.levers.map(l=>`<li><span>${/commutation/i.test(l[1])?l[1]+' (libellé à confirmer)':l[1]}</span><em class="d-${l[2]==='hausse'?'up':l[2]==='baisse'?'dn':'ck'}">${dir[l[2]]||l[2]}</em></li>`).join('')+'</ol>'}))},
+ {id:'mesures',t:'Les mesures suivies',n:5,lead:'Les cinq mesures rejouées sur 13 527 cycles réels.',items:RUBP.map(p=>({h:p[0],s:p[1]+' · '+p[2],b:''})),more:['st-mesures-caoutchouc.html','Tout le détail des mesures caoutchouc']},
+ {id:'reperes',t:'Repères techniques',lead:'Ce que les capteurs mesurent réellement, l’ordre de travail, les retours sur le manque matière, la matière grillée et les bulles.',items:[],more:['st-reperes-caoutchouc.html','Lire les repères techniques']}];}
+const FULL=()=>`<section class="svb full"><h2>La base complète</h2><p class="sl">${sec==='c'?'Les 16 défauts avec tous leurs leviers classés, l’ordre de contrôle de notre expert caoutchouc et les seuils par mélange':'Les 24 défauts, plus de 85 causes racines et leurs actions, les seuils par matière et la pondération des causes'} sont livrés avec VP Expert et paramétrés pour votre atelier pendant le pilote.</p><div class="hcta"><a class="btn primary" href="index.html#offres">Voir VP Expert</a><a class="btn ghost" href="${sec==='c'?'presse-caoutchouc.html':'presse.html'}">Voir l’expertise en action</a></div></section>`;
+function render(){const S=sec==='c'?rub():plast(),q=document.getElementById('q').value.trim().toLowerCase();
+ document.getElementById('svsec').textContent=sec==='c'?'Moulage caoutchouc':'Injection plastique';
+ document.querySelectorAll('[data-sec]').forEach(a=>a.toggleAttribute('aria-current',a.dataset.sec===sec));document.querySelectorAll('[data-sec]').forEach(a=>{if(a.dataset.sec===sec)a.setAttribute('aria-current','page');});
+ document.getElementById('toc').innerHTML='';
+ const SUM={defauts:sec==='c'?'Leviers classés et sens du réglage':'Les écarts de mesure associés à chaque défaut',causes:'Contrôle, action, limite, vérification',ecosysteme:'Les 10 étapes du flux matière et les utilités',signature:'Les 5 niveaux de paramètres et les 2 limites',mesures:sec==='c'?'5 mesures rejouées sur 13 527 cycles':'Ce que la presse transmet à chaque cycle',amdec:'85 causes cotées pour préparer l’audit',ordre:'Une vérification à la fois, dans l’ordre',reperes:'Capteurs, ordre de travail, retours terrain'};
+ const ICO={defauts:'◎',causes:'⚙',ecosysteme:'⇢',signature:'▲',mesures:'∿',amdec:'☰',ordre:'①',reperes:'✦'};
+ const html=S.map((s,ix)=>{const it=s.items.filter(i=>!q||(i.h+' '+i.s+' '+i.b).toLowerCase().includes(q));if(q&&!it.length&&!(s.t+' '+s.lead).toLowerCase().includes(q))return '';
+  const open=q||location.hash==='#'+s.id;
+  return `<details class="svb svc" id="${s.id}" name="sv"${open?' open':''}><summary><span class="svico" aria-hidden="true">${ICO[s.id]||'•'}</span><span class="svtt"><b>${s.t}</b><span>${SUM[s.id]||''}</span></span>${s.n?`<em>${s.n}</em>`:''}<i class="svchev" aria-hidden="true"></i></summary><div class="svbody"><p class="sl">${s.lead}</p>${s.html&&!q?s.html:''}${it.length?`<div class="svl">${it.map(i=>i.b?`<details${q?' open':''}><summary><strong>${i.h}</strong><span>${i.s}</span></summary><div class="svd">${i.b}</div></details>`:`<div class="svi${i.lock?' lk':''}"><strong>${i.h}</strong><span>${i.s}</span></div>`).join('')}</div>`:''}${s.more?`<a class="tool more" href="${s.more[0]}"><strong>${s.more[1]}</strong></a>`:''}</div></details>`;}).join('');
+ document.getElementById('sv').innerHTML=html?'<div class="svgrid">'+html+'</div>'+FULL():'<p class="sl">Aucun résultat. Essayez un autre mot.</p>';
+ document.querySelectorAll('.svc').forEach(d=>d.addEventListener('toggle',()=>{if(d.open){document.querySelectorAll('.svc[open]').forEach(o=>{if(o!==d)o.open=false;});if(window.innerWidth<820)setTimeout(()=>d.scrollIntoView({block:'start',behavior:'smooth'}),60);}}));}
+document.getElementById('q').oninput=render;document.querySelectorAll('[data-sec]').forEach(a=>a.onclick=e=>{e.preventDefault();sec=a.dataset.sec;try{history.replaceState(null,'',location.pathname+(sec==='c'?'?secteur=caoutchouc':'')+location.hash)}catch(_){};if(window.vpSector)vpSector(sec==='c');render();});render();})();
+</script>
+<script src="tips.js"></script>
+<script src="typo.js"></script>
+<script src="anim.js?v=13"></script><script data-pplx-inline-edit>
+(function () {
+  if (window === window.top) return;
+
+  const allowedParentOrigins = ["https://www.perplexity.ai","https://perplexity.ai","https://testing.perplexity.ai","https://staging.perplexity.ai","https://*.preview.i.perplexity.ai","http://perplexity.localhost","http://localhost:1420","http://127.0.0.1:1420","http://localhost:3000","http://127.0.0.1:3000","http://localhost:5173","http://127.0.0.1:5173"];
+  const MAX_FONT_BYTES = 500 * 1024;
+  const MAX_TOTAL_FONT_BYTES = 2 * 1024 * 1024;
+  const DEFAULT_LINE_HEIGHT = 16;
+  let scrollForwarding = false;
+  let scrollRaf = 0;
+  let trustedTopOrigin = null;
+
+  // Allow entries like "https://*.preview.i.perplexity.ai" — the wildcard
+  // matches a single DNS label (no dots), so "https://*.foo" cannot stretch
+  // across multiple labels.
+  function matchesAllowedOrigin(origin) {
+    if (!origin) return false;
+    for (const entry of allowedParentOrigins) {
+      if (!entry.includes("*")) {
+        if (entry === origin) return true;
+        continue;
+      }
+      const pattern = new RegExp(
+        "^" +
+          entry.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[^.]+") +
+          "$",
+      );
+      if (pattern.test(origin)) return true;
+    }
+    return false;
+  }
+
+  // Trust decision: when the sender is same-origin-visible (event.origin is a
+  // real origin like https://www.perplexity.ai) we trust event.origin directly.
+  // When event.origin is "null" (opaque broker srcdoc), we fall back to the
+  // broker's stamped `parentOrigin` to identify the top window. The fallback
+  // is claim-only — we rely on the browser's native `targetOrigin` enforcement
+  // on the response path (see postToTrustedTop) to ensure replies can't be
+  // delivered to anyone but the actual top window of that claimed origin.
+  function getTrustedParentOrigin(event) {
+    const forwardedParentOrigin =
+      typeof event.data.parentOrigin === "string" ? event.data.parentOrigin : null;
+    const parentOrigin = event.origin === "null" ? forwardedParentOrigin : event.origin;
+    return matchesAllowedOrigin(parentOrigin) ? parentOrigin : null;
+  }
+
+  // All responses go to window.top with targetOrigin = the allowlisted origin.
+  // An attacker that iframes us inside their own null-origin broker can claim
+  // any parentOrigin they like, but the browser will drop the reply whenever
+  // the real top's origin doesn't match — so the screenshot never leaves.
+  function postToTrustedTop(message) {
+    if (!trustedTopOrigin) return;
+    try {
+      window.top.postMessage(message, trustedTopOrigin);
+    } catch (_error) {}
+  }
+
+  const PICK_CAPABILITIES = ["pick"];
+  const PICK_CHAIN_LENGTH = 4;
+  const PICK_MAX_TEXT_CHARS = 120;
+  const PICK_MAX_HTML_CHARS = 300;
+
+  function truncate(value, maxChars) {
+    return value.length > maxChars ? value.slice(0, maxChars - 1) + "…" : value;
+  }
+
+  function isPickableElement(element) {
+    return (
+      element instanceof Element &&
+      element !== document.documentElement &&
+      element !== document.body
+    );
+  }
+
+  function resolvePickTarget(x, y) {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+    const element = document.elementFromPoint(x, y);
+    return isPickableElement(element) ? element.closest("svg") || element : null;
+  }
+
+  function pickLabel(element) {
+    if (element.id) return element.localName + "#" + element.id;
+    return [element.localName].concat(Array.from(element.classList).slice(0, 2)).join(".");
+  }
+
+  // Only attributes that help find the element in source. data-* values and URL
+  // query strings or fragments can carry tokens.
+  const PICK_ATTRIBUTES = new Set([
+    "id",
+    "class",
+    "name",
+    "type",
+    "role",
+    "alt",
+    "aria-label",
+    "href",
+    "src",
+  ]);
+
+  function pickAttributeValue(attribute) {
+    return attribute.name === "href" || attribute.name === "src"
+      ? attribute.value.split(/[?#]/)[0]
+      : attribute.value;
+  }
+
+  function describePickElement(element) {
+    const chain = [];
+    for (
+      let current = element;
+      isPickableElement(current) && chain.length < PICK_CHAIN_LENGTH;
+      current = current.parentElement
+    ) {
+      chain.unshift(current);
+    }
+    const attributes = Array.from(element.attributes)
+      .filter((attribute) => PICK_ATTRIBUTES.has(attribute.name))
+      .map((attribute) => ` ${attribute.name}="${pickAttributeValue(attribute).replace(/"/g, "&quot;")}"`)
+      .join("");
+    const text = (element.innerText || element.textContent || "").replace(/\s+/g, " ").trim();
+    return {
+      chain: chain.map(pickLabel),
+      html: truncate(`<${element.localName}${attributes}>`, PICK_MAX_HTML_CHARS),
+      text: text ? truncate(text, PICK_MAX_TEXT_CHARS) : undefined,
+    };
+  }
+
+  // Hover asks once per frame, and innerText on a large section forces layout,
+  // so only the rect is re-read while the pointer stays on the same element.
+  // Clicks ask for fresh details since the page may have changed the element.
+  let lastPick = null;
+
+  function describePickTarget(element, fresh) {
+    if (fresh || lastPick?.element !== element) {
+      lastPick = { element, details: describePickElement(element) };
+    }
+    const rect = element.getBoundingClientRect();
+    return {
+      rect: { x: rect.left, y: rect.top, width: rect.width, height: rect.height },
+      ...lastPick.details,
+    };
+  }
+
+  function inlineAll(original, clone) {
+    if (original.nodeType !== 1 || clone.nodeType !== 1) return;
+
+    try {
+      const computedStyle = getComputedStyle(original);
+      // cssText on a computed style is the serialized declaration in modern
+      // Chromium/Safari — a single read beats enumerating ~400 longhand
+      // properties. Firefox returns "" here, so we fall back on empty.
+      const serialized = computedStyle.cssText;
+      if (serialized) {
+        clone.style.cssText = serialized;
+      } else {
+        const parts = new Array(computedStyle.length);
+        for (let index = 0; index < computedStyle.length; index += 1) {
+          const property = computedStyle[index];
+          parts[index] = `${property}:${computedStyle.getPropertyValue(property)};`;
+        }
+        clone.style.cssText = parts.join("");
+      }
+    } catch (_error) {}
+
+    const originalChildren = original.children;
+    const clonedChildren = clone.children;
+    for (
+      let index = 0;
+      index < originalChildren.length && index < clonedChildren.length;
+      index += 1
+    ) {
+      inlineAll(originalChildren[index], clonedChildren[index]);
+    }
+  }
+
+  function extractFontUrl(srcValue) {
+    const matches = [
+      ...srcValue.matchAll(
+        /url\(["']?([^"')]+)["']?\)(?:\s*format\(["']?([^"')]+)["']?\))?/gi,
+      ),
+    ];
+    if (matches.length === 0) return null;
+    const woff2 = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff2"));
+    if (woff2) return woff2[1];
+    const woff = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff"));
+    if (woff) return woff[1];
+    return matches[0][1];
+  }
+
+  // Cache resolved font URL -> data URI across captures. Fonts on a page
+  // essentially never change, and a batch run emits multiple captures back to
+  // back — without this we'd refetch + re-base64 every time.
+  const fontDataUriCache = new Map();
+  const SRC_DECLARATION_RE = /src\s*:\s*[^;}]+/i;
+
+  async function fetchAsDataUri(url) {
+    if (fontDataUriCache.has(url)) return fontDataUriCache.get(url);
+    let dataUri = null;
+    try {
+      const response = await fetch(url, { mode: "cors", credentials: "omit" });
+      if (response.ok) {
+        const blob = await response.blob();
+        if (blob.size <= MAX_FONT_BYTES) {
+          dataUri = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () =>
+              resolve(typeof reader.result === "string" ? reader.result : null);
+            reader.onerror = () => resolve(null);
+            reader.readAsDataURL(blob);
+          });
+        }
+      }
+    } catch (_error) {
+      dataUri = null;
+    }
+    fontDataUriCache.set(url, dataUri);
+    return dataUri;
+  }
+
+  function collectFontFaceRuleTexts() {
+    const rules = [];
+    for (const sheet of document.styleSheets) {
+      let cssRules;
+      try {
+        cssRules = sheet.cssRules;
+      } catch (_error) {
+        continue;
+      }
+      if (!cssRules) continue;
+      for (const rule of cssRules) {
+        const cssText = rule.cssText || "";
+        if (cssText.startsWith("@font-face")) rules.push(cssText);
+      }
+    }
+    return rules;
+  }
+
+  async function buildInlinedFontCss() {
+    const ruleTexts = collectFontFaceRuleTexts();
+    if (ruleTexts.length === 0) return null;
+
+    const resolved = ruleTexts.map((cssText) => {
+      if (!SRC_DECLARATION_RE.test(cssText)) return null;
+      const srcMatch = cssText.match(/src\s*:\s*([^;}]+)[;}]/i);
+      if (!srcMatch) return null;
+      const url = extractFontUrl(srcMatch[1]);
+      if (!url) return null;
+      try {
+        return { cssText, url: new URL(url, document.baseURI).href };
+      } catch (_error) {
+        return null;
+      }
+    });
+
+    const dataUris = await Promise.all(
+      resolved.map((entry) => (entry ? fetchAsDataUri(entry.url) : Promise.resolve(null))),
+    );
+
+    const inlined = [];
+    let totalBytes = 0;
+    for (let index = 0; index < resolved.length; index += 1) {
+      const entry = resolved[index];
+      const dataUri = dataUris[index];
+      if (!entry || !dataUri) continue;
+      const approxBytes = dataUri.length * 0.75;
+      if (totalBytes + approxBytes > MAX_TOTAL_FONT_BYTES) break;
+      totalBytes += approxBytes;
+      inlined.push(entry.cssText.replace(SRC_DECLARATION_RE, `src: url("${dataUri}")`));
+    }
+    return inlined.length > 0 ? inlined.join("\n") : null;
+  }
+
+  function stripExternal(clone) {
+    const images = clone.querySelectorAll("img");
+    for (let index = 0; index < images.length; index += 1) {
+      const src = images[index].getAttribute("src");
+      if (src && !src.startsWith("data:")) images[index].removeAttribute("src");
+    }
+
+    const elements = clone.querySelectorAll("*");
+    for (let index = 0; index < elements.length; index += 1) {
+      const style = elements[index].style.cssText;
+      if (style && style.includes("url(")) {
+        elements[index].style.cssText = style.replace(
+          /url\(["']?(?!data:)[^)"']*["']?\)/gi,
+          "none",
+        );
+      }
+    }
+  }
+
+  function emitScroll() {
+    scrollRaf = 0;
+    if (!scrollForwarding) return;
+    postToTrustedTop({
+      type: "INLINE_EDIT_SCROLL",
+      scrollX: window.scrollX,
+      scrollY: window.scrollY,
+      capabilities: PICK_CAPABILITIES,
+    });
+  }
+
+  window.addEventListener(
+    "scroll",
+    function () {
+      if (!scrollForwarding || scrollRaf) return;
+      scrollRaf = requestAnimationFrame(emitScroll);
+    },
+    { passive: true, capture: true },
+  );
+
+  async function handleCaptureRequest(event) {
+    const requestId = event.data.requestId;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    function postResult(dataUrl) {
+      postToTrustedTop({
+        type: "INLINE_EDIT_SCREENSHOT_RESULT",
+        requestId,
+        dataUrl,
+        scrollX,
+        scrollY,
+      });
+    }
+
+    try {
+      // Wait for any pending web fonts to resolve so both inline metrics and
+      // the @font-face inlining below see the same loaded faces.
+      if (document.fonts && document.fonts.ready) {
+        try {
+          await document.fonts.ready;
+        } catch (_error) {}
+      }
+
+      const clone = document.documentElement.cloneNode(true);
+      inlineAll(document.documentElement, clone);
+
+      const removedNodes = clone.querySelectorAll("script,link[rel=\"stylesheet\"],style");
+      for (let index = 0; index < removedNodes.length; index += 1) {
+        removedNodes[index].remove();
+      }
+
+      stripExternal(clone);
+
+      // Re-embed web fonts as data-URI @font-face rules so the SVG rasterizer
+      // can resolve them — external font URLs aren't fetched during
+      // foreignObject rendering, which would otherwise force a fallback face
+      // and change text metrics.
+      const inlinedFontCss = await buildInlinedFontCss();
+      if (inlinedFontCss) {
+        const styleEl = document.createElement("style");
+        styleEl.textContent = inlinedFontCss;
+        const head = clone.querySelector("head");
+        if (head) head.appendChild(styleEl);
+        else clone.insertBefore(styleEl, clone.firstChild);
+      }
+
+      const html = new XMLSerializer().serializeToString(clone);
+      const svg =
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">` +
+        '<foreignObject width="100%" height="100%">' +
+        `<div xmlns="http://www.w3.org/1999/xhtml" style="width:${width}px;height:${height}px;overflow:hidden">` +
+        `<div style="position:relative;left:-${scrollX}px;top:-${scrollY}px">` +
+        html +
+        "</div></div></foreignObject></svg>";
+      const svgUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      const image = new Image();
+      image.onload = function () {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(image, 0, 0);
+        postResult(canvas.toDataURL("image/png"));
+      };
+      image.onerror = function () {
+        postResult(null);
+      };
+      image.src = svgUrl;
+    } catch (_error) {
+      postResult(null);
+    }
+  }
+
+  window.addEventListener("message", function (event) {
+    if (!event.data) return;
+    // Only accept messages from the direct parent frame. Blocks sibling /
+    // unrelated-window postMessage senders that could otherwise reach us.
+    if (event.source !== window.parent) return;
+
+    const trustedParentOrigin = getTrustedParentOrigin(event);
+    if (!trustedParentOrigin) return;
+    trustedTopOrigin = trustedParentOrigin;
+
+    if (event.data.type === "INLINE_EDIT_PICK") {
+      const element = resolvePickTarget(event.data.x, event.data.y);
+      postToTrustedTop({
+        type: "INLINE_EDIT_PICK_RESULT",
+        seq: event.data.seq,
+        target: element ? describePickTarget(element, event.data.fresh === true) : null,
+      });
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_START") {
+      scrollForwarding = true;
+      emitScroll();
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_STOP") {
+      scrollForwarding = false;
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
+      scrollRaf = 0;
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_BY") {
+      const { deltaX, deltaY, deltaMode } = event.data;
+      if (!scrollForwarding || !Number.isFinite(deltaX) || !Number.isFinite(deltaY)) return;
+      if (deltaMode !== 0 && deltaMode !== 1 && deltaMode !== 2) return;
+      const lineHeight =
+        parseFloat(getComputedStyle(document.documentElement).lineHeight) || DEFAULT_LINE_HEIGHT;
+      const scaleX = deltaMode === 1 ? lineHeight : deltaMode === 2 ? window.innerWidth : 1;
+      const scaleY = deltaMode === 1 ? lineHeight : deltaMode === 2 ? window.innerHeight : 1;
+      // The selection overlay receives the wheel event instead of this iframe.
+      // Instant scrolling preserves trackpad deltas even on smooth-scroll sites.
+      window.scrollBy({ left: deltaX * scaleX, top: deltaY * scaleY, behavior: "instant" });
+      emitScroll();
+      return;
+    }
+
+    if (event.data.type !== "INLINE_EDIT_CAPTURE_REQUEST") return;
+
+    handleCaptureRequest(event);
+  });
+})();
+
+
+</script><script src="signature.js?v=2"></script>
+</body>
+</html>

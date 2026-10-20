@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Préparer mon pilote VP Predict · Vella Partners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="st.css">
+<link rel="stylesheet" href="premium.css?v=9">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="signature.css?v=2">
+<link rel="stylesheet" href="industrie.css?v=5">
+<link rel="icon" type="image/png" href="img/favicon.png">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="index.html" aria-label="Vella Partners, accueil"><img src="img/logo-vella-partners.png" alt="Vella Partners" width="517" height="150"></a>
+  <nav class="tabs menu" aria-label="Menu"><a href="index.html">Accueil</a><a href="index.html#offres">Nos offres</a><a href="index.html#essayer" aria-current="page">Essayer</a><a href="savoir.html">Savoir technique</a></nav>
+<nav class="tabs sector" aria-label="Secteur" id="sec"><span class="seclab">Secteur :</span></nav>
+</header>
+<main class="poc" id="poc"></main>
+<script>
+(function(){const Q=new URLSearchParams(location.search),RUB=Q.get('secteur')==='caoutchouc';let m=null;if(Q.has('net')){m={n:+Q.get('n'),net:+Q.get('net'),c77:+Q.get('c77'),c63:+Q.get('c63'),scen:Q.get('scen')||'prudent'};m.k=m.c77+m.c63;}
+const eur=v=>Math.round(v).toLocaleString('fr-FR')+' €';
+document.getElementById('sec').innerHTML=`<span class="seclab">Secteur :</span><a href="pilote.html"${RUB?'':' aria-current="page"'}>Injection plastique</a><a href="pilote.html?secteur=caoutchouc"${RUB?' aria-current="page"':''}>Caoutchouc</a>`;
+void `<a href="${RUB?'caoutchouc.html':'gains.html'}">Estimer mes gains</a><a href="${RUB?'presse-caoutchouc.html':'presse.html'}">Simulateur presse</a>`;
+const data=RUB?['Mesures cycle par cycle : pression d’injection, températures du pot, des busettes et du moule, temps de vulcanisation','Lot de mélange rattaché à chaque cycle, avec la rhéométrie (ML, Ts2 ou T10, T90)','Rebuts et défauts relevés par lot, ébavurage compris','Consignes de la recette et leurs tolérances']:['Mesures cycle par cycle : matelas, pression de commutation, temps d’injection et de dosage, températures','Ordre de fabrication, moule et lot matière rattachés à chaque cycle','Rebuts et défauts relevés par poste','Consignes de la recette et leurs tolérances'];
+const chk=['Choisir 2 à 3 presses pilotes, connectables (Euromap 77 ou 63)<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Euromap 77 : presses récentes avec sortie OPC UA, rien à ajouter. Euromap 63 : presses plus anciennes, un adaptateur d’environ 890 € suffit."></span></button>','Nommer un référent process et 3 à 4 régleurs utilisateurs<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Le référent valide les seuils et les actions avec nous ; les régleurs reçoivent les alertes et testent les contrôles proposés."></span></button>','Extraire 3 mois d’historique : arrêts, rebuts, temps de réglage','Vérifier l’accès réseau des presses avec votre informatique','Valider avec votre informatique le mode d’hébergement des données','Envoyer le formulaire d’intention à la Région (aide Industrie du Futur)<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Dispositif Région Auvergne-Rhône-Alpes : 50 % d’un accompagnement plafonné à 32 000 €, soit jusqu’à 16 000 €. Le formulaire part avant la signature."></span></button>'];
+const P=(()=>{if(!m||!Q.has('pn'))return null;const g=k=>+Q.get(k)||0;const p=Math.min(m.k,RUB?3:2),a77=Math.min(p,m.c77),a63=p-a77;
+ const scan=Q.get('scan')==='1',price=20000+7000*p,aidBase=price+(scan?10000:0),aidAll=Math.min(16000,.5*Math.min(aidBase,32000)),aidScan=scan?Math.min(aidAll,5000):0,aid=aidAll-aidScan;
+ const pk=g('pk')||p,pf=g('pf')||12*(250+100*Math.max(3,pk)),credit=Math.min(pf,.5*price);
+ return {p,price,aid,aidScan,scan,a77,a63,pk,ls:g('ls'),pa:g('pa'),pf,pv:g('pv'),pg:g('pg'),credit,pn:g('pn'),pr:g('pr'),pc:g('pc'),e:(g('e1')+g('e2'))*p,e1:g('e1')*p,e2:g('e2')*p,h:g('h1')*p,d:g('d1')*p,i1:g('i1')*p,i2:g('i2')*p,i3:g('i3')*p,rj:g('rj'),trs:g('trs')};})();
+const n0=v=>Math.round(v).toLocaleString('fr-FR'),w6=v=>v*6/52;
+const propHTML=()=>{if(!m)return '';if(!P)return `<div class="card"><h3>Proposition de pilote</h3><p>Relancez votre estimation pour obtenir une proposition chiffrée : <a href="${RUB?'caoutchouc.html':'gains.html'}">estimer mes gains</a>.</p></div>`;
+ if(P.p<1)return `<div class="card prop"><h3>Proposition de pilote</h3><p>Aucune de vos presses n’est connectable sans mise à niveau. Le pilote VP Predict demande 1 à 3 presses Euromap 77, Euromap 63 ou reliées à votre MES : parlons d’abord de la mise à niveau d’une presse critique, ou d’un démarrage avec VP Expert seul.</p></div>`;
+ const kpi=[
+  ['Rebuts évitables en moins'+(RUB?' et ébavurage':''),eur(P.e)+' / an',`${eur(w6(P.e))} sur 6 semaines`,`VP Expert ${eur(P.e1)} + VP Predict ${eur(P.e2)}, sur ${P.p} presses pilotes choisies parmi les plus critiques`],
+  ['Heures de presse récupérées',n0(P.h)+' h / an',`${n0(w6(P.h))} h sur 6 semaines`,'Arrêts évités et cadence retrouvée, en heures équivalentes'],
+  ['Temps de recherche de cause évité',n0(P.d)+' h / an',`${n0(w6(P.d))} h sur 6 semaines`,`Sur ${n0(P.i3)} h de recherche de cause par an`]];
+ const init=[['Coût des rebuts',eur(P.i1)+' / an',`Taux de rebuts déclaré : ${String(P.rj).replace('.',',')} %`],['Aléas techniques et process',n0(P.i2)+' h / an','Heures d’arrêt sur les presses pilotes'],['Recherche de cause',n0(P.i3)+' h / an','Temps régleurs avant d’agir'],['TRS de départ',String(P.trs).replace('.',',')+' %','Calculé, à recaler sur vos relevés']];
+ const ok=P.pr>=2;
+ return `<section class="prop" aria-label="Proposition de pilote payant">
+ <div class="prh"><p class="eyebrow">Proposition de pilote payant</p><h2>Ce que nous vous proposons de prouver</h2><p class="lead">Objectifs fixés sur le scénario prudent, le plus bas des trois : le pilote réussit s’il atteint ce que nous annonçons sans optimisme.</p></div>
+ <div class="prg"><div class="prc"><h3>Périmètre</h3><ul><li><b>${P.p} presse${P.p>1?'s':''} pilote${P.p>1?'s':''}</b> : ${P.a77?`${P.a77} prête${P.a77>1?'s':''} à connecter (Euromap 77)`:''}${P.a77&&P.a63?', ':''}${P.a63?`${P.a63} avec adaptateur (Euromap 63)`:''}</li><li>3 mois : 3 semaines de mesure de référence, puis environ 6 semaines de mesure des gains</li><li>1 référent process et 3 à 4 régleurs</li><li>VP Predict repère la dérive, VP Expert dit quoi faire</li></ul>${P.p<2?'<p class="prw">Une seule presse connectable : le résultat sera moins représentatif. Une deuxième presse est conseillée.</p>':''}</div>
+ <div class="prc"><h3>Prix</h3>${P.scan?`<div class="prl"><span>VP Scan préalable : 2 jours sur site, mise en place VP Expert offerte</span><b>10 000 € HT</b></div>`:''}<div class="prl"><span>Pilote VP Predict : 20 000 € + ${P.p} × 7 000 € par presse</span><b>${eur(P.price)} HT</b></div><div class="prl"><span>Aide Industrie du Futur, si éligible : à confirmer avant déduction</span><b>jusqu’à − ${eur(P.aid+P.aidScan)}</b></div><div class="prl tot"><span>Reste à charge possible</span><b>${eur(P.price-P.aid+(P.scan?10000-P.aidScan:0))} HT</b></div><div class="prl"><span>Si vous poursuivez : crédité sur l’abonnement VP Predict de l’année 1</span><b>− ${eur(P.credit)}</b></div><div class="prl"><span>Connexion, à votre charge</span><b>${P.a63?`${P.a63} × 890 € d’adaptateur`:'aucun adaptateur'}</b></div></div></div>
+ <h3 class="prt">État initial, relevé au mois 1</h3><p class="cap">Vos valeurs actuelles ramenées aux ${P.p} presses pilotes. Elles seront remplacées par les relevés réels avant toute action : c’est la base du avant / après.</p>
+ <div class="pri">${init.map(x=>`<div><span>${x[0]}</span><b>${x[1]}</b><small>${x[2]}</small></div>`).join('')}</div>
+ <h3 class="prt">Trois indicateurs, objectifs prudents</h3><p class="cap">Mesurés contre l’état initial, sur les ${P.p} presses pilotes. Rythme annuel et équivalent sur 6 semaines de mesure.</p>
+ <div class="prk">${kpi.map((x,i)=>`<div><p class="prn">${i+1}</p><h4>${x[0]}</h4><b>${x[1]}</b><span>${x[2]}</span><small>${x[3]}</small></div>`).join('')}</div>
+ <h3 class="prt">Règle de décision à la fin du pilote</h3>
+ <div class="prd"><div class="go"><b>Poursuivre</b><p>Au moins 2 indicateurs sur 3 atteignent leur objectif, et le gain extrapolé au parc reste au-dessus de 2 fois l’abonnement.</p></div><div class="aj"><b>Ajuster</b><p>Les indicateurs atteignent au moins la moitié de leur objectif : on recentre sur les presses et les causes qui rapportent, avant de déployer.</p></div><div class="st"><b>Arrêter</b><p>Moins de la moitié des objectifs : vous arrêtez, sans autre engagement que le pilote.</p></div></div>
+ <p class="prx">Extrapolé à votre parc, avec VP Expert sur les ${m.n} presses et VP Predict sur ${P.pk} presse${P.pk>1?'s':''} critique${P.pk>1?'s':''}${P.ls&&P.ls<100?` (supposées porter ${P.ls} % des pertes restantes)`:''}, le scénario prudent donne <b>${eur(P.pn)} de gain net par an</b>, soit <b>${String(P.pr).replace('.',',')} fois</b> les abonnements de ${eur(P.pc)}${ok?' : au-dessus du seuil d’engagement de 2 fois.':' : sous le seuil d’engagement de 2 fois. Le pilote doit d’abord montrer sur quelles presses le gain se concentre.'}${P.pa?` Abonnement VP Predict ensuite : ${eur(P.pf)} de part fixe par an (250 € par mois pour le site + 100 € par presse) + 25 % des rebuts évités vérifiés, estimés à ${eur(P.pv)} par an.`:''}</p>
+ <div class="btns" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px"><button class="btn primary" type="button" onclick="print()">Enregistrer la proposition en PDF</button><a class="btn ghost" href="tel:+33622154362">En parler : 06 22 15 43 62</a></div>
+ <p class="legal" style="margin-top:12px">Proposition indicative, à confirmer par écrit. Les objectifs reprennent les gains prudents du simulateur pour les presses pilotes, supposées choisies parmi les plus critiques ; l’équivalent sur 6 semaines suppose un rythme constant. Le crédit de 50 % du pilote s’applique à la part fixe de l’abonnement VP Predict de la première année, si la décision est de poursuivre. Aide soumise à l’éligibilité de l’entreprise et du prestataire.</p>
+ </section>`;};
+document.getElementById('poc').innerHTML=`<p class="eyebrow">Pilote VP Predict · ${RUB?'Moulage caoutchouc':'Injection thermoplastique'}</p>
+<h1>Préparer mon pilote</h1><img class="svimg" src="img/p-commencer.jpg" alt="Préparation du pilote entre un consultant et un responsable d’usine" width="900" height="675"><p class="lead">Le pilote vérifie sur vos presses ce que le simulateur ne fait qu’estimer : 3 mois, dont environ 6 semaines de mesure, avec des indicateurs fixés dès le départ. À la fin, vous décidez : poursuivre, ajuster ou arrêter.</p>
+${m?`<div class="sumbox"><p>Votre estimation · scénario ${({cible:'ambitieux'})[m.scen]||m.scen}</p><strong>${eur(m.net)} de gain net par an</strong><p>${m.n} presses, dont ${m.k} connectables sans mise à niveau (${m.c77} prêtes, ${m.c63} avec adaptateur). C’est le chiffre que le pilote doit confirmer.</p></div>${propHTML()}`:`<div class="card"><h3>Pas encore d’estimation</h3><p><a href="${RUB?'caoutchouc.html':'gains.html'}">Estimez vos gains en 3 minutes</a> : le chiffre s’affichera ici comme objectif du pilote.</p></div>`}
+<div class="grid"><div class="card"><h3>Un pilote de 3 mois, à moitié crédité</h3><p>Réservé aux clients VP Expert, sur 1 à 3 presses critiques${RUB?' (3 conseillées en caoutchouc)':' (2 conseillées)'}. Si vous poursuivez, la moitié du pilote est déduite de l’abonnement VP Predict de la première année : le pilote n’est pas un coût perdu. Le prix est fixé dans la proposition, après VP Scan ou sur devis.</p></div>
+<div class="card"><h3>Ensuite : un abonnement lié au résultat</h3><p>Seulement si le gain mesuré atteint au moins 2 fois l’abonnement. Une part fixe par site et par presse connectée, et une part variable calculée sur les économies de rebuts vérifiées sur vos relevés et attribuées à VP Predict. Vous ne payez la part variable que sur ce qui a été mesuré.</p></div>
+<div class="card"><h3>Pas sûr par où commencer ? VP Scan</h3><p>2 jours sur site : pertes chiffrées presse par presse, qualité de vos données, presses critiques désignées pour le pilote et feuille de route. Finançable à 50 % par la Région Auvergne-Rhône-Alpes. La mise en place VP Expert est offerte après un VP Scan.</p></div>
+<div class="card"><h3>Ce que le pilote ne fait pas</h3><p>Aucun réglage modifié automatiquement : l’outil propose, le régleur décide. Rien ne sort de l’usine sans votre accord.</p></div>
+<div class="aides reveal" aria-label="Aides possibles"><h2>Aides possibles pour votre projet</h2>
+<div class="aidg">
+<div class="aid"><p class="aio">Région Auvergne-Rhône-Alpes et État</p><h4>Industrie du Futur</h4><p class="aim">Jusqu’à 16 000 €</p><p>50 % d’un accompagnement plafonné à 32 000 €. Peut financer le pilote. TPE, PME et ETI à activité manufacturière, site de production en Auvergne-Rhône-Alpes.</p></div>
+<div class="aid"><p class="aio">Bpifrance · France 2030</p><h4>Diag Data IA<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Diagnostic de vos données et des usages de l’IA : 8 jours d’intervention sur 3 mois au plus, par un expert agréé et désigné par Bpifrance. Coût 10 000 € HT, dont 40 % financés : il reste 6 000 € HT à votre charge."></span></button></h4><p class="aim">40 % de 10 000 € HT</p><p>Diagnostic data et IA en amont du projet, 6 000 € HT restant à charge. Entreprises de 10 à 2 000 salariés, plus de 1 M€ de chiffre d’affaires.</p></div>
+<div class="aid"><p class="aio">Bpifrance · Osez l’IA</p><h4>Accélérateur IA<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Programme de 18 mois pour les dirigeants : accompagnement individuel, formations et réseau, environ 2 jours par trimestre. Subventionné à 41 % par France 2030. Promotions limitées, entrée sur candidature et sélection."></span></button></h4><p class="aim">41 % pris en charge</p><p>Programme de 18 mois pour les dirigeants de PME et ETI industrielles, sur candidature et sélection.</p></div>
+</div>
+<p class="aidr">Sous réserve de l’éligibilité de votre entreprise, du référencement du prestataire et de l’accord de chaque organisme. Montants et conditions publiés en octobre 2026, susceptibles d’évoluer : <a href="https://les-aides.fr/aide/YEIf3w/region-auvergne-rhone-alpes/etre-accompagne-dans-mon-projet-industrie-du-futur.html" target="_blank" rel="noopener">Industrie du Futur</a>, <a href="https://diag.bpifrance.fr/diag-data-ia" target="_blank" rel="noopener">Diag Data IA</a>, <a href="https://conseil.bpifrance.fr/accelerateurs/accelerateurs-intelligence-artificielle" target="_blank" rel="noopener">Accélérateur IA</a>.</p>
+</div></div>
+<h2>Ce que le pilote teste</h2><div class="vpcmp"><div class="vpc pr"><p class="vpt">VP Predict</p><p class="vpq">Repère la dérive</p><ul><li>Connexion de 1 à 3 presses</li><li>Référence de chaque mesure, seuils réglés sur vos données</li><li>Alertes au régleur : vraies alertes, fausses alertes, avance gagnée sur le rebut</li></ul></div><div class="vplus" aria-hidden="true">+</div><div class="vpc ex"><p class="vpt">VP Expert</p><p class="vpq">Dit quoi faire</p><ul><li>Causes classées et contrôles dans l’ordre à chaque alerte</li><li>Actions suivies, retour au réglage d’origine si elles échouent</li><li>Base enrichie par les cas confirmés de vos régleurs</li></ul></div></div>
+<h2>Le déroulé</h2><ol class="tl"><li><b>Semaine 0</b>Qualification gratuite : avis go / no go</li><li><b>Mois 1</b>Connexion, 3 semaines de mesure de référence, état initial chiffré en euros<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="La photo de départ : rebuts, arrêts et temps de réglage relevés avant toute action. C’est la base du « avant / après »."></span></button>, données fiabilisées</li><li><b>Mois 2 à 3</b>Environ 6 semaines de mesure des gains : VP Predict repère les dérives et alerte le régleur, VP Expert dit quoi faire, actions suivies</li><li><b>Fin du mois 3</b>Revue de décision avec la direction : gain mesuré contre l’état initial, taux de fausses alertes, avance gagnée sur le rebut. Poursuivre (50 % du pilote crédités), ajuster le périmètre ou arrêter sans autre engagement</li></ol>
+<h2>Les données à préparer</h2><div class="grid">${data.map(d=>`<div class="card"><p>${d}</p></div>`).join('')}</div>
+<h2>Ma liste avant le lancement</h2><div class="chk">${chk.map((c,i)=>`<label><input type="checkbox" data-i="${i}">${c}</label>`).join('')}</div>
+<div class="btns" style="margin-top:22px;display:flex;flex-wrap:wrap;gap:10px"><a class="btn primary" href="tel:+33622154362">Appeler le 06 22 15 43 62</a><button class="btn ghost" type="button" onclick="print()">Enregistrer en PDF</button></div>
+<section class="qual" id="rdv" aria-labelledby="qh"><h2 id="qh">Demander un rendez-vous de qualification</h2><p class="cap">Gratuit, 30 minutes au téléphone : on vérifie ensemble que le pilote a du sens pour votre usine avant toute proposition.</p>
+<form id="qf" class="qg"><label>Société<input name="soc" required maxlength="80" autocomplete="organization"></label><label>Nom<input name="nom" required maxlength="80" autocomplete="name"></label><label>Téléphone<input name="tel" required type="tel" maxlength="20" autocomplete="tel"></label><label>Nombre de presses<input name="np" type="number" min="1" max="500" value="${m?m.n:''}"></label>
+<label>Presses connectables (Euromap 77 ou 63)<select name="cx"><option>Je ne sais pas</option><option>Aucune</option><option>Quelques-unes</option><option>La plupart</option></select></label>
+<label>Votre priorité<select name="pb"><option>Un défaut qui revient</option><option>Anticiper les dérives</option><option>Chiffrer mes pertes</option><option>Autre</option></select></label>
+<label>Échéance<select name="ech"><option>Ce trimestre</option><option>Dans 6 mois</option><option>Dans l’année</option><option>Pas encore définie</option></select></label>
+<label>Créneau de rappel<select name="cr"><option>Matin</option><option>Midi</option><option>Après-midi</option><option>Peu importe</option></select></label>
+<div class="qb"><button class="btn primary" type="submit">Envoyer ma demande par SMS</button><button class="btn ghost" type="button" id="qcopy">Copier le récapitulatif</button></div><p class="hint" id="qmsg" aria-live="polite">Votre demande part par SMS au 06 22 15 43 62. Rien n’est enregistré sur ce site.</p></form></section>
+<p class="legal">Démonstrateur : montants et calendrier indicatifs, à confirmer dans la proposition. Aides soumises à l’éligibilité de l’entreprise et du prestataire.</p>`;
+})();
+</script>
+<script>
+(function(){const f=document.getElementById('qf');if(!f)return;
+const txt=()=>{const d=new FormData(f);return `Demande de qualification Vella Partners\nSociété : ${d.get('soc')}\nNom : ${d.get('nom')}\nTél : ${d.get('tel')}\nPresses : ${d.get('np')||'?'} · connectables : ${d.get('cx')}\nPriorité : ${d.get('pb')}\nÉchéance : ${d.get('ech')}\nRappel : ${d.get('cr')}`;};
+f.onsubmit=e=>{e.preventDefault();location.href='sms:+33622154362?&body='+encodeURIComponent(txt());document.getElementById('qmsg').textContent='Votre application de messages s’ouvre avec la demande préremplie : il reste à l’envoyer.';};
+document.getElementById('qcopy').onclick=()=>{if(!f.reportValidity())return;navigator.clipboard.writeText(txt()).then(()=>{document.getElementById('qmsg').textContent='Récapitulatif copié : collez-le dans un SMS ou un e-mail.';});};})();
+</script>
+<script src="tips.js"></script>
+<script src="typo.js"></script>
+<script src="anim.js?v=13"></script><script data-pplx-inline-edit>
+(function () {
+  if (window === window.top) return;
+
+  const allowedParentOrigins = ["https://www.perplexity.ai","https://perplexity.ai","https://testing.perplexity.ai","https://staging.perplexity.ai","https://*.preview.i.perplexity.ai","http://perplexity.localhost","http://localhost:1420","http://127.0.0.1:1420","http://localhost:3000","http://127.0.0.1:3000","http://localhost:5173","http://127.0.0.1:5173"];
+  const MAX_FONT_BYTES = 500 * 1024;
+  const MAX_TOTAL_FONT_BYTES = 2 * 1024 * 1024;
+  const DEFAULT_LINE_HEIGHT = 16;
+  let scrollForwarding = false;
+  let scrollRaf = 0;
+  let trustedTopOrigin = null;
+
+  // Allow entries like "https://*.preview.i.perplexity.ai" — the wildcard
+  // matches a single DNS label (no dots), so "https://*.foo" cannot stretch
+  // across multiple labels.
+  function matchesAllowedOrigin(origin) {
+    if (!origin) return false;
+    for (const entry of allowedParentOrigins) {
+      if (!entry.includes("*")) {
+        if (entry === origin) return true;
+        continue;
+      }
+      const pattern = new RegExp(
+        "^" +
+          entry.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[^.]+") +
+          "$",
+      );
+      if (pattern.test(origin)) return true;
+    }
+    return false;
+  }
+
+  // Trust decision: when the sender is same-origin-visible (event.origin is a
+  // real origin like https://www.perplexity.ai) we trust event.origin directly.
+  // When event.origin is "null" (opaque broker srcdoc), we fall back to the
+  // broker's stamped `parentOrigin` to identify the top window. The fallback
+  // is claim-only — we rely on the browser's native `targetOrigin` enforcement
+  // on the response path (see postToTrustedTop) to ensure replies can't be
+  // delivered to anyone but the actual top window of that claimed origin.
+  function getTrustedParentOrigin(event) {
+    const forwardedParentOrigin =
+      typeof event.data.parentOrigin === "string" ? event.data.parentOrigin : null;
+    const parentOrigin = event.origin === "null" ? forwardedParentOrigin : event.origin;
+    return matchesAllowedOrigin(parentOrigin) ? parentOrigin : null;
+  }
+
+  // All responses go to window.top with targetOrigin = the allowlisted origin.
+  // An attacker that iframes us inside their own null-origin broker can claim
+  // any parentOrigin they like, but the browser will drop the reply whenever
+  // the real top's origin doesn't match — so the screenshot never leaves.
+  function postToTrustedTop(message) {
+    if (!trustedTopOrigin) return;
+    try {
+      window.top.postMessage(message, trustedTopOrigin);
+    } catch (_error) {}
+  }
+
+  const PICK_CAPABILITIES = ["pick"];
+  const PICK_CHAIN_LENGTH = 4;
+  const PICK_MAX_TEXT_CHARS = 120;
+  const PICK_MAX_HTML_CHARS = 300;
+
+  function truncate(value, maxChars) {
+    return value.length > maxChars ? value.slice(0, maxChars - 1) + "…" : value;
+  }
+
+  function isPickableElement(element) {
+    return (
+      element instanceof Element &&
+      element !== document.documentElement &&
+      element !== document.body
+    );
+  }
+
+  function resolvePickTarget(x, y) {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+    const element = document.elementFromPoint(x, y);
+    return isPickableElement(element) ? element.closest("svg") || element : null;
+  }
+
+  function pickLabel(element) {
+    if (element.id) return element.localName + "#" + element.id;
+    return [element.localName].concat(Array.from(element.classList).slice(0, 2)).join(".");
+  }
+
+  // Only attributes that help find the element in source. data-* values and URL
+  // query strings or fragments can carry tokens.
+  const PICK_ATTRIBUTES = new Set([
+    "id",
+    "class",
+    "name",
+    "type",
+    "role",
+    "alt",
+    "aria-label",
+    "href",
+    "src",
+  ]);
+
+  function pickAttributeValue(attribute) {
+    return attribute.name === "href" || attribute.name === "src"
+      ? attribute.value.split(/[?#]/)[0]
+      : attribute.value;
+  }
+
+  function describePickElement(element) {
+    const chain = [];
+    for (
+      let current = element;
+      isPickableElement(current) && chain.length < PICK_CHAIN_LENGTH;
+      current = current.parentElement
+    ) {
+      chain.unshift(current);
+    }
+    const attributes = Array.from(element.attributes)
+      .filter((attribute) => PICK_ATTRIBUTES.has(attribute.name))
+      .map((attribute) => ` ${attribute.name}="${pickAttributeValue(attribute).replace(/"/g, "&quot;")}"`)
+      .join("");
+    const text = (element.innerText || element.textContent || "").replace(/\s+/g, " ").trim();
+    return {
+      chain: chain.map(pickLabel),
+      html: truncate(`<${element.localName}${attributes}>`, PICK_MAX_HTML_CHARS),
+      text: text ? truncate(text, PICK_MAX_TEXT_CHARS) : undefined,
+    };
+  }
+
+  // Hover asks once per frame, and innerText on a large section forces layout,
+  // so only the rect is re-read while the pointer stays on the same element.
+  // Clicks ask for fresh details since the page may have changed the element.
+  let lastPick = null;
+
+  function describePickTarget(element, fresh) {
+    if (fresh || lastPick?.element !== element) {
+      lastPick = { element, details: describePickElement(element) };
+    }
+    const rect = element.getBoundingClientRect();
+    return {
+      rect: { x: rect.left, y: rect.top, width: rect.width, height: rect.height },
+      ...lastPick.details,
+    };
+  }
+
+  function inlineAll(original, clone) {
+    if (original.nodeType !== 1 || clone.nodeType !== 1) return;
+
+    try {
+      const computedStyle = getComputedStyle(original);
+      // cssText on a computed style is the serialized declaration in modern
+      // Chromium/Safari — a single read beats enumerating ~400 longhand
+      // properties. Firefox returns "" here, so we fall back on empty.
+      const serialized = computedStyle.cssText;
+      if (serialized) {
+        clone.style.cssText = serialized;
+      } else {
+        const parts = new Array(computedStyle.length);
+        for (let index = 0; index < computedStyle.length; index += 1) {
+          const property = computedStyle[index];
+          parts[index] = `${property}:${computedStyle.getPropertyValue(property)};`;
+        }
+        clone.style.cssText = parts.join("");
+      }
+    } catch (_error) {}
+
+    const originalChildren = original.children;
+    const clonedChildren = clone.children;
+    for (
+      let index = 0;
+      index < originalChildren.length && index < clonedChildren.length;
+      index += 1
+    ) {
+      inlineAll(originalChildren[index], clonedChildren[index]);
+    }
+  }
+
+  function extractFontUrl(srcValue) {
+    const matches = [
+      ...srcValue.matchAll(
+        /url\(["']?([^"')]+)["']?\)(?:\s*format\(["']?([^"')]+)["']?\))?/gi,
+      ),
+    ];
+    if (matches.length === 0) return null;
+    const woff2 = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff2"));
+    if (woff2) return woff2[1];
+    const woff = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff"));
+    if (woff) return woff[1];
+    return matches[0][1];
+  }
+
+  // Cache resolved font URL -> data URI across captures. Fonts on a page
+  // essentially never change, and a batch run emits multiple captures back to
+  // back — without this we'd refetch + re-base64 every time.
+  const fontDataUriCache = new Map();
+  const SRC_DECLARATION_RE = /src\s*:\s*[^;}]+/i;
+
+  async function fetchAsDataUri(url) {
+    if (fontDataUriCache.has(url)) return fontDataUriCache.get(url);
+    let dataUri = null;
+    try {
+      const response = await fetch(url, { mode: "cors", credentials: "omit" });
+      if (response.ok) {
+        const blob = await response.blob();
+        if (blob.size <= MAX_FONT_BYTES) {
+          dataUri = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () =>
+              resolve(typeof reader.result === "string" ? reader.result : null);
+            reader.onerror = () => resolve(null);
+            reader.readAsDataURL(blob);
+          });
+        }
+      }
+    } catch (_error) {
+      dataUri = null;
+    }
+    fontDataUriCache.set(url, dataUri);
+    return dataUri;
+  }
+
+  function collectFontFaceRuleTexts() {
+    const rules = [];
+    for (const sheet of document.styleSheets) {
+      let cssRules;
+      try {
+        cssRules = sheet.cssRules;
+      } catch (_error) {
+        continue;
+      }
+      if (!cssRules) continue;
+      for (const rule of cssRules) {
+        const cssText = rule.cssText || "";
+        if (cssText.startsWith("@font-face")) rules.push(cssText);
+      }
+    }
+    return rules;
+  }
+
+  async function buildInlinedFontCss() {
+    const ruleTexts = collectFontFaceRuleTexts();
+    if (ruleTexts.length === 0) return null;
+
+    const resolved = ruleTexts.map((cssText) => {
+      if (!SRC_DECLARATION_RE.test(cssText)) return null;
+      const srcMatch = cssText.match(/src\s*:\s*([^;}]+)[;}]/i);
+      if (!srcMatch) return null;
+      const url = extractFontUrl(srcMatch[1]);
+      if (!url) return null;
+      try {
+        return { cssText, url: new URL(url, document.baseURI).href };
+      } catch (_error) {
+        return null;
+      }
+    });
+
+    const dataUris = await Promise.all(
+      resolved.map((entry) => (entry ? fetchAsDataUri(entry.url) : Promise.resolve(null))),
+    );
+
+    const inlined = [];
+    let totalBytes = 0;
+    for (let index = 0; index < resolved.length; index += 1) {
+      const entry = resolved[index];
+      const dataUri = dataUris[index];
+      if (!entry || !dataUri) continue;
+      const approxBytes = dataUri.length * 0.75;
+      if (totalBytes + approxBytes > MAX_TOTAL_FONT_BYTES) break;
+      totalBytes += approxBytes;
+      inlined.push(entry.cssText.replace(SRC_DECLARATION_RE, `src: url("${dataUri}")`));
+    }
+    return inlined.length > 0 ? inlined.join("\n") : null;
+  }
+
+  function stripExternal(clone) {
+    const images = clone.querySelectorAll("img");
+    for (let index = 0; index < images.length; index += 1) {
+      const src = images[index].getAttribute("src");
+      if (src && !src.startsWith("data:")) images[index].removeAttribute("src");
+    }
+
+    const elements = clone.querySelectorAll("*");
+    for (let index = 0; index < elements.length; index += 1) {
+      const style = elements[index].style.cssText;
+      if (style && style.includes("url(")) {
+        elements[index].style.cssText = style.replace(
+          /url\(["']?(?!data:)[^)"']*["']?\)/gi,
+          "none",
+        );
+      }
+    }
+  }
+
+  function emitScroll() {
+    scrollRaf = 0;
+    if (!scrollForwarding) return;
+    postToTrustedTop({
+      type: "INLINE_EDIT_SCROLL",
+      scrollX: window.scrollX,
+      scrollY: window.scrollY,
+      capabilities: PICK_CAPABILITIES,
+    });
+  }
+
+  window.addEventListener(
+    "scroll",
+    function () {
+      if (!scrollForwarding || scrollRaf) return;
+      scrollRaf = requestAnimationFrame(emitScroll);
+    },
+    { passive: true, capture: true },
+  );
+
+  async function handleCaptureRequest(event) {
+    const requestId = event.data.requestId;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    function postResult(dataUrl) {
+      postToTrustedTop({
+        type: "INLINE_EDIT_SCREENSHOT_RESULT",
+        requestId,
+        dataUrl,
+        scrollX,
+        scrollY,
+      });
+    }
+
+    try {
+      // Wait for any pending web fonts to resolve so both inline metrics and
+      // the @font-face inlining below see the same loaded faces.
+      if (document.fonts && document.fonts.ready) {
+        try {
+          await document.fonts.ready;
+        } catch (_error) {}
+      }
+
+      const clone = document.documentElement.cloneNode(true);
+      inlineAll(document.documentElement, clone);
+
+      const removedNodes = clone.querySelectorAll("script,link[rel=\"stylesheet\"],style");
+      for (let index = 0; index < removedNodes.length; index += 1) {
+        removedNodes[index].remove();
+      }
+
+      stripExternal(clone);
+
+      // Re-embed web fonts as data-URI @font-face rules so the SVG rasterizer
+      // can resolve them — external font URLs aren't fetched during
+      // foreignObject rendering, which would otherwise force a fallback face
+      // and change text metrics.
+      const inlinedFontCss = await buildInlinedFontCss();
+      if (inlinedFontCss) {
+        const styleEl = document.createElement("style");
+        styleEl.textContent = inlinedFontCss;
+        const head = clone.querySelector("head");
+        if (head) head.appendChild(styleEl);
+        else clone.insertBefore(styleEl, clone.firstChild);
+      }
+
+      const html = new XMLSerializer().serializeToString(clone);
+      const svg =
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">` +
+        '<foreignObject width="100%" height="100%">' +
+        `<div xmlns="http://www.w3.org/1999/xhtml" style="width:${width}px;height:${height}px;overflow:hidden">` +
+        `<div style="position:relative;left:-${scrollX}px;top:-${scrollY}px">` +
+        html +
+        "</div></div></foreignObject></svg>";
+      const svgUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      const image = new Image();
+      image.onload = function () {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(image, 0, 0);
+        postResult(canvas.toDataURL("image/png"));
+      };
+      image.onerror = function () {
+        postResult(null);
+      };
+      image.src = svgUrl;
+    } catch (_error) {
+      postResult(null);
+    }
+  }
+
+  window.addEventListener("message", function (event) {
+    if (!event.data) return;
+    // Only accept messages from the direct parent frame. Blocks sibling /
+    // unrelated-window postMessage senders that could otherwise reach us.
+    if (event.source !== window.parent) return;
+
+    const trustedParentOrigin = getTrustedParentOrigin(event);
+    if (!trustedParentOrigin) return;
+    trustedTopOrigin = trustedParentOrigin;
+
+    if (event.data.type === "INLINE_EDIT_PICK") {
+      const element = resolvePickTarget(event.data.x, event.data.y);
+      postToTrustedTop({
+        type: "INLINE_EDIT_PICK_RESULT",
+        seq: event.data.seq,
+        target: element ? describePickTarget(element, event.data.fresh === true) : null,
+      });
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_START") {
+      scrollForwarding = true;
+      emitScroll();
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_STOP") {
+      scrollForwarding = false;
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
+      scrollRaf = 0;
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_BY") {
+      const { deltaX, deltaY, deltaMode } = event.data;
+      if (!scrollForwarding || !Number.isFinite(deltaX) || !Number.isFinite(deltaY)) return;
+      if (deltaMode !== 0 && deltaMode !== 1 && deltaMode !== 2) return;
+      const lineHeight =
+        parseFloat(getComputedStyle(document.documentElement).lineHeight) || DEFAULT_LINE_HEIGHT;
+      const scaleX = deltaMode === 1 ? lineHeight : deltaMode === 2 ? window.innerWidth : 1;
+      const scaleY = deltaMode === 1 ? lineHeight : deltaMode === 2 ? window.innerHeight : 1;
+      // The selection overlay receives the wheel event instead of this iframe.
+      // Instant scrolling preserves trackpad deltas even on smooth-scroll sites.
+      window.scrollBy({ left: deltaX * scaleX, top: deltaY * scaleY, behavior: "instant" });
+      emitScroll();
+      return;
+    }
+
+    if (event.data.type !== "INLINE_EDIT_CAPTURE_REQUEST") return;
+
+    handleCaptureRequest(event);
+  });
+})();
+
+
+</script><script src="signature.js?v=2"></script>
+</body>
+</html>
