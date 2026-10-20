@@ -100,14 +100,14 @@ function draw3(){
  h+=ans<2?'<p class="sl">Répondez à au moins deux questions pour classer les causes.</p>':list.length?head+'<div class="cl">'+list.slice(0,nShow).map((c,i)=>card(c,i,stOf(c),i===nxi)).join('')+'</div>':'<p class="sl">Aucune cause ne correspond encore à ces réponses : c’est un cas à ajouter à la base du site.</p>';
  if(ans>=2&&list.length>nShow)h+=`<p class="sl">${list.length-nShow} autre${list.length-nShow>1?'s':''} cause${list.length-nShow>1?'s':''} possible${list.length-nShow>1?'s':''}, voir le diagramme. Score de pertinence sur 100, calculé à partir des indices et des cas confirmés sur le site : ce n’est pas une probabilité. Une cause n’est confirmée qu’après contrôle.</p>`;
  const out=[];
- if(!d){if(S.qui==='qual')out.push('<b>Détecté par le service qualité après fabrication :</b> bloquer le lot concerné'+(S.etendue==='partie'?', retrouver par la traçabilité (heure, ordre de fabrication) la partie de série touchée':S.etendue==='tot'?' et trier la totalité de la série':'')+'.');
+ if(!d){if(S.qui==='qual')out.push('<span class="nvm"></span><b>Détecté par le service qualité après fabrication :</b> bloquer le lot concerné'+(S.etendue==='partie'?', retrouver par la traçabilité (heure, ordre de fabrication) la partie de série touchée':S.etendue==='tot'?' et trier la totalité de la série':'')+'.');
   if(S.qui==='client')out.push('<b>Détecté chez le client :</b> lancer le confinement (tri des stocks et en-cours) et informer la qualité.');
   if(S.qui==='aval')out.push('<b>Détecté en finition :</b> bloquer les en-cours entre presse et finition, prévenir le régleur.');
   if(S.combien==='toutes')out.push('<b>Toutes les pièces :</b> arrêt ou tri à 100 % le temps du contrôle.');
   if(S.vis==='refroid'&&isB())out.push('<b>Visible après refroidissement :</b> inhabituel pour une bavure, vérifier qu’il ne s’agit pas d’un retrait.');
   if(S.br==='sans'&&nMesOf())out.push(`<span class="vpx vpp">VP Predict</span> <b>Avec VP Predict</b>, ${nMesOf()} cause(s) liée(s) aux mesures passeraient en fin de liste si les mesures sont conformes, sans relevé manuel. <button type="button" class="lk" data-go="conforme">Voir avec les mesures</button>`);}
  else out.push('Une fois l’origine corrigée, vérifiez que le défaut disparaît. S’il persiste avec une mesure revenue dans sa plage : <button type="button" class="lk" data-go="conforme">enquête sur le défaut, mesures conformes</button>.');
- h+=out.map(o=>`<div class="emsg">${o}</div>`).join('');
+ h+=out.map(o=>`<div class="emsg${o.startsWith('<span class="nvm">')?' nv':''}">${o}</div>`).join('');
  if(S.br==='conforme'&&!d&&nMesOf())h+=`<p class="sl"><b>Moins probables, mesures conformes :</b> ${cands().filter(c=>c.t==='mes').map(c=>c.n.toLowerCase()).join(', ')}.</p>`;
  h+='<p class="pr"><button type="button" class="btn ghost sm" id="print">Imprimer la fiche d’enquête</button></p>';
  $('res').innerHTML=h;

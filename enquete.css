@@ -109,6 +109,25 @@ button.sc span{font-size:13.5px;color:var(--muted)}button.sc[aria-pressed=true]{
 .res.nc{background:#fbecec;color:#9b2c2c}.res.ok{background:var(--goodbg);color:var(--good)}
 #hist tr.ok td{color:var(--muted)}
 @media print{.acts,[data-fix],[data-hfix],[data-new]{display:none!important}}
-/* Mode revue (?revue) : ajouts v9.5 signalés en bleu */
-body.revue .nv{outline:2px dashed #1F5FA8;outline-offset:3px;border-radius:8px}
-body.revue .emain::before{content:"Mode revue : les ajouts de la version 9.5 sont encadrés en bleu";display:block;margin:0 0 12px;padding:8px 14px;border-radius:10px;background:#1F5FA8;color:#fff;font-weight:600;font-size:14px}
+/* Mode revue (?revue) : ajouts v9.5 en bleu Vella Partners (#1F5FA8), comme dans les autres documents */
+body.revue{--nvb:#1F5FA8;--nvbg:#EAF1FA}
+body.revue .nv{outline:0;background:var(--nvbg);border-left:4px solid var(--nvb);border-radius:10px;padding:6px 10px;color:var(--nvb)}
+body.revue .nv b,body.revue .nv .ql,body.revue .nv .ml,body.revue .nv .hint{color:var(--nvb)}
+body.revue .nv .opts button{border-color:#9db8dc;color:var(--nvb)}
+body.revue .nv .opts button[aria-pressed=true]{background:var(--nvb);border-color:var(--nvb);color:#fff}
+body.revue .nv .hint.warn{background:#dce8f7;color:var(--nvb)}
+body.revue span.nv,body.revue .tg.nv,body.revue .tfam.nv,body.revue .famlab.nv{padding:2px 9px;border-left:0;border-radius:999px;background:var(--nvb)!important;color:#fff!important}
+body.revue .qqoqc.nv{border:0}
+body.revue .acts.nv .bnc{background:var(--nvb)!important;border-color:var(--nvb)!important}
+body.revue .acts.nv .bok{background:#fff!important;border-color:var(--nvb)!important;color:var(--nvb)!important}
+body.revue .cst.nv{border-left-color:var(--nvb)}
+body.revue .cc.next{border-color:var(--nvb);box-shadow:0 0 0 3px #1F5FA833}
+body.revue #hist .nv{display:block}
+body.revue #hist th.nv{display:table-cell;background:var(--nvb);color:#fff;border-radius:0;padding:8px 10px}
+body.revue .res.nc,body.revue .res.ok{background:var(--nvbg);color:var(--nvb)}
+body.revue .emain::before{content:"Mode revue : les nouveautés de la version 9.5 sont en bleu";display:block;margin:0 0 12px;padding:8px 14px;border-radius:10px;background:#1F5FA8;color:#fff;font-weight:600;font-size:14px}
+body.revue .cc.found{border-color:var(--nvb);box-shadow:0 8px 22px #1F5FA81f}
+body.revue .nv .lk{color:var(--nvb)}
+body.revue #hist .lk{color:#1F5FA8}
+body.revue .famlab.nv{align-self:center;line-height:1.6;font-size:11px}
+body.revue #hist th.nv{border-left:0}
