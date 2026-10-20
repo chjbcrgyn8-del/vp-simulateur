@@ -131,3 +131,7 @@ body.revue .nv .lk{color:var(--nvb)}
 body.revue #hist .lk{color:#1F5FA8}
 body.revue .famlab.nv{align-self:center;line-height:1.6;font-size:11px}
 body.revue #hist th.nv{border-left:0}
+/* v9.6 caoutchouc : 4e thématique et bandeau de revue */
+.tfam.f-vul{background:#6d4f8f}.fams button.f-vul{border-left:4px solid #6d4f8f}
+body.revue.rc .emain::before{content:"Mode revue : le formalisme QQOQC repris du simulateur plastique est en bleu"}
+.dt.vul{border-left-color:#6d4f8f}

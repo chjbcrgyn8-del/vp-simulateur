@@ -11,7 +11,7 @@
 <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
 <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="enquete.css?v=8">
+<link rel="stylesheet" href="enquete.css?v=11">
 <link rel="stylesheet" href="premium.css?v=9">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -28,23 +28,22 @@
 <main class="emain">
 <header class="ehero"><p class="vpx">VP Expert · enquête défaut caoutchouc</p>
 <h1>J’ai un défaut sur une pièce : trouver la cause</h1>
-<p class="lead">Choisissez le défaut parmi les 16 défauts caoutchouc, répondez à quatre questions courtes : les causes se classent en pourcentage. Méthode QQOQC<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Quoi, Qui, Où, Quand, Comment, Combien : la méthode qualité classique pour décrire un défaut avant d’en chercher la cause."></span></button> et diagramme d’Ishikawa<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Diagramme en arête de poisson qui range les causes possibles par famille : matière, outillage, moyen, paramètres."></span></button>, les outils habituels du service qualité.</p></header>
-<ol class="esteps" aria-label="Étapes"><li data-n="1">Le défaut</li><li data-n="2">Les mesures</li><li data-n="3">Le contexte</li><li data-n="4">Leviers en %</li></ol>
+<p class="lead">Choisissez le défaut parmi les 16 défauts caoutchouc, décrivez-le avec la méthode QQOQC : les leviers se classent par score de pertinence. Méthode QQOQC<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Quoi, Qui, Où, Quand, Comment, Combien : la méthode qualité classique pour décrire un défaut avant d’en chercher la cause."></span></button> et diagramme d’Ishikawa<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Diagramme en arête de poisson qui range les causes possibles par famille : matière, outillage, moyen, paramètres."></span></button>, les outils habituels du service qualité.</p></header>
+<ol class="esteps" aria-label="Étapes"><li data-n="1">Le défaut</li><li data-n="2">Les mesures</li><li data-n="3">Enquête QQOQC</li><li data-n="4">Leviers à contrôler</li></ol>
 <section class="ebox" id="s0"><h2><span class="num">1</span> Quel défaut voyez-vous ?</h2><div class="dsr"><input id="dq" type="search" placeholder="Chercher : manque matière, bulles, adhérisation…" aria-label="Chercher un défaut"><div class="fams" id="fams"></div></div><div class="defs" id="defs"></div></section>
 <section class="ebox" id="s1"><h2><span class="num">2</span> Que disent les mesures de la presse ?</h2><p class="vpx vpp">VP Predict · repère la dérive</p><p class="sl vpline">Avec VP Predict, cette étape se remplit seule : les mesures arrivent de la presse et une dérive déclenche l’alerte. Sans VP Predict, VP Expert fonctionne quand même, à partir de ce que voit le régleur.</p><div class="sit" id="sit"></div><div id="drv"></div><p class="emsg" id="msg"></p></section>
-<section class="ebox" id="s2"><h2><span class="num">3</span> <span id="t2">Décrivez le défaut</span></h2><div id="qs"></div>
-<details class="opt" id="opt"><summary>Préciser (facultatif) : détecté par qui, combien de pièces</summary><div id="qopt"></div></details>
+<section class="ebox" id="s2"><h2><span class="num">3</span> <span id="t2">Enquête QQOQC</span><span class="qqoqc nv">Méthode QQOQC</span></h2><p class="sl qqline">Quoi, Qui, Où, Quand, Comment, Combien : six questions pour décrire le défaut avant d’en chercher la cause.</p><div id="qs"></div>
 <p class="fiche" id="fiche"></p></section>
 <section class="ebox" id="s3"><h2><span class="num">4</span> <span id="t3">Causes à contrôler, dans l’ordre</span><button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Score de pertinence sur 100, et non une probabilité : il est calculé à partir des indices concordants avec vos réponses et des cas déjà confirmés sur votre site (ici, pendant la démonstration). Une cause n’est confirmée qu’après contrôle."></span></button></h2><div id="res"></div></section>
 <section class="ebox" id="s4" hidden><h2 id="ititle">Diagramme d’Ishikawa</h2><p class="sl" id="ihint"></p><div class="ishi" id="ishi"></div>
 <p class="leg"><i class="s3"></i>3 indices ou plus <i class="s2"></i>2 indices <i class="s1"></i>1 indice <i class="x"></i>moins probable, mesures conformes</p></section>
-<section id="hist" hidden><h2>Causes confirmées dans cette démonstration</h2><div class="tw"><table><thead><tr><th>Heure</th><th>Défaut</th><th>Cause confirmée</th><th>Contrôle</th></tr></thead><tbody id="hb"></tbody></table></div></section>
+<section id="hist" hidden><h2>Contrôles enregistrés dans cette démonstration</h2><p class="sl nv">Seuls les contrôles non conformes alimentent les statistiques des causes du site, une fois par enquête. Une erreur de saisie se corrige avec « Corriger ».</p><div class="tw"><table><thead><tr><th>Heure</th><th>Défaut</th><th>Levier contrôlé</th><th class="nv">Résultat</th><th class="nv"></th></tr></thead><tbody id="hb"></tbody></table></div></section>
 <div class="vpduo"><div><p class="vpx">VP Expert</p><p><b>Dit quoi faire.</b> Étapes 1, 3 et 4 : défaut, contexte, causes classées. Sur toutes vos presses, sans connexion.</p></div><div><p class="vpx vpp">VP Predict</p><p><b>Repère la dérive.</b> Étape 2 : écarte d’office les causes liées aux mesures conformes, ou repère la dérive avant le rebut. Sur vos presses connectées.</p></div></div>
-<p class="duo">Démonstrateur. Défauts et ordre des leviers : référentiel de notre expert caoutchouc (16 défauts). Indices de contexte (Où, Quand, Comment) et contrôles détaillés : rédigés par Vella à partir de ce référentiel, en relecture par notre expert. <a href="savoir.html?secteur=caoutchouc">Voir le Savoir technique</a> · <a href="presse-caoutchouc.html">Simulateur presse caoutchouc (dérive en direct)</a></p>
+<p class="duo">Démonstrateur. Défauts et ordre des leviers : référentiel de notre expert caoutchouc (16 défauts). Indices de contexte (Où, Quand, Comment) et contrôles détaillés : rédigés par Vella Partners à partir de ce référentiel, en relecture par notre expert. <a href="savoir.html?secteur=caoutchouc">Voir le Savoir technique</a> · <a href="presse-caoutchouc.html">Simulateur presse caoutchouc (dérive en direct)</a></p>
 </main>
 <script src="ref-caoutchouc.js?v=8"></script>
 <script src="kb-caoutchouc.js"></script>
-<script src="enquete-c.js?v=8"></script>
+<script src="enquete-c.js?v=9"></script>
 <script src="tips.js"></script>
 <script src="typo.js"></script>
 <script src="anim.js?v=13"></script><script data-pplx-inline-edit>
