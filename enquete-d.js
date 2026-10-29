@@ -6,7 +6,7 @@
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const R=window.VELLA_REF_DEC,REF=R.defects,LV=R.levers,CFG=window.SIM_CFG,RU=CFG.rules||{};
-const FAM=[['dim','Dérives dimensionnelles · DC-01'],['out','Usure, ébréchure, casse · DC-04']];
+const FAM=[['dim','Dérives dimensionnelles'],['out','Coupe, outils et état de surface']];
 const OU=[['od','Diamètre extérieur'],['id','Alésage ou perçage'],['long','Longueur ou épaulement'],['fil','Filetage ou gorge'],['tout','Toutes les cotes']];
 const QUAND=[['demar','Au démarrage ou après un arrêt'],['serie','En cours de série'],['outil','Après un changement d’arête'],['lot','Après un changement de barre ou de lot'],['regl','Après un réglage ou une correction']];
 const FREQ=[['chaque','À chaque pièce'],['barre','Selon la position dans la barre'],['alea','Aléatoire']];
@@ -16,7 +16,7 @@ const COMBIEN=[['rare','Quelques pièces'],['part','Une part régulière'],['tou
 const MACH=[['canon','Poupée mobile avec canon'],['sans','Poupée mobile sans canon'],['fixe','Poupée fixe ou multibroche']];
 const LBL={};[OU,QUAND,FREQ,TERME,QUI,COMBIEN].forEach(l=>l.forEach(([v,t])=>LBL[v]=LBL[v]||t));
 const lab=(l,v)=>(l.find(x=>x[0]===v)||[,''])[1];
-const BR=['Mesure','Outil','Machine et thermique','Barre et matière','Programme et réglages'];
+const BR=['Mesure','Outil','Machine et thermique','Barre et matière','Programme et réglages','Expertise documentaire'];
 const S={def:'D01',fam:'all',qd:'',br:'sans',mach:'canon',param:'d',dir:'up',ou:'od',quand:'serie',freq:'chaque',terme:'moyen',qui:'op',combien:undefined};
 const HIST=[],REC={},OK={},NUM={};
 const base=()=>S.br==='derive'?'d|'+S.param+S.dir+'|'+S.mach:'p|'+S.def+'|'+S.mach;
@@ -113,7 +113,7 @@ function record(id,res){const K=KEY();REC[K]=REC[K]||{};OK[K]=OK[K]||{};if(REC[K
  const c=LAST.find(x=>x.id===id);if(!c)return;
  if(res==='nc')REC[K][id]=1;else OK[K][id]=1;
  HIST.unshift({key:K,id,r:res,g:c.gate,t:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),d:S.br==='derive'?CFG.params.find(p=>p.id===S.param).sn+(S.dir==='up'?' en hausse':' en baisse'):DEF().defect,c:c.n});}
-function render(){draw0();draw1();draw2();draw3();drawH();}
+function render(){draw0();draw1();draw2();draw3();drawH();window.dispatchEvent(new Event('vp:enquete-render'));}
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
  if(b.dataset.fam){S.fam=b.dataset.fam;draw0();return}
  if(b.dataset.def){S.def=b.dataset.def;render();if(innerWidth<760)$('s1').scrollIntoView({behavior:'smooth'});return}
@@ -130,4 +130,5 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
 $('dq').addEventListener('input',e=>{S.qd=e.target.value;draw0()});
 document.body.classList.add('rc');
 render();
+window.VPConsolidation?.bind({sector:'DC',S,REC,OK,NUM,HIST,render,cands,KEY,choices:{def:REF.map(d=>d.tab),fam:['all',...FAM.map(x=>x[0])],qd:'text',br:SIT.map(x=>x[0]),mach:MACH.map(x=>x[0]),param:CFG.params.map(p=>p.id),dir:['up','down'],...Object.fromEntries(Object.entries({ou:OU,quand:QUAND,freq:FREQ,terme:TERME,qui:QUI,combien:COMBIEN}).map(([k,v])=>[k,v.map(x=>x[0])]))}});
 })();

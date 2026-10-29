@@ -30,11 +30,11 @@ const RULES=[
  [/^Force de fermeture/,'Presse et réglages',null,{ou:['joint'],quand:['maint'],freq:['chaque']},'Vérifier la force de fermeture réelle et le verrouillage.'],
  [/^Ouverture du moule/,'Moule',null,{ou:['joint'],quand:['maint']},'Contrôler l’ouverture au plan de joint (point de sécurité) et l’état du plan de joint.'],
  [/^Température du moule/,'Moule','mo',{ou:['tout','meme'],quand:['demar']},'Mesurer la température réelle du moule au pyromètre de contact et la comparer aux sondes.'],
- [/^Volume d'injection/,'Presse et réglages',null,{ou:['fin'],freq:['alea']},'Comparer volume injecté et dosage à la fiche ; vérifier le matelas.'],
+ [/^Volume d'injection/,'Presse et réglages',null,{ou:['fin'],freq:['alea']},'Identifier l’architecture et les conventions de dosage dans la notice avant de comparer les quantités. Ne pas transposer le matelas thermoplastique au procédé caoutchouc.'],
  [/^Inserts/,'Pièce et inserts',null,{ou:['ins'],freq:['alea'],quand:['lot']},'Contrôler les inserts du lot : géométrie, dimensions, préparation.'],
  [/^Géométrie de la pièce/,'Pièce et inserts',null,{ou:['meme'],terme:['long'],freq:['chaque']},'Repérer la zone sur le plan pièce : épaisseur, angle, accès matière.'],
  [/^Défaut de conception/,'Moule',null,{ou:['meme'],terme:['long'],freq:['chaque']},'Relire avec l’outilleur la conception de la zone : évents, canaux, équilibrage.'],
- [/^Temps de vulcanisation/,'Presse et réglages','vu',{ou:['tout'],freq:['chaque']},'Comparer le temps de vulcanisation à la fiche et au T90 du lot.'],
+ [/^Temps de vulcanisation/,'Presse et réglages','vu',{ou:['tout'],freq:['chaque']},'Comparer le cycle à la gamme validée et documenter matière, épaisseur et histoire thermique. Le T90 au rhéomètre ne constitue pas un temps directement transposable à la presse.'],
  [/^Agent d'adhérisation/,'Pièce et inserts',null,{ou:['ins'],quand:['lot'],terme:['court']},'Vérifier l’application et la date de l’agent d’adhérisation sur les inserts.'],
  [/^Temps/,'Presse et réglages',null,{freq:['chaque'],quand:['demar']},'Comparer le temps et la vitesse d’ouverture du moule à la fiche (cinématique de démoulage).']
 ];
@@ -124,7 +124,7 @@ function record(id,res){const K=KEY();REC[K]=REC[K]||{};OK[K]=OK[K]||{};if(REC[K
  const c=LAST.find(x=>x.id===id);if(!c)return;
  if(res==='nc')REC[K][id]=1;else OK[K][id]=1;
  HIST.unshift({key:K,id,r:res,t:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),d:S.br==='derive'?CFG.params.find(p=>p.id===S.param).n+(S.dir==='up'?' en hausse':' en baisse'):NAME(DEF()),c:c.n});}
-function render(){draw0();draw1();draw2();draw3();drawH();}
+function render(){draw0();draw1();draw2();draw3();drawH();window.dispatchEvent(new Event('vp:enquete-render'));}
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
  if(b.id==='more'){S.more=true;draw0();return}
  if(b.dataset.fam){S.fam=b.dataset.fam;draw0();return}
@@ -142,4 +142,5 @@ $('dq').addEventListener('input',e=>{S.qd=e.target.value;draw0()});
 document.body.classList.add('rc');
 if(/[?&]revue\b/.test(location.search))document.body.classList.add('revue');
 render();
+window.VPConsolidation?.bind({sector:'CA',S,REC,OK,NUM,HIST,render,cands,KEY,choices:{def:REF.map(d=>d.tab),fam:['all',...FAM.map(x=>x[0])],qd:'text',more:'boolean',br:SIT.map(x=>x[0]),param:CFG.params.map(p=>p.id),dir:['up','down'],...Object.fromEntries(Object.entries({ou:OU,quand:QUAND,freq:FREQ,terme:TERME,qui:QUI,combien:COMBIEN}).map(([k,v])=>[k,v.map(x=>x[0])]))}});
 })();

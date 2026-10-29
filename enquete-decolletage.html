@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Enquête défaut décolletage · VP Expert · Vella Partners</title>
-<meta name="description" content="Choisissez le défaut parmi 16 défauts de décolletage (dérives dimensionnelles, usure et casse d’outil), décrivez-le avec la méthode QQOQC : les leviers se classent par score de pertinence. Méthode QQO">
+<meta name="description" content="Choisissez le défaut parmi 19 défauts et situations documentaires de décolletage, décrivez-le avec la méthode QQOQC : les leviers suivent un ordre de contrôle illustratif. Méthode QQO">
 <meta name="theme-color" content="#0a1320">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="Vella Partners">
 <meta property="og:title" content="Enquête défaut décolletage · VP Expert · Vella Partners">
-<meta property="og:description" content="Choisissez le défaut parmi 16 défauts de décolletage (dérives dimensionnelles, usure et casse d’outil), décrivez-le avec la méthode QQOQC : les leviers se classent par score de pertinence. Méthode QQO">
+<meta property="og:description" content="Choisissez le défaut parmi 19 défauts et situations documentaires de décolletage, décrivez-le avec la méthode QQOQC : les leviers suivent un ordre de contrôle illustratif. Méthode QQO">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -39,7 +39,7 @@
 <p class="sl">Démonstration : classements illustratifs non calibrés. Référentiel candidat issu d’une recherche documentaire non validée : aucune règle n’est approuvée par un expert décolletage. Un constat ne prouve pas une cause. Les contrôles et actions doivent être validés pour la machine, la matière et l’outil concernés avant toute intervention réelle.</p>
 <header class="ehero"><p class="vpx">VP Expert · enquête défaut décolletage</p>
 <h1>J’ai un défaut sur une pièce : trouver la cause</h1>
-<p class="lead">Choisissez le défaut parmi 16 défauts de décolletage (dérives dimensionnelles, usure et casse d’outil), décrivez-le avec la méthode QQOQC : les leviers se classent par score de pertinence. Méthode QQOQC<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Quoi, Qui, Où, Quand, Comment, Combien : la méthode qualité classique pour décrire un défaut avant d’en chercher la cause."></span></button> et diagramme d’Ishikawa<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Diagramme en arête de poisson qui range les causes possibles par famille : mesure, outil, machine et thermique, barre et matière, programme et réglages."></span></button>, les outils habituels du service qualité.</p></header>
+<p class="lead">Choisissez le défaut parmi 19 défauts et situations documentaires de décolletage, décrivez-le avec la méthode QQOQC : les leviers suivent un ordre de contrôle illustratif. Méthode QQOQC<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Quoi, Qui, Où, Quand, Comment, Combien : la méthode qualité classique pour décrire un défaut avant d’en chercher la cause."></span></button> et diagramme d’Ishikawa<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Diagramme en arête de poisson qui range les causes possibles par famille : mesure, outil, machine et thermique, barre et matière, programme et réglages."></span></button>, les outils habituels du service qualité.</p></header>
 <ol class="esteps" aria-label="Étapes"><li data-n="1">Le défaut</li><li data-n="2">Les mesures</li><li data-n="3">Enquête QQOQC</li><li data-n="4">Leviers à contrôler</li></ol>
 <section class="ebox" id="s0"><h2><span class="num">1</span> Quel défaut voyez-vous ?</h2><div class="dsr"><input id="dq" type="search" placeholder="Chercher : diamètre, ébréchure…" aria-label="Chercher un défaut"><div class="fams" id="fams"></div></div><div class="defs" id="defs"></div><div id="mach"></div></section>
 <section class="ebox" id="s1"><h2><span class="num">2</span> Que disent les mesures de la machine ?</h2><p class="vpx vpp">VP Predict · repère la dérive</p><p class="sl vpline">Avec VP Predict, cette étape se remplit seule : les mesures arrivent de la CNC et du contrôle post-process, et une dérive déclenche l’alerte. Sans VP Predict, VP Expert fonctionne quand même, à partir de ce que mesurent le régleur et l’opérateur.</p><div class="sit" id="sit"></div><div id="drv"></div><p class="emsg" id="msg"></p></section>
@@ -54,10 +54,14 @@
 </main>
 <script src="ref-decolletage.js?v=2"></script>
 <script src="kb-decolletage.js?v=4"></script>
-<script src="enquete-d.js?v=3"></script>
+<link rel="stylesheet" href="vp-expert-consolide.css?v=1">
+<script src="decolletage-data.js"></script><script src="decolletage-cas-complet.js"></script>
+<script src="vp-expert-dc-complements.js?v=1"></script>
+<script src="vp-expert-consolide.js?v=1"></script>
+<script src="enquete-d.js?v=consolide-1"></script>
 <script src="tips.js"></script>
 <script src="typo.js"></script>
 <script src="ux.js?v=20261029-ux"></script>
-<script src="vp-documentary-entry.js?v=20261029-r2"></script>
+<script src="vp-documentary-entry.js?v=20261030-consolide-r1"></script>
 </body>
 </html>

@@ -122,7 +122,7 @@ function record(id,res){const K=KEY();REC[K]=REC[K]||{};OK[K]=OK[K]||{};if(REC[K
  const c=/^d\d/.test(id)?DRV[+id.slice(1)]:cands().find(x=>x.id===id);if(!c)return;
  if(res==='nc')REC[K][id]=1;else OK[K][id]=1;
  HIST.unshift({key:K,id,r:res,t:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),d:S.br==='derive'?lab(PROC,S.param)+' dérive':S.def,c:c.n});}
-function render(){draw0();draw1();draw2();draw3();drawH();}
+function render(){draw0();draw1();draw2();draw3();drawH();window.dispatchEvent(new Event('vp:enquete-render'));}
 document.addEventListener('click',e=>{
  const b=e.target.closest('button');if(!b)return;
  if(b.dataset.def){S.def=b.dataset.def;if(LATE.includes(S.def)&&S.vis==='demoul')S.vis=undefined;render();if(innerWidth<760)$('s1').scrollIntoView({behavior:'smooth'});return}
@@ -141,4 +141,5 @@ document.addEventListener('click',e=>{
 $('dq').addEventListener('input',e=>{S.qd=e.target.value;draw0()});
 if(/[?&]revue\b/.test(location.search))document.body.classList.add('revue');
 render();
+window.VPConsolidation?.bind({sector:'TP',S,REC,OK,NUM,HIST,render,cands,KEY,choices:{def:DEFS.map(d=>d[0]),fam:['all',...FAM.map(x=>x[0])],qd:'text',more:'boolean',br:SIT.map(x=>x[0]),param:PROC.map(p=>p[0]),...Object.fromEntries(Object.entries({ou:OU,quand:QUAND,freq:FREQ,terme:TERME,qui:QUI,combien:COMBIEN,vis:VIS,etendue:ETENDUE}).map(([k,v])=>[k,v.map(x=>x[0])]))}});
 })();
