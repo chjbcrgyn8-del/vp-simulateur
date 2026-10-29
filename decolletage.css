@@ -34,3 +34,8 @@ p.ncl{display:block}
 .ncl .cl b{color:#0f6b5c}
 .ncl .rtag{margin-left:0;margin-right:4px}
 .ncl-o{display:inline-block;margin-left:4px;font:500 10.5px var(--mono);color:#6b7280;white-space:nowrap}
+/* Registres de sources (v2.3) */
+.muted{color:#6b7280}.small{font-size:13px}
+table.srcw td:first-child{white-space:nowrap}
+table.srcw td:nth-child(2){min-width:220px}
+table.srcw td:nth-child(4),table.srcw td:nth-child(5){min-width:180px;font-size:13px}
