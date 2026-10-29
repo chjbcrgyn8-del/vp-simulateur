@@ -26,7 +26,7 @@
 <link rel="stylesheet" href="industrie.css?v=5">
 <link rel="stylesheet" href="ux.css?v=20261029-dec">
 <link rel="icon" type="image/png" href="img/favicon.png">
-<link rel="stylesheet" href="biblio-fiches.css?v=1.1">
+<link rel="stylesheet" href="biblio-fiches.css?v=1.2-dev-public">
 </head>
 <body class="stp">
 <a class="skip" href="#main">Aller au contenu</a>
@@ -45,7 +45,7 @@
 <div id="sv"></div>
 </main>
 <script src="v21ref.js"></script><script src="expertise.js"></script><script src="ref-caoutchouc.js?v=8"></script>
-<script src="biblio-defauts-v11.js?v=1.1"></script><script src="biblio-fiches.js?v=1.1"></script>
+<script src="biblio-defauts-v12.js?v=1.2-dev-public"></script><script src="biblio-fiches.js?v=1.2-dev-public"></script>
 <script>
 (function(){const T=t=>`<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="${t}"></span></button>`;
 let sec=new URLSearchParams(location.search).get('secteur')==='caoutchouc'?'c':'p';
@@ -53,7 +53,7 @@ const SYL=[['Lot de mélange au rhéomètre','ML, puis Ts2 ou T10, puis T90. San
 const RUBP=[['Pression d’injection dynamique','bar','Souvent une pression hydraulique au sommet du piston, pas la pression matière.'],['Température du pot','°C','Sonde dans l’acier ou le circuit de régulation.'],['Température des busettes BCR','°C','BCR : bloc à canaux régulés. La sonde peut être loin dans le circuit d’huile.'],['Température moule plateau fixe','°C','À vérifier au pyromètre de contact.'],['Temps de vulcanisation','s','Se raccourcit seulement après validation au rhéomètre (T90).']];
 const EXD=['Incomplet','Bavure','Retassure','Brûlure'],EXC=['clapet','humidite','tmoule'],EXR=['Manque matière','Matière grillée','Sous-vulcanisation'];
 function plast(){const D=window.DEF,L=window.DLAB,C=window.V21C,DF=window.V21DEF,P=window.PRESS_P;
- return [{id:'defauts',t:'Les 24 défauts et leurs mesures',n:Object.keys(D).length,lead:'Les 24 fiches documentaires sont ouvertes : mécanismes, mesures à examiner, conditions et limites. Version 1.1 · 29 octobre 2026. Les contrôles proposés restent à valider par notre expert plasturgie ; aucune valeur de réglage n’est imposée. Les quatre exemples de la matrice experte restent présentés séparément.'+T('Une association bibliographique n’est ni un diagnostic confirmé ni un taux de détection. Les conclusions dépendent de la matière, du moule et du procédé ; aucun gain industriel n’est démontré par ces fiches.'),
+ return [{id:'defauts',t:'Les 24 défauts et leurs mesures',n:Object.keys(D).length,lead:'Les 24 fiches documentaires sont ouvertes : mécanismes, mesures à examiner, conditions et limites. Version 1.2-DEV · aperçu documentaire public · 29 octobre 2026. Validation métier en attente. Les contrôles proposés restent à valider par notre expert plasturgie ; aucune valeur de réglage n’est imposée. Les quatre exemples de la matrice experte restent présentés séparément.'+T('Une association bibliographique n’est ni un diagnostic confirmé ni un taux de détection. Les conclusions dépendent de la matière, du moule et du procédé ; aucun gain industriel n’est démontré par ces fiches.'),
   items:Object.entries(D).map(([d,codes])=>({h:d,s:'Fiche bibliographique affinée · non validée métier'+(EXD.includes(d)?' · exemple expert distinct':''),b:window.vpFicheLitterature(d)+(EXD.includes(d)?'<details class="bib-expert"><summary>Exemple distinct : matrice de notre expert plasturgie</summary>'+(codes.length?'<ul>'+codes.map(c=>`<li>${L[c]||c}</li>`).join('')+'</ul>':'<p>Ce défaut se traite par les contrôles terrain : moule, matière, manutention.</p>')+'</details>':'')}))},
  {id:'causes',t:'13 causes racines documentées',n:C.length,lead:'Pour chaque cause : le contrôle à faire, ce qu’il montre, l’action, la limite à respecter et comment vérifier. Trois exemples sont ouverts ici.',
   items:C.map(c=>!EXC.includes(c.id)?{h:c.n,s:c.m+' · détail livré avec VP Expert',lock:1,b:''}:({h:c.n,s:'Exemple · '+c.m+' · défauts : '+c.def.map(x=>DF[x]).join(', '),b:`<dl><dt>Contrôle</dt><dd>${c.ctrl} <i>(${c.who})</i></dd><dt>Si non conforme</dt><dd>${c.ko}</dd><dt>Action</dt><dd>${c.act} <i>(${c.role})</i></dd><dt>Limite</dt><dd>${c.lim}</dd><dt>Vérification</dt><dd>${c.ver}</dd></dl>`}))},

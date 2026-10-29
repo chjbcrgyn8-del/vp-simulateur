@@ -20,3 +20,9 @@
 .bib-expert > summary { min-height: 44px; cursor: pointer; }
 .bib-expert ul { padding-left: 20px; }
 @media(max-width:640px) { .bib-fields { grid-template-columns: 1fr; } }
+
+/* Compléments documentaires DEV uniquement. */
+.bib-symptome h3,.bib-complement h3 { font-size:1rem; margin:0 0 8px; }
+.bib-symptome { margin:16px 0; }
+.bib-complement { margin-top:16px; border-top:1px solid var(--line); padding-top:12px; }
+.bib-dev { color:var(--navy); }
