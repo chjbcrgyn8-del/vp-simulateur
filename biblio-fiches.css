@@ -1,0 +1,22 @@
+/* Retouches limitées aux fiches documentaires de Savoir technique. */
+#defauts .svl { align-items: start; }
+#defauts .svl > details { align-self: start; min-width: 0; }
+#defauts .svl > details[open] { grid-column: 1 / -1; }
+.bib-fiche { --bib-body: 1rem; --bib-small: .8125rem; font-size: var(--bib-body); line-height: 1.6; }
+.bib-fiche p { margin: 0 0 12px; }
+.bib-label { font: 500 var(--bib-small)/1.5 var(--mono); color: var(--muted); }
+.bib-label strong { color: var(--navy); }
+.bib-fields { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px 24px; }
+.bib-fields section { min-width: 0; border-top: 1px solid var(--line); padding-top: 12px; }
+.bib-fields h3 { margin: 0 0 8px; font-size: var(--bib-body); line-height: 1.4; }
+.bib-fields ul { margin: 0; padding-left: 20px; }
+.bib-sources { margin: 16px 0 0; border-top: 1px solid var(--line); padding-top: 12px; font-size: var(--bib-small); }
+.bib-sources summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; }
+.bib-sources ul { padding-left: 20px; }
+.bib-sources li { margin-bottom: 12px; }
+.bib-url { display: block; overflow-wrap: anywhere; user-select: all; margin-top: 4px; color: var(--muted); }
+.bib-fiche a { text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.bib-expert { border-top: 1px dashed var(--line); margin-top: 16px; padding-top: 12px; }
+.bib-expert > summary { min-height: 44px; cursor: pointer; }
+.bib-expert ul { padding-left: 20px; }
+@media(max-width:640px) { .bib-fields { grid-template-columns: 1fr; } }

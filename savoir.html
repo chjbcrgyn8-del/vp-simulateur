@@ -26,6 +26,7 @@
 <link rel="stylesheet" href="industrie.css?v=5">
 <link rel="stylesheet" href="ux.css?v=20261029-dec">
 <link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="stylesheet" href="biblio-fiches.css?v=1.1">
 </head>
 <body class="stp">
 <a class="skip" href="#main">Aller au contenu</a>
@@ -36,7 +37,7 @@
 <main id="main" class="st sv">
 <header class="ds-hero svhero"><div class="svht"><p class="eyebrow" id="svsec">Injection plastique</p>
 <h1>Savoir technique</h1>
-<p class="lead">Le savoir de nos experts plasturgie et caoutchouc, rangé pour être trouvé en quelques secondes : défauts, contrôles dans l’ordre, mesures suivies. C’est ce référentiel qui guide VP Expert et VP Predict. Quelques exemples sont ouverts ici ; la base complète est livrée avec VP Expert.</p>
+<p class="lead">Défauts, contrôles et mesures suivies : retrouvez les exemples de nos experts plasturgie et caoutchouc. Les 24 défauts d’injection disposent aussi d’une fiche bibliographique publique, distincte du référentiel expert et non validée par nos experts.</p>
 </div><img class="svimg" src="img/savoir.jpg?v=2" alt="Joints caoutchouc, pièces plastiques, pied à coulisse et carnet de contrôle sur un établi" width="960" height="640">
 </header>
 <label class="svs"><span>Chercher un défaut, une mesure, un réglage</span><input type="search" id="q" placeholder="ex. bavure, matelas, température du moule"></label>
@@ -44,6 +45,7 @@
 <div id="sv"></div>
 </main>
 <script src="v21ref.js"></script><script src="expertise.js"></script><script src="ref-caoutchouc.js?v=8"></script>
+<script src="biblio-defauts-v11.js?v=1.1"></script><script src="biblio-fiches.js?v=1.1"></script>
 <script>
 (function(){const T=t=>`<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="${t}"></span></button>`;
 let sec=new URLSearchParams(location.search).get('secteur')==='caoutchouc'?'c':'p';
@@ -51,8 +53,8 @@ const SYL=[['Lot de mélange au rhéomètre','ML, puis Ts2 ou T10, puis T90. San
 const RUBP=[['Pression d’injection dynamique','bar','Souvent une pression hydraulique au sommet du piston, pas la pression matière.'],['Température du pot','°C','Sonde dans l’acier ou le circuit de régulation.'],['Température des busettes BCR','°C','BCR : bloc à canaux régulés. La sonde peut être loin dans le circuit d’huile.'],['Température moule plateau fixe','°C','À vérifier au pyromètre de contact.'],['Temps de vulcanisation','s','Se raccourcit seulement après validation au rhéomètre (T90).']];
 const EXD=['Incomplet','Bavure','Retassure','Brûlure'],EXC=['clapet','humidite','tmoule'],EXR=['Manque matière','Matière grillée','Sous-vulcanisation'];
 function plast(){const D=window.DEF,L=window.DLAB,C=window.V21C,DF=window.V21DEF,P=window.PRESS_P;
- return [{id:'defauts',t:'Les 24 défauts et leurs mesures',n:Object.keys(D).length,lead:'Pour chaque défaut de pièce, les écarts de mesure presse associés dans la matrice établie avec notre expert plasturgie. 20 des 24 défauts ont au moins une mesure. Quatre exemples sont ouverts ici.'+T('Une mesure associée aide à orienter le contrôle. Ce n’est pas un taux de détection : il se mesure pendant le pilote.'),
-  items:Object.entries(D).map(([d,codes])=>!EXD.includes(d)?{h:d,s:'Détail livré avec VP Expert',lock:1,b:''}:({h:d,s:'Exemple · '+(codes.length?codes.length+' mesure'+(codes.length>1?'s':'')+' associée'+(codes.length>1?'s':''):'Aucune mesure : contrôle visuel ou outillage'),b:codes.length?'<ul>'+codes.map(c=>`<li>${L[c]||c}</li>`).join('')+'</ul>':'<p>Ce défaut se traite par les contrôles terrain : moule, matière, manutention.</p>'}))},
+ return [{id:'defauts',t:'Les 24 défauts et leurs mesures',n:Object.keys(D).length,lead:'Les 24 fiches documentaires sont ouvertes : mécanismes, mesures à examiner, conditions et limites. Version 1.1 · 29 octobre 2026. Les contrôles proposés restent à valider par notre expert plasturgie ; aucune valeur de réglage n’est imposée. Les quatre exemples de la matrice experte restent présentés séparément.'+T('Une association bibliographique n’est ni un diagnostic confirmé ni un taux de détection. Les conclusions dépendent de la matière, du moule et du procédé ; aucun gain industriel n’est démontré par ces fiches.'),
+  items:Object.entries(D).map(([d,codes])=>({h:d,s:'Fiche bibliographique affinée · non validée métier'+(EXD.includes(d)?' · exemple expert distinct':''),b:window.vpFicheLitterature(d)+(EXD.includes(d)?'<details class="bib-expert"><summary>Exemple distinct : matrice de notre expert plasturgie</summary>'+(codes.length?'<ul>'+codes.map(c=>`<li>${L[c]||c}</li>`).join('')+'</ul>':'<p>Ce défaut se traite par les contrôles terrain : moule, matière, manutention.</p>')+'</details>':'')}))},
  {id:'causes',t:'13 causes racines documentées',n:C.length,lead:'Pour chaque cause : le contrôle à faire, ce qu’il montre, l’action, la limite à respecter et comment vérifier. Trois exemples sont ouverts ici.',
   items:C.map(c=>!EXC.includes(c.id)?{h:c.n,s:c.m+' · détail livré avec VP Expert',lock:1,b:''}:({h:c.n,s:'Exemple · '+c.m+' · défauts : '+c.def.map(x=>DF[x]).join(', '),b:`<dl><dt>Contrôle</dt><dd>${c.ctrl} <i>(${c.who})</i></dd><dt>Si non conforme</dt><dd>${c.ko}</dd><dt>Action</dt><dd>${c.act} <i>(${c.role})</i></dd><dt>Limite</dt><dd>${c.lim}</dd><dt>Vérification</dt><dd>${c.ver}</dd></dl>`}))},
  {id:'ecosysteme',t:'L’écosystème de la presse',n:13,lead:'Retour d’expérience de notre expert plasturgie : quand l’atelier réagit au défaut, environ 50 % des causes viennent de l’environnement de production, de la machine et des réglages, 20 % du facteur humain et de la méthode, 15 % de l’outillage et 15 % de la matière. Dans environ 8 dérives sur 10, le défaut ne vient pas du réglage lui-même : il faut regarder tout le flux, de la matière au broyage.'+T('Répartition issue de l’expérience terrain de notre expert, pas d’une étude statistique. Elle se vérifie sur vos données pendant le pilote.'),items:[],
