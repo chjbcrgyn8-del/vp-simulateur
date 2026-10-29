@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Banc d’essai sur données réelles · Vella Partners</title>
+<meta name="description" content="Rejouer des mesures industrielles réelles sans modification, puis tester les règles d’alerte avec une dérive artificielle signalée. Injection plastique, caoutchouc, tournage.">
+<meta name="theme-color" content="#0a1320">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Vella Partners">
+<meta property="og:title" content="Banc d’essai sur données réelles · Vella Partners">
+<meta property="og:description" content="Relecture de données réelles non modifiées et dérives injectées, clairement séparées.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="sim2.css?v=8">
+<link rel="stylesheet" href="premium.css?v=9">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="signature.css?v=2">
+<link rel="stylesheet" href="industrie.css?v=5">
+<link rel="stylesheet" href="ux.css?v=20261029-dec">
+<link rel="stylesheet" href="banc-essai.css?v=20261030-b1">
+<link rel="icon" type="image/png" href="img/favicon.png">
+</head>
+<body class="press banc">
+<a class="skip" href="#main">Aller au contenu</a>
+<header class="top">
+  <a class="brand" href="index.html" aria-label="Vella Partners, accueil"><img src="img/logo-vella-partners.png" alt="Vella Partners" width="517" height="150"></a>
+  <nav class="tabs sector" aria-label="Secteur"><span class="seclab">Secteur :</span><a href="presse.html">Injection plastique</a><a href="presse-caoutchouc.html">Caoutchouc</a><a href="machine-decolletage.html">Décolletage</a></nav><nav class="tabs menu" aria-label="Menu"><a href="index.html">Accueil</a><a href="index.html#offres">Nos offres</a><a href="index.html#essayer" aria-current="page">Essayer</a><a href="savoir.html">Savoir technique</a></nav>
+</header>
+<main id="main" class="smain">
+<section class="bx-intro">
+ <p class="bx-k"><span class="vpx vpp">VP Predict</span> Banc d’essai</p>
+ <h1>Tester les règles d’alerte sur des mesures réelles</h1>
+ <p class="bx-lead">Deux modes séparés : la <b>relecture brute</b> montre les données telles qu’elles ont été enregistrées ; la <b>dérive injectée</b> ajoute une dérive artificielle, signalée partout, pour mesurer le délai de détection. Les changements de consigne sont séparés avant le calcul des seuils.</p>
+</section>
+
+<section class="console bx-console" aria-label="Banc d’essai">
+ <div class="sbar bx-bar">
+  <div class="bx-ds" role="group" aria-label="Jeu de données">
+   <button type="button" data-ds="caoutchouc" aria-pressed="false">Caoutchouc · 13 527 cycles</button>
+   <button type="button" data-ds="loki" aria-pressed="false">Injection · SKZ LoKI</button>
+   <button type="button" data-ds="iguzzini" aria-pressed="false">Injection · iGuzzini qualité</button>
+   <button type="button" data-ds="vicomtech" aria-pressed="false">Tournage · Vicomtech usure</button>
+   <button type="button" data-ds="import" id="bx-dsimp" aria-pressed="false" hidden>Mon fichier</button>
+   <label class="bx-file btn ghost sm">Importer mon fichier CSV<input type="file" id="bx-file" accept=".csv,.txt,text/csv"></label>
+  </div>
+ </div>
+ <div class="bx-statusbar" id="bx-status" aria-live="polite"></div>
+ <div class="bx-ctrl">
+  <div class="bx-mode" role="group" aria-label="Mode">
+   <button type="button" data-mode="brut" aria-pressed="true"><b>Relecture brute</b><small>valeurs d’origine</small></button>
+   <button type="button" data-mode="derive" aria-pressed="false"><b>Dérive injectée</b><small>copie modifiée, signalée</small></button>
+  </div>
+  <label>Mesure suivie<select id="bx-var"></select></label>
+  <label>Séparation des campagnes<select id="bx-seg"></select></label>
+  <label>Référence (points)<input type="number" id="bx-ref" min="5" max="500" step="1" value="30"></label>
+  <label>Afficher<select id="bx-view"></select></label>
+ </div>
+ <p class="sl bx-mh" id="bx-modehelp"></p>
+ <div class="bx-drift" id="bx-drift" hidden>
+  <p class="bx-dtag">Dérive artificielle ajoutée par le simulateur · ne pas confondre avec une mesure</p>
+  <div class="bx-dgrid">
+   <label>Début <span id="bx-startv"></span><input type="range" id="bx-start" min="0" max="100" step="1"></label>
+   <label>Amplitude <span id="bx-ampv">2 σ</span><input type="range" id="bx-amp" min="0.5" max="4" step="0.25" value="2"></label>
+   <label>Forme<select id="bx-kind"><option value="rampe" selected>Rampe progressive</option><option value="palier">Palier brusque</option></select></label>
+   <label id="bx-lenw">Durée de la rampe (cycles)<input type="number" id="bx-len" min="5" max="2000" value="150"></label>
+   <label>Sens<select id="bx-dir"><option value="1">En hausse</option><option value="-1">En baisse</option></select></label>
+  </div>
+ </div>
+ <div class="bx-grid">
+  <div class="chartcard">
+   <div class="chead"><div><h2 id="bx-ctitle"></h2><p id="bx-csub" class="sl"></p></div>
+    <ul class="legend bx-leg"><li><i class="l-real"></i>Réel</li><li><i class="l-test"></i>Copie modifiée</li><li><i class="l-mu"></i>Référence</li><li><i class="l-lim"></i>± 3 σ</li><li><i class="l-ew"></i>Tendance lissée</li><li><i class="l-al"></i>Signal</li></ul></div>
+   <svg id="bx-chart" viewBox="0 0 720 300" role="img" aria-label="Courbe de la mesure choisie"></svg>
+   <p class="sl bx-foot">Zone claire : référence de chaque segment. Trait vertical : changement de consigne ou de campagne. Gris hachuré : segment trop court, non évalué.</p>
+  </div>
+  <aside class="side bx-side" id="bx-side" aria-live="polite"></aside>
+ </div>
+ <div class="bx-actions"><button type="button" class="btn ghost sm" id="bx-export">Exporter les résultats (CSV)</button><span class="sl">Chaque ligne indique si la valeur est réelle ou modifiée par le simulateur.</span></div>
+</section>
+
+<section class="bx-sec" aria-labelledby="bx-srct"><h2 id="bx-srct">Source et limites du jeu</h2><div id="bx-src" class="bx-card"></div></section>
+<section class="bx-sec" id="bx-qualsec" aria-labelledby="bx-qt" hidden><h2 id="bx-qt">Relation avec la qualité ou les réglages</h2><div id="bx-qual" class="bx-card"></div></section>
+<section class="bx-sec" aria-labelledby="bx-it"><h2 id="bx-it">Contrôle d’import</h2><div id="bx-imp" class="bx-card"></div></section>
+
+<section class="bx-sec" aria-labelledby="bx-mt"><h2 id="bx-mt">Méthode</h2><div class="bx-card bx-method">
+ <ol>
+  <li><b>Séparer avant de calculer.</b> Une nouvelle campagne commence à chaque changement de consigne ou de colonne de campagne (essai, outil, OF). Tolérance : tout changement pour le caoutchouc, 1 % par défaut, 5 % pour les vitesses de coupe Vicomtech. Une transition d’un ou deux points est rattachée au segment suivant. Un réglage voulu n’est pas une dérive spontanée.</li>
+  <li><b>Référence par segment.</b> Moyenne et écart-type sur les premiers points de chaque segment. Si la mesure est trop stable, l’écart-type est ramené à la moitié de la résolution du capteur.</li>
+  <li><b>Trois règles VP Predict.</b> Valeur hors ± 3 σ, 7 points consécutifs du même côté, tendance lissée EWMA (λ 0,2, L 3) hors zone. Des signaux espacés de moins de 10 points forment un seul épisode.</li>
+  <li><b>Deux modes jamais mélangés.</b> La relecture brute ne modifie aucune valeur. La dérive injectée travaille sur une copie, signalée sur la courbe, dans le panneau et dans l’export.</li>
+ </ol>
+ <p class="sl">Ce banc vérifie le comportement des règles : délai de détection d’une dérive artificielle, signaux sur données réelles à qualifier. Il ne démontre ni un taux de fausses alertes industriel, ni un gain : ces points se valident en pilote sur vos presses. <a href="banc-modele-import.csv" download>Télécharger le modèle d’import CSV</a> · <a href="presse.html">Simulateur presse</a> · <a href="savoir.html">Savoir technique</a></p>
+</div></section>
+<p class="legal">Données publiques citées avec leur licence : SKZ LoKI (CC BY 4.0), Vicomtech (CC BY-SA 4.0, extrait diffusé sous la même licence), iGuzzini (chargé depuis le dépôt d’origine, usage recherche et enseignement). Cycles caoutchouc transmis par notre expert plasturgie partenaire. Votre fichier importé est lu dans votre navigateur : rien n’est envoyé ni conservé.</p>
+</main>
+<script src="cycles-caoutchouc.js?v=20261029-c10"></script>
+<script src="banc-data-loki.js?v=20261030-b1"></script>
+<script src="banc-data-vicomtech.js?v=20261030-b1"></script>
+<script src="banc-essai.js?v=20261030-b1"></script>
+<script src="typo.js"></script>
+<script src="ux.js?v=20261029-ux"></script>
+</body>
+</html>
