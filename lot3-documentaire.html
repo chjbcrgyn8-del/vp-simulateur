@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>Lot 3 · Bibliothèque documentaire · Vella Partners</title>
+<link rel="icon" href="img/favicon.png"><link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lot2bis.css"><link rel="stylesheet" href="lot3.css"></head>
+<body class="doc-app"><header class="doc-top"><a href="index.html" aria-label="Retour au simulateur"><img src="img/logo-vella-partners.png" alt="Vella Partners" width="517" height="150"></a><nav aria-label="Navigation"><a href="index.html">Simulateur</a><a href="expertise-documentaire.html">Six fiches · Lot 2 bis</a><a href="decolletage.html?example=wear-thermal">Cas décolletage complet</a><span>Lot 3 · Démonstration</span></nav></header>
+<main class="doc-main">
+<div class="doc-heading"><div><p class="eyebrow">VP Expert / Préparer la revue métier</p><h1>Bibliothèque documentaire · Lot 3</h1><p>Caoutchouc, thermoplastique et décolletage. Consulter les candidats, préparer les questions, sans autoriser d’action.</p></div><span class="version" id="lot3-version">Chargement</span></div>
+<aside class="doc-warning"><strong>Consultation documentaire. Aucune règle activée.</strong> Les textes privés et les actions candidates de l’archive ne sont pas embarqués. Les notices sont fournies, pas toutes vérifiées ; un lien n’est pas une preuve de validité. Les notes restent déclaratives. Les versions DEV indiquent un référentiel en développement, pas une validation industrielle.</aside>
+<p class="vp-doc-entry"><a href="decolletage.html">Décolletage : ouvrir les six dossiers guidés enrichis par la recherche internationale</a><br>Complément distinct : contexte, observations, préparation d’essai et résultat déclaré. Les notes de cette bibliothèque ne sont pas transférées automatiquement.</p>
+<p id="catalog-status" role="status">Chargement du catalogue…</p>
+<nav class="l3-tabs" aria-label="Vues documentaires">
+ <button data-view="rules" aria-pressed="true">Règles candidates</button><button data-view="sources" aria-pressed="false">Registre des sources</button><button data-view="coverage" aria-pressed="false">Couverture et limites</button>
+</nav>
+<section class="doc-panel" aria-label="Recherche"><div class="l3-filters">
+ <div><label for="l3-sector">Domaine</label><select id="l3-sector"><option value="">Tous les domaines</option><option value="caoutchouc">Caoutchouc</option><option value="plasturgie">Thermoplastique</option><option value="decolletage">Décolletage</option></select></div>
+ <div><label for="l3-search">Rechercher un identifiant ou un terme</label><input id="l3-search" type="search" placeholder="Ex. DC01, bavure, température"></div>
+ <div id="priority-filter"><label for="l3-priority">Ordre de revue</label><select id="l3-priority"><option value="">Toutes les priorités</option><option value="P1_REVIEW">Les neuf priorités proposées</option></select></div>
+</div><p id="filter-result" role="status"></p></section>
+<section id="rules-view" aria-label="Règles candidates"><div class="l3-layout"><div id="rule-list" class="l3-list" aria-label="Choisir une règle"></div><article id="rule-detail" class="doc-panel" aria-live="polite"></article></div></section>
+<section id="sources-view" hidden aria-label="Registre des sources"><p>178 notices de l’archive, dont cinq réservées, avec chevauchements possibles. Les références du corpus DEV antérieur apparaissent séparément dans les fiches ; elles ne sont pas comptées comme de nouvelles études.</p><div id="source-list"></div></section>
+<section id="coverage-view" hidden aria-label="Couverture et limites"><div class="doc-warning">Un défaut recensé n’est pas un diagnostic validé. Les codes de cette annexe ne sont pas utilisés comme identifiants de règles ; les rapprochements fournis restent à revoir.</div><div id="coverage-list"></div></section>
+<section class="doc-panel l3-tools" aria-labelledby="notes-title"><h2 id="notes-title">Conserver la préparation de revue</h2><p>L’export du cas reprend la famille de défaut de la règle sélectionnée, avec toutes ses règles et notes, même si les filtres en masquent certaines. Il ne constitue pas un dossier client identifié. La revue globale conserve les neuf priorités et les règles annotées ; le JSON conserve toutes vos notes. Aucun export ne constitue une décision signée.</p>
+<p id="l3-case-scope" role="status"></p>
+<div class="actions"><button id="l3-export-case" class="primary" disabled>Exporter le cas sélectionné .md</button><button id="l3-export-md" disabled>Exporter la revue globale .md</button><button id="l3-export-json" disabled>Exporter les notes .json</button><label class="file-button">Reprendre les notes<input id="l3-import" type="file" accept=".json,application/json" disabled></label><button id="l3-print" disabled>Imprimer la règle</button></div>
+<p id="l3-feedback" role="status" aria-live="polite"></p><p class="privacy">Aucun envoi automatique des notes ni stockage serveur. Exportez avant de recharger ou de changer de page. Les fichiers bruts du lot et les signatures ne doivent pas être importés ici ; seul le format de notes de ce module est accepté.</p></section>
+<footer class="doc-footer"><p>Vella Partners · Lot 3 DEV · 29 octobre 2026.</p><p>Le garde-fou fourni dans l’archive est un prototype local, pas une authentification. Cette interface ne comporte aucun mécanisme d’activation d’action.</p></footer>
+</main><script src="lot3.js"></script></body></html>
