@@ -71,3 +71,17 @@ a,button,summary,.btn,.choice{-webkit-tap-highlight-color:transparent}
  .top{flex-wrap:wrap;row-gap:6px!important}
  .top .tabs.menu{order:4!important;width:100%;justify-content:flex-end;border-top:1px solid rgba(255,255,255,.08)!important;padding-top:4px!important}
 }
+
+/* ---------- Contraste : tout texte atteint 4,5:1 (3:1 pour les très grands chiffres) ----------
+   Les couleurs de marque restent en fonds, filets et grands aplats ; seules les couleurs de TEXTE changent. */
+/* cuivre / orange clair sur fond crème : cuivre foncé (4,8 à 5,3:1) */
+.ql,.cc .ind,.cc.best .ind,.svc>summary em,.ds-levels small{color:#9a5b1f}
+.poc .aim{color:#9a5b1f!important}
+.ds-num{color:#b85c10}
+/* texte blanc sur pastille colorée trop claire : texte sombre, comme sur les boutons principaux du site */
+.ishi .s2,.leg .s2{color:#0f2036}
+.ecof .k-p b,.pl.l1{color:#1a1206}
+.ecof .k-d b{color:#0b111c}
+/* gris trop pâle */
+.muted{color:#5a6472}
+.sitefoot .bot{color:#7d8aa0!important}

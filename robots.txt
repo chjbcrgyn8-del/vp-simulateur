@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://chjbcrgyn8-del.github.io/vp-simulateur/sitemap.xml
