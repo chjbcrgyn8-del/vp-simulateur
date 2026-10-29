@@ -51,7 +51,7 @@ window.SIM_CFG={
  /* Ordre de contrôle de l'expert caoutchouc, proposé pour « Je ne sais pas » */
  checks:{_all:['Lot de mélange au rhéomètre : ML, puis Ts2 ou T10, puis T90','Température matière en sortie de buse, ou aux busettes si la presse a un BCR','Unité d’injection : température et vitesse de la boudineuse, puis température du pot et vitesse d’injection','Température réelle du moule','Encrassement : busettes si BCR, sinon canaux du moule']}
 };
-/* Cycles réels : colonnes du fichier exemple (cycles-caoutchouc.js) pour les 5 paramètres suivis,
+/* Cycles réels : colonnes de cycles-caoutchouc.js (sous-ensemble du fichier exemple, voir srcCols) pour les 5 paramètres suivis,
    colonnes de consigne servant à repérer les changements de réglage, référence sur 500 cycles. */
-window.SIM_CFG.real={cols:{p:21,pot:14,bcr:18,mo:28,vu:34},sets:[13,17,27,33],refN:500,
+window.SIM_CFG.real={cols:{p:5,pot:2,bcr:4,mo:7,vu:9},sets:[1,3,6,8],refN:500,
  refNote:'Calculée sur les 500 cycles réels qui précèdent le point de départ, puis recalculée au lancement de chaque dérive. Tolérances de recette appliquées autour de cette référence. Busettes BCR : la mesure réelle tourne autour de 89,9 °C pour une consigne de 85 °C, écart à confirmer avec notre expert caoutchouc.'};
