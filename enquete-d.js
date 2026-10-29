@@ -62,10 +62,11 @@ function draw2(){const d=S.br==='derive';
  if(!d&&S.combien)L.push(['Combien',lab(COMBIEN,S.combien)]);
  $('fiche').innerHTML='<b>Fiche d’enquête QQOQC</b> '+L.filter(x=>x[1]).map(([k,v])=>`<span><i>${k}</i> ${esc(v)}</span>`).join('');}
 function gateState(){const K=KEY(),id=S.def+'_M';if(S.br==='derive'||!isDim())return 'none';if((REC[K]||{})[id])return 'bad';if((OK[K]||{})[id])return 'ok';return 'open';}
+function nclE(r){const u=RU[r];if(!u||!u.nc)return '';return `<div class="ncl"><p class="nc"><b>À ne pas conclure</b> ${rtag(r)} ${esc(u.nc)}</p><p class="cl"><b>Clôture attendue</b> ${esc(u.cl)} <span class="ncl-o">${esc(u.o||'')}</span></p></div>`;}
 function card(c,i,st,nx){
  let act;
  if(st==='lock')act=`<p class="lockt">Verrouillé : contre-mesure d’abord ${rtag('DC01-R01')}${gateState()==='bad'?' · moyen de mesure douteux, aucune correction d’outil avant une mesure fiable':''}</p>`;
- else if(st==='nc')act=`<div class="cst nc nv"><b>${c.gate?'Moyen douteux ou écart non confirmé :':'Écart observé :'}</b> ${c.gate?'aucune correction d’outil tant que la mesure n’est pas fiable.':'hypothèse à vérifier, cause non démontrée. Aucun apprentissage à partir de ce clic.'} <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
+ else if(st==='nc')act=`<div class="cst nc nv"><b>${c.gate?'Moyen douteux ou écart non confirmé :':'Écart observé :'}</b> ${c.gate?'aucune correction d’outil tant que la mesure n’est pas fiable.':'hypothèse à vérifier, cause non démontrée. Aucun apprentissage à partir de ce clic.'} <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>${nclE(c.r)}`;
  else if(st==='ok')act=`<div class="cst ok nv"><b>${c.gate?'Écart confirmé, moyen fiable :':'Contrôle conforme :'}</b> ${c.gate?'les leviers de réglage sont déverrouillés.':'hypothèse non étayée par ce contrôle.'} <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
  else act=c.gate?`<div class="acts nv"><button type="button" class="btn sm bok" data-ok="${c.id}">Écart confirmé sur le moyen de référence</button><button type="button" class="btn ghost sm bnc" data-nc="${c.id}">Écart non confirmé ou moyen douteux</button></div>`
   :`<div class="acts nv"><button type="button" class="btn sm bnc" data-nc="${c.id}">Non conforme après contrôle</button><button type="button" class="btn ghost sm bok" data-ok="${c.id}">Conforme après contrôle</button></div>`;

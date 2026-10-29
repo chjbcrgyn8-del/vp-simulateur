@@ -25,3 +25,12 @@ details.shape ul{margin:6px 0 4px;padding-left:18px}details.shape li{margin:2px 
 #mach{margin-top:14px}#mach .ml{margin:0 0 6px;font-size:13px;font-weight:600;color:var(--navy)}
 .hidnote{margin-top:6px}
 .cc .rtag{font-weight:500}
+
+/* v2.2 · « À ne pas conclure » et « Clôture attendue » (Lot 3, non validés) */
+.ncl{margin:10px 0 0;padding:9px 11px;border-left:3px solid #b7791f;background:#fbf6ec;border-radius:0 6px 6px 0;font-size:13px;line-height:1.5;color:#2b2f36}
+.ncl p{margin:0}.ncl p+p{margin-top:6px}
+p.ncl{display:block}
+.ncl b{display:block;font:600 11.5px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:#7a4e0e;margin-bottom:2px}
+.ncl .cl b{color:#0f6b5c}
+.ncl .rtag{margin-left:0;margin-right:4px}
+.ncl-o{display:inline-block;margin-left:4px;font:500 10.5px var(--mono);color:#6b7280;white-space:nowrap}
