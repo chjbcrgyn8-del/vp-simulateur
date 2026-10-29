@@ -5,15 +5,13 @@
   const PREDICT_PRICE=100,PREDICT_PRICE_11=100,PREDICT_SITE=250,PREDICT_MIN=3,PREDICT_SUCCESS=.25,PILOT_BASE=20000,PILOT_PER=7000,PILOT_CREDIT=.5,EXT_BASE=4000,EXT_PER=600,SCAN_PRICE=10000,FOCUS_EXP=.5;
   // Pack Usine retiré de la grille publique (sur devis pour les groupes) : constantes conservées, non utilisées.
   const PACK=[{add:18000,cap:12},{add:24000,cap:25},{add:30000,cap:40}],PACK_C=[{add:18000,cap:8},{add:24000,cap:20},{add:30000,cap:32}],PACK_EXTRA=100;
-  // Hypothèses qualité du cas type (v9.4) : objectif cible −30 % du coût évitable des rebuts, milieu de la fourchette d'objectifs de pilote publiée (−20 à −40 %) ; le scénario prudent en retient la moitié (−15 %).
-  // Part adressable par VP Expert 80 % : 20 des 24 défauts types du référentiel sont reliés à une mesure et à des leviers de réglage classés.
   const defaults={
     activity:'plasturgie',process:'thermoplastique',material:'PA / PP / ABS',series:'Mix de petites et moyennes séries',
     presses:[{label:'Moins de 100 t',n:6,h:5000},{label:'100 à < 250 t',n:8,h:5000},{label:'250 à < 500 t',n:4,h:5000},{label:'500 t et plus',n:2,h:5000}],
     changes:900,changeDuration:90,preventive:1000,tech:5,org:3,proc:2,performance:92,reject:3,trsDeclared:null,occupation:null,occupationBasis:'required',
     costMode:'euros',scrapCost:200000,scrapRate:3,productionCost:7000000,avoidable:60,
-    targetTech:25,targetOrg:15,targetProc:20,targetChange:70,targetPerformance:94,targetQuality:30,
-    addressTech:40,addressOrg:25,addressProc:70,addressChange:40,addressPerf:60,addressQuality:80,
+    targetTech:25,targetOrg:15,targetProc:20,targetChange:70,targetPerformance:94,targetQuality:20,
+    addressTech:40,addressOrg:25,addressProc:70,addressChange:40,addressPerf:60,addressQuality:60,
     financeMode:'benchmark',caHour:null,contribution:80,revenue:6000000,margin:45,monetization:60,investment:8000,internalCost:6000,annualCost:18000,priceAuto:true,startMonth:3,rampMonths:6,
     offer:'option',diagHours:30,techRate:45,targetDiag:30,aidPilot:false,entry:'direct',predictFocus:'critiques',scenario:'prudent',connMode:'none',c77:null,c63:null,c0:null,dataStatus:'illustrative',siteRotation:'unknown',siteCauses:'unknown',siteRejects:'unknown',tonnage:null
   };
@@ -33,10 +31,28 @@
   const PRICE_TIERS_C=[{max:5,price:7200,label:'jusqu’à 5 presses'},{max:8,price:12000,label:'6 à 8 presses'},{max:20,price:18000,label:'9 à 20 presses'},{max:Infinity,price:24000,label:'plus de 20 presses'}];
   function priceTier(n,act){return (act==='caoutchouc'?PRICE_TIERS_C:PRICE_TIERS).find(t=>n<=t.max);}
   const scenarioFactors={prudent:.5,central:.75,cible:1};
+  const MODEL_VERSION='VP-PUBLIC-2026-10-29-R1';
+  const ASSUMPTIONS_ID='base-depot-principal-20-60-illustrative';
   function calculate(s){
-    const errors=[];const finite=(v)=>v!==null&&v!==''&&Number.isFinite(Number(v));
+    if(!s||typeof s!=='object'||Array.isArray(s)||!Array.isArray(s.presses)||!s.presses.length||s.presses.some(p=>!p||typeof p!=='object'||Array.isArray(p)))return {errors:['Structure des données invalide : renseigner le parc de presses.']};
+    const errors=[];const finite=(v)=>(typeof v==='number'||typeof v==='string'&&v.trim()!=='')&&Number.isFinite(Number(v));
     const required=(key,label,min=0,max=Infinity,integer=false)=>{const v=s[key];if(!finite(v)||+v<min||+v>max||(integer&&!Number.isInteger(+v)))errors.push(`${label} : saisir ${integer?'un entier':'une valeur'} entre ${min} et ${max===Infinity?'une limite positive':max}.`);};
     const RUB=s.activity==='caoutchouc';if(!RUB&&(s.activity!=='plasturgie'||s.process!=='thermoplastique'))return {unsupported:true,errors:[]};
+    if(!['prudent','central','cible'].includes(s.scenario))errors.push('Scénario non reconnu.');
+    if(!['euros','rate','unknown'].includes(s.costMode))errors.push('Mode de coût non reconnu.');
+    if(!['direct','derived','benchmark','unknown'].includes(s.financeMode))errors.push('Mode financier non reconnu.');
+    if(s.connMode&&!['none','all','critical','ready'].includes(s.connMode))errors.push('Mode de connexion non reconnu.');
+    ['diagHours','techRate'].forEach(k=>required(k,k,0));
+    required('targetDiag','Part de temps de diagnostic évitée',0,100);
+    if(+s.reject===100)errors.push('Rebuts à 100 % : la valorisation économique exige une référence de production conforme. Aucun gain global calculé.');
+    if(RUB){
+      required('cureTime','Temps de vulcanisation actuel',Number.MIN_VALUE);
+      required('cureTarget','Temps de vulcanisation visé',Number.MIN_VALUE);
+      ['handling','mixHours','deflashHours','deflashCost'].forEach(k=>required(k,k,0));
+      required('mixIssues','Nombre de lots concernés',0,Infinity,true);
+      ['addressCure','targetMix','addressMix','targetDeflash','addressDeflash'].forEach(k=>required(k,k,0,100));
+    }
+    ['c77','c63','c0','predictK'].forEach(k=>{if(s[k]!==null&&s[k]!==undefined&&s[k]!=='')required(k,k,0,Infinity,true);});
     s.presses.forEach((p,i)=>{if(!finite(p.n)||p.n<0||!Number.isInteger(+p.n))errors.push(`Classe ${i+1} : nombre de presses entier positif ou nul requis.`);if(!finite(p.h)||p.h<0||p.h>8760||(+p.n>0&&+p.h===0))errors.push(`Classe ${i+1} : heures requises entre 1 et 8 760 pour une presse active.`);});
     ['changes','changeDuration','preventive','targetChange','investment','internalCost','annualCost'].forEach(k=>required(k,{changes:'Nombre de changements',changeDuration:'Durée des changements',preventive:'Préventif',targetChange:'Durée cible',investment:'Investissement',internalCost:'Temps interne',annualCost:'Coûts récurrents'}[k],0,Infinity,k==='changes'));
     ['tech','org','proc','reject','avoidable','targetTech','targetOrg','targetProc','targetQuality','addressTech','addressOrg','addressProc','addressChange','addressPerf','addressQuality','monetization'].forEach(k=>required(k,labels[k]||k,0,100));
@@ -48,9 +64,16 @@
     if(s.financeMode==='direct'&&s.contribution!==null&&s.contribution!=='')required('contribution','Contribution horaire',0);
     if(s.financeMode==='derived'){required('revenue','CA du périmètre',0);required('margin','Marge sur coûts variables',0,100);}
     if(s.financeMode==='benchmark'){required('margin','Marge sur coûts variables',0,100);if(finite(s.caHour))required('caHour','CA par heure de presse',1);}
+    if(s.financeMode==='benchmark'&&s.caHour!==null&&s.caHour!==undefined&&s.caHour!==''&&!finite(s.caHour))errors.push('CA horaire invalide.');
+    if(s.tonnage!==null&&s.tonnage!==undefined&&(!Array.isArray(s.tonnage)||s.tonnage.length!==TON_CA.length||s.tonnage.some(v=>!finite(v)||+v<0||!Number.isInteger(+v))))errors.push('Répartition par tonnage invalide.');
     ['trsDeclared','occupation'].forEach(k=>{if(s[k]!==null&&s[k]!=='')required(k,k==='trsDeclared'?'TRS déclaré':'Occupation déclarée',0,100);});
     const n=s.presses.reduce((a,p)=>a+(+p.n||0),0);if(s.priceAuto!==false&&n>0)s.annualCost=priceTier(n,s.activity).price;const H=s.presses.reduce((a,p)=>a+(+p.n||0)*(+p.h||0),0);
     if(n<1||H<=0)errors.push('Ajoutez au moins une presse et des heures requises.');
+    if(['c77','c63','c0'].some(k=>finite(s[k]))){
+      const split=[Math.round(n*.5),Math.round(n*.3)];
+      const counts=[finite(s.c77)?+s.c77:split[0],finite(s.c63)?+s.c63:split[1],finite(s.c0)?+s.c0:Math.max(0,n-split[0]-split[1])];
+      if(counts.reduce((a,b)=>a+b,0)>n)errors.push('Le nombre de presses par connexion dépasse le parc déclaré.');
+    }
     const changeH=s.changes*s.changeDuration/60,techH=H*s.tech/100,orgH=H*s.org/100,procH=H*s.proc/100;
     const mixH=RUB?(+s.mixIssues||0)*(+s.mixHours||0):0;const stopH=mixH+changeH+(+s.preventive)+techH+orgH+procH;
     if(stopH>=H)errors.push('Les arrêts doivent rester inférieurs aux heures requises. Vérifiez les doublons et les dénominateurs.');
@@ -70,7 +93,7 @@
     const perfTechnical=P===null?null:H*(D+techRecovery/H)*perfDelta*Q;
     const perfAddressable=P===null?null:H*D1*perfDelta*(s.addressPerf/100)*Q;
     const equivalentStops=P===null?null:addressRecovery*P*Q;
-    const cycle0=RUB?+s.cureTime+(+s.handling):1,cureT=RUB?Math.min(+s.cureTime,+s.cureTarget):0,cycle1=RUB?+s.handling+s.cureTime-(s.cureTime-cureT)*f:1;
+    const cycle0=RUB?+s.cureTime+(+s.handling):1,cureT=RUB?Math.min(+s.cureTime,+s.cureTarget):0,cycle1=RUB?+s.handling+(+s.cureTime)-(s.cureTime-cureT)*f:1;
     const cureTechnical=!RUB||P===null||cycle1<=0?0:H*D1*P*Q*(cycle0/cycle1-1),cureAddressable=cureTechnical*(RUB?s.addressCure/100:0);
     const deflashGain=RUB?(+s.deflashHours||0)*(+s.deflashCost||0)*s.targetDeflash/100*f*s.addressDeflash/100:0;
     const equivalent=P===null?null:equivalentStops+perfAddressable+cureAddressable;
@@ -128,9 +151,12 @@
     if(scan>0)warnings.push('Démarrage par VP Scan : la mise en place VP Expert (8 000 €) est offerte, le diagnostic chiffre vos priorités avant tout abonnement.');
     if(gross===null)warnings.push('Données économiques incomplètes : aucun retour sur investissement global n’est affiché.');
     const modeledLosses=P===null||contribution===null||scrapCost===null?null:(changeH+techH+orgH+procH)*P*Q*contribution+H*D*(1-P)*Q*contribution+scrapCost*s.avoidable/100;
-    return {errors:[],warnings,scan,setup,aidScan:conn?conn.aidScan:aidScanOnly,credit,year1Cost:costAll-credit,netPerPress:n>0&&grossAll!==null?(grossAll-costAll)/n:null,diagGain,RUB,mixH,cycle0,cycle1,cureAddressable,deflashGain,n,H,D,P,Q,trs:P===null?null:D*P*Q*100,changeH,stopH,rows,f,techRecovery,addressRecovery,equivalent,equivalentTechnical,perfAddressable,contribution,benchCA,caHourUsed,scrapCost,qualityTechnical,qualityGain,capacityGain,gross,grossAll,costAll,conn,c77,c63,c0,netRA:gross===null?null:gross-s.annualCost,net:grossAll===null?null:grossAll-costAll,upfront,cash,monthly,payback,year1:gross===null?null:cash[12],modeledLosses,remainingD:D1,projectedTrs:P===null?null:D1*(P+perfDelta*s.addressPerf/100)*Q*100};
+    const result={errors:[],warnings,modelVersion:MODEL_VERSION,assumptionsId:ASSUMPTIONS_ID,scan,setup,aidScan:conn?conn.aidScan:aidScanOnly,credit,year1Cost:costAll-credit,netPerPress:n>0&&grossAll!==null?(grossAll-costAll)/n:null,diagGain,RUB,mixH,cycle0,cycle1,cureAddressable,deflashGain,n,H,D,P,Q,trs:P===null?null:D*P*Q*100,changeH,stopH,rows,f,techRecovery,addressRecovery,equivalent,equivalentTechnical,perfAddressable,contribution,benchCA,caHourUsed,scrapCost,qualityTechnical,qualityGain,capacityGain,gross,grossAll,costAll,conn,c77,c63,c0,netRA:gross===null?null:gross-s.annualCost,net:grossAll===null?null:grossAll-costAll,upfront,cash,monthly,payback,year1:gross===null?null:cash[12],modeledLosses,remainingD:D1,projectedTrs:P===null?null:D1*(P+perfDelta*s.addressPerf/100)*Q*100};
+    const invalid=v=>typeof v==='number'?!Number.isFinite(v):v&&typeof v==='object'?Object.values(v).some(invalid):false;
+    if(invalid(result))return {errors:['Calcul impossible : valeurs hors domaine numérique. Vérifier les entrées avant toute estimation.'],modelVersion:MODEL_VERSION,assumptionsId:ASSUMPTIONS_ID};
+    return result;
   }
   const labels={tech:'Aléas techniques',org:'Aléas organisationnels',proc:'Aléas process',reject:'Rebuts en pièces',avoidable:'Part de coût évitable',targetTech:'Réduction des aléas techniques',targetOrg:'Réduction des aléas organisationnels',targetProc:'Réduction des aléas process',targetQuality:'Réduction du coût évitable des rebuts',addressTech:'Part adressable technique',addressOrg:'Part adressable organisation',addressProc:'Part adressable process',addressChange:'Part adressable changements',addressPerf:'Part adressable performance',addressQuality:'Part adressable qualité',monetization:'Capacité commercialisable'};
-  root.VellaCalc={PREDICT_PRICE_11,PREDICT_MIN,PREDICT_SUCCESS,PILOT_CREDIT,EXT_BASE,EXT_PER,SCAN_PRICE,FOCUS_EXP,defaultsC,PRICE_TIERS_C,PRICE_TIERS,priceTier,BENCH_CA,TON_CA,benchmarkCA,defaults,PACK,PACK_C,PREDICT_PRICE,PREDICT_SITE,PILOT_BASE,PILOT_PER,calculate,scenarioFactors,labels};
+  root.VellaCalc={MODEL_VERSION,ASSUMPTIONS_ID,PREDICT_PRICE_11,PREDICT_MIN,PREDICT_SUCCESS,PILOT_CREDIT,EXT_BASE,EXT_PER,SCAN_PRICE,FOCUS_EXP,defaultsC,PRICE_TIERS_C,PRICE_TIERS,priceTier,BENCH_CA,TON_CA,benchmarkCA,defaults,PACK,PACK_C,PREDICT_PRICE,PREDICT_SITE,PILOT_BASE,PILOT_PER,calculate,scenarioFactors,labels};
   if(typeof module!=='undefined')module.exports=root.VellaCalc;
 })(typeof window!=='undefined'?window:globalThis);

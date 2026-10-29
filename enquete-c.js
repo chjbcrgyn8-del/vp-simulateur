@@ -82,28 +82,27 @@ const DIRT={'hausse':'Levier à augmenter','baisse':'Levier à baisser','hausse 
 const TOCONF=t=>/commutation/i.test(t)?t+' (libellé à confirmer par l’expert)':t;
 function card(c,i,st,nx){const cf=CONF[c.id]||0;
  let act;
- if(st==='nc')act=`<div class="cst nc nv"><b>Non conforme après contrôle :</b> levier retenu pour cette enquête, compté une fois dans les statistiques du site. <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
- else if(st==='ok')act=`<div class="cst ok nv"><b>Conforme après contrôle :</b> levier écarté. <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
- else if(st==='lock')act='<p class="sl lockt">Cause déjà trouvée pour cette enquête : pas de second enregistrement.</p>';
+ if(st==='nc')act=`<div class="cst nc nv"><b>Écart observé :</b> hypothèse à vérifier, cause non démontrée. Aucun apprentissage à partir de ce clic. <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
+ else if(st==='ok')act=`<div class="cst ok nv"><b>Contrôle conforme :</b> hypothèse non étayée par ce contrôle. <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
  else act=`<div class="acts nv"><button type="button" class="btn sm bnc" data-nc="${c.id}">Non conforme après contrôle</button><button type="button" class="btn ghost sm bok" data-ok="${c.id}">Conforme après contrôle</button></div>`;
- return `<div class="cc${i===0?' best':''}${st==='ok'?' done':''}${st==='lock'?' lock':''}${st==='nc'?' found':''}${nx?' next':''}" data-id="${c.id}"><div class="ch"><span class="rk">${i+1}</span><b>${nx?'<span class="tg nxt nv">Contrôle suivant</span>':''}${esc(TOCONF(c.n))}${c.t?'<span class="tg mes">Donnée de mesure</span>':''}</b><span class="ind" title="Score de pertinence, pas une probabilité">${c.pct}<small> pts</small></span></div><div class="bar"><i style="width:${c.pct}%"></i></div><p><span class="fam">${esc(c.b)}</span> <b>Contrôle :</b> ${esc(c.ctl)}</p><p class="why">${c.lo?'<b>Mesure conforme : moins probable</b>, vérifier le capteur · ':''}${c.rank?`Rang ${c.rank} dans l’ordre de notre expert caoutchouc · ${esc(DIRT[c.dir]||c.dir)}`:esc(c.x||'')}${c.w&&c.w.length?' · indices : '+esc(c.w.join(' · ')):''}${cf?` · <b>${cf} cas confirmé${cf>1?'s':''} sur le site</b>`:''}</p>${act}</div>`;}
+ return `<div class="cc${i===0?' best':''}${st==='ok'?' done':''}${st==='lock'?' lock':''}${st==='nc'?' found':''}${nx?' next':''}" data-id="${c.id}"><div class="ch"><span class="rk">${i+1}</span><b>${nx?'<span class="tg nxt nv">Contrôle suivant</span>':''}${esc(TOCONF(c.n))}${c.t?'<span class="tg mes">Donnée de mesure</span>':''}</b><span class="ind" title="Score de pertinence, pas une probabilité">${c.pct}<small> pts</small></span></div><div class="bar"><i style="width:${c.pct}%"></i></div><p><span class="fam">${esc(c.b)}</span> <b>Contrôle :</b> ${esc(c.ctl)}</p><p class="why">${c.lo?'<b>Mesure conforme : moins probable</b>, vérifier le capteur · ':''}${c.rank?`Rang ${c.rank} dans l’ordre de notre expert caoutchouc · ${esc(DIRT[c.dir]||c.dir)}`:esc(c.x||'')}${c.w&&c.w.length?' · indices : '+esc(c.w.join(' · ')):''}${cf?` · <b>Écart observé dans cette démonstration, cause non démontrée</b>`:''}</p>${act}</div>`;}
 let LAST=[];
-function draw3(){const d=S.br==='derive';let h='<p class="vpx">VP Expert · dit quoi faire</p>',list;
+function draw3(){const d=S.br==='derive';let h='<p class="vpx">VP Expert · guide les contrôles</p>',list;
  $('t3').textContent=d?'Origines à contrôler, dans l’ordre':'Leviers à contrôler, dans l’ordre';
- if(d){list=((CFG.kb[S.param]||{})[S.dir]||[]).map((c,k)=>({id:'d'+S.param+S.dir+k,n:c.l,b:'Expertise',ctl:(c.a&&c.a[0]?c.a[0].l:''),x:c.n+' cas dans l’expertise initiale',s:c.n*(1+(CONF['d'+S.param+S.dir+k]||0)*.5)}));}
- else{list=cands().map(c=>{const w=why(c.ind),lo=S.br==='conforme'&&!!c.t;return {...c,w,lo,s:c.prior*Math.pow(2.2,w.length+(CONF[c.id]||0))*(lo?.2:1)}});}
+ if(d){list=((CFG.kb[S.param]||{})[S.dir]||[]).map((c,k)=>({id:'d'+S.param+S.dir+k,n:c.l,b:'Expertise',ctl:(c.a&&c.a[0]?c.a[0].l:''),x:'Pondération illustrative du référentiel, sans fréquence terrain vérifiée',s:c.n}));}
+ else{list=cands().map(c=>{const w=why(c.ind),lo=S.br==='conforme'&&!!c.t;return {...c,w,lo,s:c.prior*Math.pow(2.2,w.length)*(lo?.2:1)}});}
  const tot=list.reduce((a,c)=>a+c.s,0)||1;list.forEach(c=>c.pct=Math.max(1,Math.round(c.s/tot*100)));
  list.sort((a,b)=>b.s-a.s);LAST=list;
- const K=KEY(),Rc=REC[K],O=OK[K]||{};
- const stOf=c=>Rc&&Rc.id===c.id?'nc':O[c.id]?'ok':Rc?'lock':'open';
- const nxi=Rc?-1:list.findIndex(c=>stOf(c)==='open');
- const nShow=Math.max(5,nxi+1,Rc?list.findIndex(c=>c.id===Rc.id)+1:0);
+ const K=KEY(),Rc=REC[K]||{},O=OK[K]||{};
+ const stOf=c=>Rc[c.id]?'nc':O[c.id]?'ok':'open';
+ const nxi=list.findIndex(c=>stOf(c)==='open');
+ const nShow=Math.max(5,nxi+1,...list.map((c,i)=>Rc[c.id]?i+1:0));
  const nOk=Object.keys(O).length;
- if(list.length)h+=Rc?`<div class="emsg win nv"><b>Cause trouvée :</b> ${esc(list.find(c=>c.id===Rc.id)?.n||'')}. Les autres contrôles sont verrouillés pour cette enquête, afin de ne pas fausser les statistiques du site. <button type="button" class="lk" data-new="1">Nouvelle enquête sur ce défaut</button></div>`
-  :nOk?`<div class="emsg nv">${nOk} contrôle${nOk>1?'s':''} conforme${nOk>1?'s':''}, levier${nOk>1?'s':''} écarté${nOk>1?'s':''}. ${nxi>=0?'Passez au contrôle suivant, n° '+(nxi+1)+'.':'Tous les leviers listés sont écartés : c’est un cas à ajouter à la base du site.'}</div>`
-  :'<p class="sl nv">Après chaque contrôle, indiquez le résultat. Une seule cause peut être retenue par enquête ; une erreur de saisie se corrige.</p>';
+ if(list.length)h+=Object.keys(Rc).length?`<div class="emsg win nv"><b>${Object.keys(Rc).length} écart(s) observé(s).</b> Cause non déterminée. Plusieurs écarts peuvent coexister : poursuivre les contrôles pertinents, puis faire valider la causalité et l’action dans le contexte machine et matière. <button type="button" class="lk" data-new="1">Nouvelle enquête sur ce défaut</button></div>`
+  :nOk?`<div class="emsg nv">${nOk} contrôle(s) conforme(s). ${nxi>=0?'Passez au contrôle suivant, n° '+(nxi+1)+'.':'Aucune hypothèse étayée : solliciter une revue métier, sans conclure à une cause.'}</div>`
+  :'<p class="sl nv">Après chaque contrôle, indiquez le constat. Plusieurs écarts peuvent être relevés ; aucun ne démontre seul la cause. Une erreur de saisie se corrige.</p>';
  h+=list.length?'<div class="cl">'+list.slice(0,nShow).map((c,i)=>card(c,i,stOf(c),i===nxi)).join('')+'</div>':'<p class="sl">Aucune cause ne correspond : c’est un cas à ajouter à la base du site.</p>';
- if(list.length>nShow)h+=`<p class="sl">${list.length-nShow} autre${list.length-nShow>1?'s':''} levier${list.length-nShow>1?'s':''} possible${list.length-nShow>1?'s':''}, voir le diagramme. Score de pertinence sur 100, calculé à partir de l’ordre de notre expert caoutchouc, des indices et des cas confirmés : ce n’est pas une probabilité. Une cause n’est confirmée qu’après contrôle.</p>`;
+ if(list.length>nShow)h+=`<p class="sl">${list.length-nShow} autre(s) levier(s) possible(s), voir le diagramme. Score illustratif calculé à partir du référentiel et des indices : ce n’est ni une probabilité, ni une fréquence terrain. Les clics de cette démonstration ne modifient pas le classement.</p>`;
  const out=[];
  if(!d){if(S.qui==='qual')out.push('<span class="nvm"></span><b>Détecté par le service qualité :</b> bloquer le lot concerné et retrouver par la traçabilité (heure, ordre de fabrication) les pièces touchées.');
   if(S.qui==='client')out.push('<b>Détecté chez le client :</b> lancer le confinement (tri des stocks et en-cours) et informer la qualité.');
@@ -117,13 +116,13 @@ function draw3(){const d=S.br==='derive';let h='<p class="vpx">VP Expert · dit 
  $('res').innerHTML=h;$('s4').hidden=d;
  if(!d){$('ititle').textContent='Diagramme d’Ishikawa · '+NAME(DEF()).toLowerCase();$('ihint').textContent=S.br==='conforme'?'Les leviers grisés sont rendus moins probables par les mesures, sans être exclus. Les autres sont colorés selon le nombre d’indices.':'Sans mesures, tous les leviers restent possibles.';
   const C=cands();$('ishi').innerHTML=BR.map(B=>`<section><h3>${B}</h3><ul>`+C.filter(c=>c.b===B).map(c=>{const n=why(c.ind).length,x=S.br==='conforme'&&c.t;return `<li class="${x?'x':n>=3?'s3':n===2?'s2':n===1?'s1':''}">${esc(c.n)}</li>`}).join('')+'</ul></section>').join('');}}
-function drawH(){$('hist').hidden=!HIST.length;$('hb').innerHTML=HIST.map((r,ix)=>`<tr class="${r.r}"><td>${r.t}</td><td>${esc(r.d)}</td><td>${esc(r.c)}</td><td><span class="res ${r.r}">${r.r==='nc'?'Non conforme : cause retenue':'Conforme : levier écarté'}</span></td><td><button type="button" class="lk" data-hfix="${ix}">Corriger</button></td></tr>`).join('');}
+function drawH(){$('hist').hidden=!HIST.length;$('hb').innerHTML=HIST.map((r,ix)=>`<tr class="${r.r}"><td>${r.t}</td><td>${esc(r.d)}</td><td>${esc(r.c)}</td><td><span class="res ${r.r}">${r.r==='nc'?'Écart observé : cause non démontrée':'Contrôle conforme : hypothèse non étayée'}</span></td><td><button type="button" class="lk" data-hfix="${ix}">Corriger</button></td></tr>`).join('');}
 function undo(ix){const r=HIST[ix];if(!r)return;HIST.splice(ix,1);
- if(r.r==='nc'){CONF[r.id]=Math.max(0,(CONF[r.id]||0)-1);if(REC[r.key]&&REC[r.key].id===r.id)delete REC[r.key];}
+ if(r.r==='nc'){if(REC[r.key])delete REC[r.key][r.id];}
  else if(OK[r.key])delete OK[r.key][r.id];}
-function record(id,res){const K=KEY();if(REC[K])return;OK[K]=OK[K]||{};if(OK[K][id])return;
+function record(id,res){const K=KEY();REC[K]=REC[K]||{};OK[K]=OK[K]||{};if(REC[K][id]||OK[K][id])return;
  const c=LAST.find(x=>x.id===id);if(!c)return;
- if(res==='nc'){REC[K]={id};CONF[id]=(CONF[id]||0)+1;}else OK[K][id]=1;
+ if(res==='nc')REC[K][id]=1;else OK[K][id]=1;
  HIST.unshift({key:K,id,r:res,t:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),d:S.br==='derive'?CFG.params.find(p=>p.id===S.param).n+(S.dir==='up'?' en hausse':' en baisse'):NAME(DEF()),c:c.n});}
 function render(){draw0();draw1();draw2();draw3();drawH();}
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;

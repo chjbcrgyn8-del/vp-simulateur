@@ -35,7 +35,7 @@ const TIPS={
 const F=(key,label,unit,hint,opt={})=>({key,label,unit,hint,...opt});
 const fmt=v=>v==null||v===''?'':Number(v).toLocaleString('fr-FR',{maximumFractionDigits:2});
 const parse=t=>{t=String(t).replace(/[\s\u202f\u00a0]/g,'').replace(',','.');return t===''?null:(isFinite(+t)?+t:NaN);};
-function check(k,v){if(v===null)return k==='caHour'?'':'Valeur requise.';if(Number.isNaN(v))return 'Saisissez un nombre.';if(v<0)return 'La valeur doit être positive.';const l=LIM[k]||(k.startsWith('presses.')?[0,500]:null);if(l&&(v<l[0]||v>l[1]))return `Entre ${fmt(l[0])} et ${fmt(l[1])}.`;return '';}
+function check(k,v){if(v===null)return k==='caHour'?'':'Valeur requise.';if(!Number.isFinite(v))return 'Saisissez un nombre fini.';if(v<0)return 'La valeur doit être positive.';if(k==='reject'&&v>=100)return 'Le taux de rebuts doit être inférieur à 100 %.';if((k==='cureTime'||k==='cureTarget')&&v<=0)return 'Le temps de vulcanisation doit être strictement positif.';const l=LIM[k]||(k.startsWith('presses.')?[0,500]:null);if(l&&(v<l[0]||v>l[1]))return `Entre ${fmt(l[0])} et ${fmt(l[1])}.`;return '';}
 const steps=[
  {id:'intro'},
  {id:'parc',eyebrow:'Votre atelier',title:'Quelle est la taille de votre parc de presses ?',lead:'Choisissez le profil le plus proche. Vous pourrez détailler par classe de tonnage.',
@@ -43,7 +43,7 @@ const steps=[
   more:'Détailler par classe de tonnage',
   moreFields:()=>S.presses.map((p,i)=>F('presses.'+i+'.n',p.label,'presses','Nombre de presses de cette classe.'))
     .concat([F('hours','Heures requises par presse','h/an','5 000 h correspond à deux équipes. Appliqué à toutes les classes.')])},
- {id:'connect',eyebrow:'Connexion des presses',title:'Vos presses peuvent-elles transmettre leurs mesures ?',lead:'VP Expert dit quoi faire, sur toutes vos presses, sans connexion. VP Predict repère la dérive en direct, sur les presses qui transmettent leurs mesures : il rapporte le plus sur les presses critiques, celles qui concentrent rebuts chers et dérives. Deux questions : l’état de votre parc, puis ce que vous voulez simuler. Touchez « ? » pour savoir comment reconnaître vos presses.',
+ {id:'connect',eyebrow:'Connexion des presses',title:'Vos presses peuvent-elles transmettre leurs mesures ?',lead:'VP Expert guide les contrôles, sans connexion machine. VP Predict repère la dérive en direct, sur les presses qui transmettent leurs mesures : il rapporte le plus sur les presses critiques, celles qui concentrent rebuts chers et dérives. Deux questions : l’état de votre parc, puis ce que vous voulez simuler. Touchez « ? » pour savoir comment reconnaître vos presses.',
   choices:[{value:'none',label:'VP Expert seul',big:'Sans connexion',d:'Toutes les presses, aucun matériel'},{value:'critical',label:'Avec VP Predict',big:'3 presses critiques',d:'Là où les pertes se concentrent. Recommandé pour démarrer'},{value:'ready',label:'Avec VP Predict',big:'Presses connectables',d:'Euromap 77 et Euromap 63 seulement'},{value:'all',label:'Avec VP Predict',big:'Tout le parc',d:'Y compris les presses à mettre à niveau'}],choiceKey:'connMode',
   fields:[F('c77','Prêtes à connecter','presses','Sortie de données moderne : 0 € de matériel.',{tip:'<b>Euromap 77 (OPC UA)</b><br>Presses récentes, en général depuis 2016 à 2018 : écran tactile, prise réseau, option « OPC UA » ou « Euromap 77 » dans la commande. Exemples : Engel CC300, Arburg Gestica, KraussMaffei MC6.'}),
           F('c63','Connectables avec un adaptateur','presses','Environ 890 € par presse.',{tip:'<b>Euromap 63</b><br>Presses des années 2000 à 2015 : la commande sait exporter des fichiers de données, mais pas en OPC UA. Un boîtier adaptateur suffit. Exemples : Engel CC100 à CC200, Arburg Selogica récentes.'}),
@@ -260,6 +260,7 @@ function renderResult(){
   const lv=[{k:'Économies évitables seules',g:eco},{k:'+ gains opérationnels',g:eco+op},{k:'+ capacité récupérée et vendue',g:eco+op+cap}].map(x=>({...x,net:x.g-r.costAll,pb:pb(x.g),cov:r.costAll>0?x.g/r.costAll*100:null}));
   return {eco,op,cap,capH,lv};})();
  app.innerHTML=`<section class="screen wide">
+ <p class="note">Modèle ${C.MODEL_VERSION} · Hypothèses illustratives : réduction qualité 20 %, part adressable 60 % par défaut. Les valeurs utilisées figurent dans le détail du calcul. Aucun gain garanti ; hypothèses à vérifier sur votre site.</p>
  <p class="printhead">Vella Partners · Estimation VP Expert · ${new Date().toLocaleDateString("fr-FR")}</p><p class="eyebrow">Votre estimation · scénario ${SL[s.scenario]}</p>
  <div class="scen" role="group" aria-label="Scénario affiché en détail">${['prudent','central','cible'].map(k=>`<button type="button" data-s="${k}" aria-pressed="${s.scenario===k}">${SL[k][0].toUpperCase()+SL[k].slice(1)}</button>`).join('')}</div>
  <div class="hero h3">
