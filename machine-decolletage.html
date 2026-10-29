@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Simulateur décolleteuse · dérive de cote et usure d’outil · Vella Partners</title>
+<meta name="description" content="Un tour à décolleter simulé : lancez une dérive de cote ou une usure d’outil, puis suivez la contre-mesure, la cause, l’action et la vérification du retour à la cote.">
+<meta name="theme-color" content="#0a1320">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Vella Partners">
+<meta property="og:title" content="Simulateur décolleteuse · dérive de cote et usure d’outil · Vella Partners">
+<meta property="og:description" content="Un tour à décolleter simulé : lancez une dérive de cote ou une usure d’outil, puis suivez la contre-mesure, la cause, l’action et la vérification du retour à la cote.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="sim2.css?v=8">
+<link rel="stylesheet" href="premium.css?v=9">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="signature.css?v=2">
+<link rel="stylesheet" href="industrie.css?v=5">
+<link rel="stylesheet" href="decolletage.css?v=2">
+<link rel="stylesheet" href="ux.css?v=20261029-dec">
+<link rel="icon" type="image/png" href="img/favicon.png">
+</head>
+<body class="press dec">
+<a class="skip" href="#main">Aller au contenu</a>
+<header class="top">
+  <a class="brand" href="index.html" aria-label="Vella Partners, accueil"><img src="img/logo-vella-partners.png" alt="Vella Partners" width="517" height="150"></a>
+  <nav class="tabs sector" aria-label="Secteur"><span class="seclab">Secteur :</span><a href="presse.html">Injection plastique</a><a href="presse-caoutchouc.html">Caoutchouc</a><a href="machine-decolletage.html" aria-current="page">Décolletage</a></nav><nav class="tabs menu" aria-label="Menu"><a href="index.html">Accueil</a><a href="index.html#offres">Nos offres</a><a href="index.html#essayer" aria-current="page">Essayer</a><a href="savoir.html">Savoir technique</a></nav>
+</header>
+<main id="main" class="smain">
+<h1 class="vh">Simulateur décolleteuse · dérive de cote et usure d’outil</h1>
+<p class="legal"><b>Simulation pédagogique uniquement.</b> Signal simulé autour de valeurs illustratives : aucune mesure réelle de décolleteuse n’est utilisée. Les causes et actions sont des règles candidates DC-01 et DC-04 issues d’une recherche documentaire non validée par un expert décolletage ; ce ne sont pas des consignes machine. Aucune valeur d’offset, d’avance ou de vitesse n’est proposée.</p>
+<section class="console" aria-label="Simulateur">
+ <div class="sbar">
+  <div class="hmi"><span class="tlight" id="tlight" data-s="off" aria-hidden="true"><i></i><i></i><i></i></span><span class="pname">Tour T7 · poupée mobile · pièce Ø 6 × 12 mm</span></div>
+  <div class="status" id="status"><i></i><span>Calcul de la référence en cours</span></div>
+  <span class="cyc">Pièce <b id="cycle">0</b></span>
+  <span class="toolw" title="Compteur de pièces depuis le dernier changement d’arête de l’outil de finition T03">Arête T03 · <b id="toolc">0</b> pcs</span>
+  <div class="ctrls"><button class="btn ghost sm" id="play" type="button">Pause</button><div class="speed" role="group" aria-label="Vitesse de simulation"><button type="button" data-v="1" aria-pressed="true">×1</button><button type="button" data-v="2" aria-pressed="false">×2</button><button type="button" data-v="4" aria-pressed="false">×4</button></div><button class="btn primary sm" id="drift" type="button" disabled>Je simule une dérive</button></div>
+ </div>
+ <details class="seuils"><summary><span class="vpx vpp">VP Predict</span> Seuils de surveillance et configuration de la machine</summary>
+  <div class="setgrid">
+   <fieldset><legend>Méthode de seuil</legend>
+    <label><input type="radio" name="meth" value="recette" checked> Tolérance plan (cotes) et plage de réglage</label>
+    <label><input type="radio" name="meth" value="stat"> Moyenne ± 3 σ <small>sur la référence</small></label></fieldset>
+   <fieldset><legend>Règles d’alerte</legend>
+    <label><input type="checkbox" data-r="seuil" checked> Hors limite : tolérance ou plage franchie</label>
+    <label><input type="checkbox" data-r="cote" checked> Alerte préventive : 7 pièces du même côté</label>
+    <label><input type="checkbox" data-r="ewma" checked> Alerte préventive : tendance lissée hors zone <button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Moyenne glissante (EWMA, λ 0,2, L 3) qui gomme le bruit d’une pièce à l’autre et montre une dérive lente avant la tolérance."></span></button></label></fieldset>
+   <fieldset class="cfgfs"><legend>Configuration de la machine</legend>
+    <label><input type="radio" name="canon" value="avec" checked> Avec canon de guidage</label>
+    <label><input type="radio" name="canon" value="sans"> Mode sans canon</label>
+    <label><input type="checkbox" data-opc checked> Charge broche exposée par la CNC <small>(lecture seule)</small></label>
+    <p class="sl">Sans canon, les pistes canon sont masquées. Une donnée non exposée s’affiche « absente », jamais à zéro. Modifiable hors dérive.</p></fieldset>
+  </div></details>
+ <div class="sgrid">
+  <aside class="tiles" id="tiles" aria-label="Mesures suivies, choisissez le graphe"></aside>
+  <div class="chartcard">
+   <div class="chead"><div><h2 id="ctitle"></h2><p id="csub" class="sl"></p></div>
+    <ul class="legend"><li><i class="l-ref"></i>Référence</li><li><i class="l-tol"></i>Tolérance plan ou plage</li><li><i class="l-ew"></i>Tendance lissée</li></ul></div>
+   <svg id="chart" viewBox="0 0 720 300" role="img" aria-label="Courbe de la mesure choisie"></svg>
+  </div>
+  <div class="side" id="side" aria-live="polite"></div>
+ </div>
+</section>
+<p class="duo">VP Predict repère la dérive sur vos machines connectées, VP Expert aide à choisir les contrôles sur tout le parc. <a href="index.html#offres">Voir les offres</a> · Un défaut sans mesure qui dérive ? <a href="enquete-decolletage.html">Enquête défaut décolletage</a> · <a href="st-reperes-decolletage.html">Repères techniques</a> · <a href="st-mesures-decolletage.html">Mesures tour</a> · <a href="sources-decolletage.html">Sources et limites</a></p>
+<section class="histo" aria-labelledby="hh">
+ <h2 id="hh">Historique des dérives, causes et actions</h2>
+ <p class="legal hist-demo"><b>Historique de démonstration, non conservé.</b> Il vit dans votre navigateur et disparaît au rechargement de la page. Dans l’application VP Expert, l’historique serait partagé par site, machine, référence pièce, outil, lot de barre, défaut, action et résultat vérifié.</p>
+ <div class="tw"><table><thead><tr><th>Date</th><th>Heure</th><th>Dérive</th><th>Cause</th><th>Action</th><th>Règle</th></tr></thead><tbody id="hist"></tbody></table></div>
+ <p class="legal">Démonstrateur : tour à poupée mobile fictif, une pièce toutes les 45 s, mesure post-process simulée à chaque pièce. Valeurs nominales, tolérances, durée de vie d’arête (2 500 pièces) et poids des causes sont illustratifs. Les règles DC01-R01 à R05 et DC04-R01 à R05 sont des intitulés de travail Vella Partners, rattachés aux sources du dossier « Enrichissement mondial décolletage v2.0 » et de la recherche mondiale v2.1 (RM-D01 à RM-D33) ; aucune n’est approuvée. Les ordres de contrôle par dérive sont des candidats, à relire par un expert décolletage. Une action n’entre dans l’historique qu’après vérification simulée. Le rappel au chef d’équipe est simulé.</p>
+</section>
+</main>
+<div class="modal" id="modal" hidden><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="mt">
+ <button type="button" class="mx" id="mclose" aria-label="Fermer">×</button>
+ <h2 id="mt">Je simule une dérive</h2>
+ <p class="ml">1. Quelle mesure ?</p><div class="mp"></div>
+ <p class="ml">2. Dans quel sens ?</p><div class="md"><button type="button" class="choice" data-md="up">En hausse</button><button type="button" class="choice" data-md="down">En baisse</button></div><p class="mdn" id="mdn"></p>
+ <button type="button" class="btn primary" id="go" disabled>Lancer la dérive</button>
+</div></div>
+<script src="kb-decolletage.js?v=2"></script>
+<script src="sim-decolletage.js?v=2"></script>
+<script src="tips.js"></script>
+<script src="typo.js"></script>
+<script src="ux.js?v=20261029-ux"></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mesures tour décolletage · Savoir technique · Vella Partners</title>
+<meta name="description" content="Ce qu’un tour CNC remonte réellement, ce que le démonstrateur simule, et ce que les données ouvertes de tournage permettent ou non.">
+<meta name="theme-color" content="#0a1320">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Vella Partners">
+<meta property="og:title" content="Mesures tour décolletage · Savoir technique · Vella Partners">
+<meta property="og:description" content="Ce qu’un tour CNC remonte réellement, ce que le démonstrateur simule, et ce que les données ouvertes de tournage permettent ou non.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="st.css">
+<link rel="stylesheet" href="premium.css?v=9">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="signature.css?v=2">
+<link rel="stylesheet" href="industrie.css?v=5">
+<link rel="stylesheet" href="decolletage.css?v=2">
+<link rel="stylesheet" href="ux.css?v=20261029-dec">
+<link rel="icon" type="image/png" href="img/favicon.png">
+</head>
+<body class="stp">
+<a class="skip" href="#main">Aller au contenu</a>
+<header class="top">
+  <a class="brand" href="index.html" aria-label="Vella Partners, accueil"><img src="img/logo-vella-partners.png" alt="Vella Partners" width="517" height="150"></a>
+  <nav class="tabs menu" aria-label="Menu"><a href="index.html">Accueil</a><a href="index.html#offres">Nos offres</a><a href="index.html#essayer">Essayer</a><a href="savoir.html" aria-current="page">Savoir technique</a></nav>
+</header>
+<main id="main" class="st"><p class="crumb"><a href="savoir.html">Savoir technique</a> › Mesures tour décolletage</p>
+
+<header class="ds-hero">
+ <div class="eyebrow">DÉCOLLETAGE · POUR ALLER PLUS LOIN</div>
+ <h1>Mesures tour · décolletage</h1>
+ <p class="ds-lead">Ce qu’un tour CNC remonte réellement, ce que le démonstrateur simule, et ce que les données ouvertes de tournage permettent ou non.</p>
+ <ul class="ds-toc" aria-label="Sur cette page">
+  <li><a href="#cnc"><span>01</span>Ce que remonte la CNC</a></li>
+  <li><a href="#simule"><span>02</span>Ce qui est simulé</a></li>
+  <li><a href="#ouvertes"><span>03</span>Données ouvertes</a></li>
+  <li><a href="#niveaux"><span>04</span>Qui agit</a></li>
+ </ul>
+ <a class="ds-switch" href="st-mesures-caoutchouc.html">Voir l’équivalent caoutchouc →</a>
+ <div class="ds-brief">
+  <div><b>Pièce par pièce</b><p>La cote vient d’une mesure post-process, d’un palpeur ou d’une saisie : la commande seule ne mesure pas la pièce.</p></div>
+  <div><b>Lecture seule</b><p>Vella Partners lit les données ; aucune correction n’est écrite dans la commande.</p></div>
+  <div><b>Donnée absente ≠ zéro</b><p>Une donnée non exposée est affichée comme absente, jamais comme conforme.</p></div>
+ </div>
+</header>
+
+<section class="rv" id="cnc" aria-labelledby="t1">
+ <div class="ds-head"><span class="ds-num">01</span><h2 id="t1">Ce que remonte un tour CNC.</h2><p>D’après les spécifications d’échange et les documents constructeurs. La disponibilité se vérifie machine par machine pendant le pilote.</p></div>
+ <div class="ds-tablewrap"><table>
+  <thead><tr><th>Donnée</th><th>Où la lire</th><th>Sources</th><th>Disponibilité</th><th>Usage dans le diagnostic</th></tr></thead>
+  <tbody><tr><td>Compteur de pièces et durée de vie d’outil</td><td>Gestion de durée de vie de la commande (comptage ou temps) ; OPC UA ToolLife : temps, nombre de pièces, seuil d’alerte, limite ; MTConnect : minutes, nombre de pièces, usure</td><td><a href="https://reference.opcfoundation.org/specs/OPC-40501-1/full" target="_blank" rel="noopener">INT-D46</a>, <a href="https://docs.mtconnect.org/MTC_Part_4-1_Cutting_Tools_1-6-0.pdf" target="_blank" rel="noopener" title="MTConnect, Part 4.1 Cutting Tools">RM-D23</a>, <a href="https://www.drivesul.com.br/template/imagens/manuais/manuais-fanuc/fanuc-series-0-model-c/Series%200%20%2000%20%200-Mate%20-%20for%20Lathe%20OPERATOR%E2%80%99S%20MANUAL.pdf" target="_blank" rel="noopener" title="FANUC Series 0 / 00 / 0-Mate for Lathe, manuel opérateur (copie en ligne)">RM-D25</a></td><td class="ds-none">Souvent disponible si la fonction est activée</td><td>Contexte de chaque cote : compteur d’arête</td></tr><tr><td>Corrections d’outil</td><td>Correcteurs de géométrie et d’usure séparés sur la commande</td><td><a href="https://www.drivesul.com.br/template/imagens/manuais/manuais-fanuc/fanuc-series-0-model-c/Series%200%20%2000%20%200-Mate%20-%20for%20Lathe%20OPERATOR%E2%80%99S%20MANUAL.pdf" target="_blank" rel="noopener" title="FANUC Series 0 / 00 / 0-Mate for Lathe, manuel opérateur (copie en ligne)">RM-D25</a></td><td class="ds-none">Lisible selon la commande et l’interface</td><td>Relire l’offset actif ; jamais d’écriture par VP</td></tr><tr><td>Charge et vitesse de broche, override</td><td>Données de broche exposées par MTConnect ou OPC UA</td><td><a href="https://docs.machinemetrics.com/docs/machine-connectivity/mtconnect-connectivity-guide/" target="_blank" rel="noopener" title="MachineMetrics, MTConnect connectivity guide">RM-D24</a>, <a href="https://reference.opcfoundation.org/specs/OPC-40501-1/full" target="_blank" rel="noopener">INT-D46</a></td><td class="ds-none">Souvent disponible</td><td>Tendance d’effort, à rattacher à la bonne opération</td></tr><tr><td>Alarmes machine</td><td>Exemples de série sur un modèle : détecteur de casse de l’outil de tronçonnage, détecteur de débit d’huile</td><td><a href="https://www.citizen.de/fileadmin/pim/machine_brochures/cincom/en/Cincom_L20_en.pdf" target="_blank" rel="noopener" title="Citizen, brochure Cincom L20">RM-D10</a></td><td class="ds-none">Selon modèle et options</td><td>Événement daté, pas une mesure continue</td></tr><tr><td>Température d’huile</td><td>Sonde du groupe ou du refroidisseur, quand elle existe</td><td><a href="https://www.techtool.com/blogs/news/swiss-machining-cutting-oil-selection" target="_blank" rel="noopener" title="Techtool, Swiss machining cutting oil selection">RM-D15</a></td><td class="ds-none">Souvent absente de l’interface</td><td>Séparer thermique et usure ; donnée absente ≠ zéro</td></tr><tr><td>Cote de la pièce</td><td>Pas remontée par la commande seule : palpeur en machine, mesure post-process ou saisie du régleur</td><td><a href="https://www.renishaw.com/en/ipc-intelligent-process-control--32497" target="_blank" rel="noopener" title="Renishaw, IPC Intelligent Process Control">RM-D20</a>, <a href="https://www.renishaw.com/resourcecentre/download/white-paper-survival-of-the-fittest-the-process-control-imperative--35900?userLanguage=en&amp;" target="_blank" rel="noopener" title="Renishaw, Survival of the fittest: the process control imperative">RM-D21</a></td><td class="ds-none">Dépend de l’équipement de mesure</td><td>Le signal qui déclenche l’alerte</td></tr><tr><td>Position dans la barre</td><td>Calculée à partir du compteur de pièces et de la longueur de pièce</td><td>Calcul Vella Partners</td><td class="ds-none">Calculable</td><td>Reconnaître une dérive en dents de scie</td></tr><tr><td>Lot de barre, nuance</td><td>Saisie au chargement ou lecture de l’ERP / MES</td><td>—</td><td class="ds-none">Rarement automatique</td><td>Relier un palier au changement de lot</td></tr></tbody></table></div>
+</section>
+
+<section class="rv" id="simule" aria-labelledby="t2">
+ <div class="ds-head"><span class="ds-num">02</span><h2 id="t2">Ce que le démonstrateur simule.</h2><p>Valeurs nominales et bandes illustratives d’un tour à poupée mobile fictif, une pièce toutes les 45 s. Ce ne sont pas des données de production.</p></div>
+ <div class="ds-tablewrap"><table><thead><tr><th>Mesure simulée</th><th>Unité</th><th>Nominal et bande</th></tr></thead><tbody><tr><td>Ø extérieur (finition)</td><td>mm</td><td class="ds-band">6,000 ± 0,010</td></tr><tr><td>Longueur totale</td><td>mm</td><td class="ds-band">12,00 ± 0,03</td></tr><tr><td>Rugosité Ra (prélèvement)</td><td>µm</td><td class="ds-band">0,80, alerte en hausse seulement</td></tr><tr><td>Charge broche principale</td><td>%</td><td class="ds-band">38, plage ± 8</td></tr><tr><td>Température huile de coupe</td><td>°C</td><td class="ds-band">31, plage ± 3</td></tr></tbody></table></div>
+ <p class="ds-micro">Formes de dérive simulées : progressive (usure), palier (ébréchure, réglage, lot), stabilisation (thermique), dents de scie (barre). <a href="machine-decolletage.html">Ouvrir le simulateur →</a></p>
+</section>
+
+<section class="rv" id="ouvertes" aria-labelledby="t3">
+ <div class="ds-head"><span class="ds-num">03</span><h2 id="t3">Données ouvertes de tournage.</h2><p>Quatre jeux retenus par la recherche mondiale. Tous viennent d’essais de laboratoire sur tours conventionnels : aucun n’est un relevé de décolleteuse en production.</p></div>
+ <div class="ds-tablewrap"><table><thead><tr><th>Réf.</th><th>Contenu</th><th>Licence</th><th>Usage possible</th></tr></thead><tbody><tr><td><a href="https://data.mendeley.com/datasets/z9w23xvhbt/1" target="_blank" rel="noopener" title="MaRoReS : usinage, rugosité et contraintes résiduelles en tournage du 42CrMo4+QT">RM-D27</a></td><td>Tournage du 42CrMo4+QT, 68 essais : efforts, accélérations, son, courant ; rugosité et contraintes résiduelles</td><td>CC BY 4.0</td><td>Tester la relation signal / rugosité</td></tr><tr><td><a href="https://data.mendeley.com/datasets/yz37pvtztx/1" target="_blank" rel="noopener" title="Rugosité et usure d’outil en tournage d’acier C45 (données et scripts MATLAB)">RM-D28</a></td><td>Tournage du C45 : rugosité Ra / Rz dans le temps à 6 vitesses, usure en dépouille VB</td><td>Données ouvertes (licence à vérifier)</td><td>Illustrer une dérive de rugosité liée à l’usure</td></tr><tr><td><a href="https://www.nature.com/articles/s41597-026-07061-1" target="_blank" rel="noopener" title="Harigovind, Nair &amp; Sakthivel, A sensor based turning dataset for data-driven surface roughness estimation">RM-D29</a></td><td>Inconel-625 en tournage à sec : vibrations triaxiales, efforts ; rugosité après chaque passe</td><td>Licence à vérifier</td><td>Méthode d’estimation de la rugosité</td></tr><tr><td><a href="https://data.mendeley.com/datasets/mvxbdd4y59/1" target="_blank" rel="noopener" title="Syed, Tool Wear (Mendeley Data)">RM-D30</a></td><td>Usure d’outil selon matière, conditions, temps cumulé et vibrations</td><td>CC BY 4.0</td><td>Inutilisable sans documentation du procédé</td></tr></tbody></table></div>
+ <div class="ds-note"><b>Conséquence.</b> Ces jeux servent à éprouver une méthode de détection, pas à présenter des cycles réels ni à calibrer les poids des causes. La démonstration sur données réelles passe par un pilote : export des cotes, du compteur d’arête, des corrections et du lot de barre d’une machine.</div>
+</section>
+
+<section class="rv" id="niveaux" aria-labelledby="t4">
+ <div class="ds-head"><span class="ds-num">04</span><h2 id="t4">À chaque dérive, la bonne personne.</h2><p>Les mêmes niveaux d’escalade qu’en plasturgie et en caoutchouc. Délais et destinataires sont paramétrés par site lors de la mise en service.</p></div>
+ <div class="ds-levels">
+  <article><small>N1</small><h3>Régleur de la zone</h3><p>Dérive détectée : il reçoit l’alerte et l’ordre de contrôle de la dérive.</p></article>
+  <article><small>N2</small><h3>Chef d’équipe</h3><p>Pas de prise en charge sous 5 minutes, ou dérive qui s’aggrave.</p></article>
+  <article><small>N3</small><h3>Qualité · méthodes · maintenance</h3><p>Risque de non-conformité, ou cause hors périmètre régleur : refroidisseur, canon, conditions de coupe.</p></article>
+ </div>
+</section>
+
+<section class="rv" aria-labelledby="t5">
+ <div class="ds-head"><h2 id="t5">Pour aller plus loin</h2></div>
+ <nav class="ds-next" aria-label="Pages liées">
+  <a href="machine-decolletage.html">Simulateur tour à décolleter<span>Dérive, contre-mesure, cause, action, vérification.</span></a>
+  <a href="enquete-decolletage.html">Enquête défaut<span>16 défauts décrits avec la méthode QQOQC.</span></a>
+  <a href="st-reperes-decolletage.html">Repères techniques<span>Ordres de contrôle et repères publiés.</span></a>
+  <a href="sources-decolletage.html">Sources et limites<span>Registre v2.0 et recherche mondiale v2.1.</span></a>
+ </nav>
+</section>
+
+</main>
+</main>
+<script src="tips.js"></script>
+<script src="typo.js"></script>
+<script src="anim.js?v=13"></script><script src="signature.js?v=2"></script>
+<script src="ux.js?v=20261029-ux"></script>
+</body>
+</html>
