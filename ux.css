@@ -1,0 +1,67 @@
+/* ux.css : ergonomie, lisibilité et finitions communes à toutes les pages.
+   Chargé en dernier : il ne retouche que des détails (zones tactiles, tailles de texte,
+   coupes de lignes, ancres, retour visuel). Rien ici ne change le contenu ni la mise en page. */
+
+/* ---------- Accès rapide au contenu (clavier, lecteurs d'écran) ---------- */
+.skip{position:absolute;left:12px;top:-64px;z-index:100;padding:12px 18px;border-radius:8px;
+ background:#0a1320;color:#fff;border:1px solid #e3b47c;font:600 14px/1 inherit;text-decoration:none;transition:top .15s}
+.skip:focus{top:12px;outline:2px solid #e8841f;outline-offset:2px}
+main:focus{outline:none}
+
+/* ---------- En-tête réellement collant ----------
+   style.css fixe body à 100 % de la fenêtre : l'en-tête « sticky » se décollait après un écran de défilement. */
+body{height:auto}
+
+/* ---------- Typographie : coupes de lignes plus propres ---------- */
+h1,h2,h3{text-wrap:balance}
+p,li,figcaption,dd,.lead,.sublead{text-wrap:pretty}
+[data-count],.proof strong,.kpi,.tv,table,.num{font-variant-numeric:tabular-nums}
+::selection{background:rgba(232,132,31,.28)}
+a,button,summary,.btn,.choice{-webkit-tap-highlight-color:transparent}
+/* le point qui suit une info-bulle reste collé au mot au lieu de passer à la ligne */
+.nw{white-space:nowrap}
+
+/* ---------- Lisibilité : plancher de 12 px pour les textes utiles ----------
+   (les valeurs d'origine étaient toutes inférieures : aucune taille n'est réduite) */
+.sitefoot h4,.kl,.offer .ot,.offer .on,.htrust li,.tabs.sector .seclab,
+.offer .under dt,.aio,.fcta small,.tv small,.cc .ind small,.tg.mes,.tg.nxt,
+.qfqt .vg span,.qfqt .vr .vhead em,.qfqt a.go small,.ds-levels small,
+.ds-tag,.fams small,.famlab,.fiche i,.qqoqc,.stag,span.vpx.vpp,.setgrid small{font-size:12px!important}
+
+/* étiquettes des cartes d'offres : 12 px sans dépasser la largeur de la carte */
+.offer .ot{letter-spacing:.02em!important}
+
+/* ---------- Retour visuel au toucher ---------- */
+.btn:active,.choice:active,.topcta:active,.fcta:active{transform:translateY(1px) scale(.985)}
+
+/* ---------- Mobile : zones tactiles de 44 px et en-tête qui s'efface ---------- */
+@media(max-width:640px){
+ /* navigation : secteur + menu (40 px de haut, 48 px avec le conteneur : l'en-tête reste sur 2 rangées) */
+ .top .tabs a{min-height:40px;display:inline-flex;align-items:center;justify-content:center;
+  padding-top:0!important;padding-bottom:0!important}
+ /* compteur d'étapes de la page Gains : masqué s'il est vide, sinon sur sa ligne au-dessus de la barre */
+ .top .stepcount{order:5;width:100%;min-width:0;line-height:1;font-size:12px}
+ .top .stepcount:empty{display:none}
+ .top .progress{order:6}
+ .top{transition:transform .25s ease}
+ .top.away{transform:translateY(-110%)}
+ /* les ancres ne passent plus sous l'en-tête */
+ html{scroll-padding-top:150px}[id]{scroll-margin-top:150px}
+ /* pied de page */
+ .sitefoot a{padding:10px 0!important;margin:0!important}
+ /* « Ce qu'il y a dessous ? », « Qui fait quoi », FAQ… */
+ details>summary{padding-top:10px;padding-bottom:10px}
+ /* pastilles de filtre de l'enquête */
+ .fams button,.sit button.sc,.choice,.opts button,.btn.sm,.segc button,.speed button{min-height:44px}
+ .speed button{min-width:44px}
+ button.lk,button.lnk,a.ds-switch{display:inline-flex;align-items:center;min-height:44px}
+}
+@media(max-width:640px) and (prefers-reduced-motion:reduce){.top{transition:none}}
+
+/* info-bulle « ? » : cible tactile élargie sans changer son dessin */
+@media(pointer:coarse){.tip::after{content:"";position:absolute;inset:-12px}}
+
+/* bouton flottant de l'accueil : s'efface quand la section finale ou le pied de page (qui ont déjà le même bouton) sont à l'écran */
+.fcta{transition:opacity .2s ease,transform .2s ease}
+.fcta.off{opacity:0;transform:translateY(12px);pointer-events:none}
+@media(prefers-reduced-motion:reduce){.fcta{transition:none}}
