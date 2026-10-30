@@ -24,7 +24,7 @@
 <link rel="stylesheet" href="signature.css?v=2">
 <link rel="stylesheet" href="industrie.css?v=5">
 <link rel="stylesheet" href="ux.css?v=20261029-dec">
-<link rel="stylesheet" href="banc-essai.css?v=20261030-b1">
+<link rel="stylesheet" href="banc-essai.css?v=20261030-b4">
 <link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 <body class="press banc">
@@ -36,8 +36,8 @@
 <main id="main" class="smain">
 <section class="bx-intro">
  <p class="bx-k"><span class="vpx vpp">VP Predict</span> Banc d’essai</p>
- <h1>Tester les règles d’alerte sur des mesures réelles</h1>
- <p class="bx-lead">Deux modes séparés : la <b>relecture brute</b> montre les données telles qu’elles ont été enregistrées ; la <b>dérive injectée</b> ajoute une dérive artificielle, signalée partout, pour mesurer le délai de détection. Les changements de consigne sont séparés avant le calcul des seuils. <a href="donnees-sources.html">D’où viennent les données</a>.</p>
+ <h1>Des mesures réelles, des dérives visibles, des signaux à qualifier</h1>
+ <p class="bx-lead">Deux modes séparés : la <b>relecture brute</b> montre les données telles qu’elles ont été enregistrées ; la <b>dérive injectée</b> ajoute une dérive artificielle, signalée partout, pour mesurer le délai de détection. Les changements de consigne sont séparés avant le calcul des seuils. Pour chaque jeu, un encadré dit ce que l’atelier en tire. <a href="donnees-sources.html">D’où viennent les données</a>.</p>
 </section>
 
 <section class="console bx-console" aria-label="Banc d’essai">
@@ -56,6 +56,7 @@
   </div>
  </div>
  <div class="bx-statusbar" id="bx-status" aria-live="polite"></div>
+ <div class="bx-recit" id="bx-recit" hidden></div>
  <div class="bx-ctrl">
   <div class="bx-mode" role="group" aria-label="Mode">
    <button type="button" data-mode="brut" aria-pressed="true"><b>Relecture brute</b><small>valeurs d’origine</small></button>
@@ -102,6 +103,11 @@
  </ol>
  <p class="sl">Ce banc vérifie le comportement des règles : délai de détection d’une dérive artificielle, signaux sur données réelles à qualifier. Il ne démontre ni un taux de fausses alertes industriel, ni un gain : ces points se valident en pilote sur vos presses. <a href="banc-modele-import.csv" download>Télécharger le modèle d’import CSV</a> · <a href="presse.html">Simulateur presse</a> · <a href="savoir.html">Savoir technique</a></p>
 </div></section>
+<section class="bx-sec bx-next" aria-labelledby="bx-nt"><h2 id="bx-nt">Et ensuite</h2><div class="bx-card">
+ <p>Ce banc le montre sur sept séries réelles : les règles détectent une dérive en quelques dizaines de cycles, mais sur de la vraie production, la majorité des signaux demandent une qualification. C’est ce travail, qualifier avec le régleur, choisir les mesures, fixer la référence de reprise, que Vella Partners apporte avant tout pilote.</p>
+ <p class="bx-next-btns"><a class="btn primary" href="pilote.html">Préparer un pilote</a><a class="btn ghost" href="index.html#offres">Nos offres</a></p>
+ <p class="sl">Le gain réel, le taux de fausses alertes et le délai de détection se mesurent sur vos presses ou vos tours, pas sur ce banc.</p>
+</div></section>
 <p class="legal">Données publiques citées avec leur licence : SKZ LoKI (CC BY 4.0), université de Kassel scatimdata (CC BY 4.0), Vicomtech (CC BY-SA 4.0, extrait diffusé sous la même licence), TU Darmstadt CiP-DMD (licence des données non précisée, reprise avec citation), iGuzzini (chargé depuis le dépôt d’origine, usage recherche et enseignement), Foxconn (jeu de concours 2020 republié sur GitHub sans licence précisée : repris pour l’usage interne Vella Partners, ce site n’étant pas ouvert au public). Cycles caoutchouc transmis par notre expert plasturgie partenaire. Votre fichier importé est lu dans votre navigateur : rien n’est envoyé ni conservé. <a href="donnees-sources.html">Sources des jeux de données et recherche détaillée</a>.</p>
 </main>
 <script src="cycles-caoutchouc.js?v=20261029-c10"></script>
@@ -110,7 +116,7 @@
 <script src="banc-data-kassel.js?v=20261030-b2"></script>
 <script src="banc-data-cipdmd.js?v=20261030-b2"></script>
 <script src="banc-data-foxconn.js?v=20261030-b3"></script>
-<script src="banc-essai.js?v=20261030-b3"></script>
+<script src="banc-essai.js?v=20261030-b4"></script>
 <script src="typo.js"></script>
 <script src="ux.js?v=20261029-ux"></script>
 </body>
