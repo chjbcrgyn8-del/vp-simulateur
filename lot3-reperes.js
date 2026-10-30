@@ -1,4 +1,4 @@
-/* Repères Lot 3 dans les enquêtes plastique et caoutchouc : « À ne pas conclure » et « Clôture attendue ».
+/* Repères Référentiel candidat dans les enquêtes plastique et caoutchouc : « À ne pas conclure » et « Clôture attendue ».
    Lecture seule ; s'ajoute sous les causes sans modifier le questionnaire. */
 (function(){
  const L=window.LOT3;if(!L)return;
@@ -33,7 +33,7 @@
   let el=document.getElementById('lot3');if(!c){if(el)el.remove();return}
   const R=L.r.filter(r=>r.d===c);if(!R.length)return;
   const open=el?el.open:false;if(!el){el=document.createElement('details');el.id='lot3';res.insertAdjacentElement('afterend',el)}
-  el.innerHTML=`<summary><b>Avant de conclure sur « ${E(L.n[c])} » : 4 repères</b><span>Lot 3 · candidats non validés</span></summary><div class="l3b"><p class="l3i">Ce qu’un contrôle ne prouve pas, et la preuve attendue pour clore. Repères documentaires en cours de relecture par nos experts : ce ne sont ni des actions, ni des réglages, ni une autorisation d’essai.</p><ol>`+
+  el.innerHTML=`<summary><b>Avant de conclure sur « ${E(L.n[c])} » : 4 repères</b><span>Référentiel candidat · non validé</span></summary><div class="l3b"><p class="l3i">Ce qu’un contrôle ne prouve pas, et la preuve attendue pour clore. Repères documentaires en cours de relecture par nos experts : ce ne sont ni des actions, ni des réglages, ni une autorisation d’essai.</p><ol>`+
   R.map(r=>`<li><h4>${E(r.t)}${r.p?'<span class="l3t">relecture prioritaire</span>':''}${r.b?'<span class="l3t">blocage à lever</span>':''}</h4><p class="l3q">Quand : ${E(r.q)}</p><div class="ncl"><p class="nc"><b>À ne pas conclure</b>${E(r.nc)}</p><p class="cl"><b>Clôture attendue</b>${E(r.cl)}</p></div><p class="l3s">${r.id}${r.x?' · s’appuie aussi sur l’expérience d’un expert partenaire':''}${r.s.length?' · Sources : '+r.s.map(([k,u])=>`<a href="${E(u)}" target="_blank" rel="noopener">${E(k)}</a>`).join(', '):''}</p></li>`).join('')+
   `</ol><p class="l3f">Référentiel ${L.v} · <a href="st-sources-mondiales.html">sources mondiales et leurs limites</a></p></div>`;el.open=open;}
  function boot(){const f=document.getElementById('fiche'),r=document.getElementById('res');if(!f||!r)return;draw();new MutationObserver(draw).observe(f,{childList:true,subtree:true,characterData:true});new MutationObserver(()=>{if(!document.getElementById('lot3'))last=null,draw()}).observe(r.parentNode,{childList:true})}
