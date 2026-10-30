@@ -7,7 +7,7 @@
 'use strict';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const fmt=(v,d)=>v==null||!isFinite(v)?'–':(Math.abs(v)>=1e5?Math.round(v).toLocaleString('fr-FR'):v.toLocaleString('fr-FR',{maximumFractionDigits:d==null?(Math.abs(v)<1?3:Math.abs(v)<100?2:1):d}));
-const U=(n)=>S.ds&&S.ds.id==='vicomtech'?(n>1?'segments':'segment'):S.ds&&S.ds.id==='import'?(n>1?'lignes':'ligne'):(n>1?'cycles':'cycle');
+const U=(n)=>S.ds&&S.ds.id==='vicomtech'?(n>1?'segments':'segment'):S.ds&&S.ds.id==='cipdmd'?(n>1?'tiges':'tige'):S.ds&&S.ds.id==='import'?(n>1?'lignes':'ligne'):(n>1?'cycles':'cycle');
 const pl=(n,a,b)=>n+' '+(n>1?b:a);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const B=window.VP_BANC||{};
@@ -44,6 +44,19 @@ DS.iguzzini={id:'iguzzini',court:'Injection · iGuzzini, 1 451 pièces',titre:'i
  limite:'Les lignes sont triées par classe qualité (370 rebuts, puis 406 acceptables, 310 cibles, 365 inefficaces), pas par ordre de production, et aucune date n’est fournie : la relecture chronologique et la dérive injectée sont désactivées.',
  note:'Contrôle des effectifs : la description du dépôt annonce 360 pièces « inefficaces », le fichier en contient 365 (total 1 451 cohérent). Écart signalé, données non corrigées.',
  classes:{1:'Rebut (U0 < 0,4)',2:'Acceptable',3:'Cible',4:'Inefficace (U0 > 0,5)'}};
+const KS={kassel1:{court:'Injection · Kassel boîtier',piece:'boîtier'},kassel3:{court:'Injection · Kassel bac',piece:'bac empilable'}};
+Object.keys(KS).forEach(id=>{const K=B[id];if(!K)return;
+ DS[id]={id,court:KS[id].court,titre:K.titre,cols:K.cols,rows:K.rows,chrono:true,seg:'colonne',segCol:1,defVar:2,ref:20,poids:2,cote:3,
+  src:'Bogedale, Doerfel, Schrodt, Heim, université de Kassel, <a href="https://doi.org/10.3390/polym15040978" target="_blank" rel="noopener">Polymers 2023, 15, 978</a>. <a href="https://github.com/sc4t1m/scatimdata" target="_blank" rel="noopener">Jeu de données scatimdata</a>, licence <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. Sélection de '+K.cols.length+' colonnes ; '+K.removed+' cycles de redémarrage (temps de cycle nul) retirés ; phases ajoutées par Vella Partners.',
+  usage:'Surveillance cycle à cycle face à la vraie qualité pièce : poids (balance 2 mg) et cote (projecteur de mesure) relevés sur chaque '+KS[id].piece+'. Les perturbations voulues du plan d’essai (température fourreau, vitesse d’injection, pauses) sont séparées en '+K.phases+' phases avant le calcul des seuils.',
+  limite:'Essais pilotés sur quelques jours, pas une production libre. Pas d’horodatage, seulement le compteur de cycles. Les phases sont détectées sur les valeurs mesurées (redémarrages, températures, temps d’injection) : les changements de pression de maintien et de température moule du plan publié n’y apparaissent pas et ressortent donc comme des signaux.',
+  note:'Contrôle d’alignement : la numérotation du plan d’essai publié s’écarte du compteur machine d’environ 17 cycles à partir du jour 3. Le plan n’a donc pas servi au découpage ; '+K.trans+' phases de transition (moins de 10 cycles) restent non évaluées.'}});
+if(B.cipdmd){const P=B.cipdmd;
+ DS.cipdmd={id:'cipdmd',court:'Tournage · CiP-DMD tiges',titre:P.titre,cols:P.cols,rows:P.rows,chrono:true,seg:'colonne',segCol:3,defVar:5,ref:20,tolerances:P.tolerances,
+  src:'TU Darmstadt, PTW, <a href="https://zenodo.org/records/8420132" target="_blank" rel="noopener">CiP-DMD (Procedia CIRP 2023)</a>, article sous licence CC BY 4.0. <a href="https://cloud.ptw-darmstadt.de/index.php/s/5Wv34VRZEXBLsZK" target="_blank" rel="noopener">Données d’origine</a> : licence non précisée par le dépôt, reprises ici avec citation. Mesures qualité des tiges, tri chronologique, périodes ajoutées à partir du journal de production.',
+  usage:'Suivi des cotes pièce par pièce en décolletage, face aux tolérances et aux changements d’outils datés du journal de production : chaque changement ouvre une nouvelle référence.',
+  limite:'Usine-école (learning factory), 8 journées de production, aucune anomalie provoquée sur le tour. Une tige sur quatre seulement change de programme d’usinage selon sa position dans la barre. Les signaux commande (courants, charges) ne sont pas repris : leur corrélation avec les cotes reste faible (|r| ≤ 0,27).',
+  note:'Contrôle d’import : 673 tiges mesurées, dont 607 rattachées à un horodatage ; 66 mesures sans fichier process ne peuvent pas être placées dans le temps et sont écartées. L’écart de diamètre, fourni en mm, est converti en µm.'};}
 const IG_FR={'Melt temperature':['Température matière','°C'],'Mold temperature':['Température moule','°C'],'time_to_fill':['Temps de remplissage','s'],'ZDx - Plasticizing time':['Temps de dosage','s'],'ZUx - Cycle time':['Temps de cycle','s'],'SKx - Closing force':['Force de fermeture','N (selon source)'],'SKs - Clamping force peak value':['Force de verrouillage, pic','N (selon source)'],'Ms - Torque peak value current cycle':['Couple vis, pic','N·m'],'Mm - Torque mean value current cycle':['Couple vis, moyen','N·m'],'APSs - Specific back pressure peak value':['Contre-pression spécifique, pic','bar'],'APVs - Specific injection pressure peak value':['Pression d’injection spécifique, pic','bar'],'CPn - Screw position at the end of hold pressure':['Position vis fin de maintien','cm'],'SVo - Shot volume':['Volume injecté','cm³'],'quality':['Classe qualité','']};
 
 /* ---------- État ---------- */
@@ -235,6 +248,7 @@ function renderChart(){
  const xs=R.x,ys=R.y,n=b-a;
  let lo=Infinity,hi=-Infinity;
  for(let i=a;i<b;i++){for(const v of [xs[i],ys?ys[i]:NaN,R.raw.mu[i]+3*R.raw.sg[i],R.raw.mu[i]-3*R.raw.sg[i]])if(isFinite(v)){if(v<lo)lo=v;if(v>hi)hi=v}}
+ const tl=ds.tolerances&&ds.tolerances[c.k];if(tl){lo=Math.min(lo,tl[0]);hi=Math.max(hi,tl[1])}
  if(!isFinite(lo)){svg.innerHTML='';return}
  if(hi===lo){hi+=1;lo-=1}const padv=(hi-lo)*0.06;lo-=padv;hi+=padv;
  const X=i=>pl+(i-a)/(Math.max(1,n-1))*(W-pl-pr),Y=v=>pt+(hi-v)/(hi-lo)*(H-pt-pb);
@@ -243,13 +257,14 @@ function renderChart(){
  let g='';
  // grille
  for(let k=0;k<=4;k++){const v=lo+(hi-lo)*k/4,yy=Y(v);g+=`<line x1="${pl}" x2="${W-pr}" y1="${yy}" y2="${yy}" class="bx-grid"/><text x="${pl-6}" y="${yy+3}" class="bx-ax" text-anchor="end">${fmt(v)}</text>`}
- g+=`<text x="${pl}" y="${H-8}" class="bx-ax">${(a+1).toLocaleString('fr-FR')}</text><text x="${W-pr}" y="${H-8}" class="bx-ax" text-anchor="end">${b.toLocaleString('fr-FR')}</text><text x="${(pl+W-pr)/2}" y="${H-8}" class="bx-ax" text-anchor="middle">${ds.id==='vicomtech'?'segment d’une seconde':ds.id==='import'?'ligne du fichier':'cycle'}</text>`;
+ g+=`<text x="${pl}" y="${H-8}" class="bx-ax">${(a+1).toLocaleString('fr-FR')}</text><text x="${W-pr}" y="${H-8}" class="bx-ax" text-anchor="end">${b.toLocaleString('fr-FR')}</text><text x="${(pl+W-pr)/2}" y="${H-8}" class="bx-ax" text-anchor="middle">${ds.id==='vicomtech'?'segment d’une seconde':ds.id==='import'?'ligne du fichier':ds.id==='cipdmd'?'tige, ordre de fabrication':'cycle'}</text>`;
  // segments et bandes
  R.segs.forEach(s=>{if(s.b<=a||s.a>=b)return;const x1=X(Math.max(a,s.a)),x2=X(Math.min(b,s.b)-1);
   if(s.a>a&&s.a<b)g+=`<line x1="${X(s.a)}" x2="${X(s.a)}" y1="${pt}" y2="${H-pb}" class="bx-segl"/>`;
   if(!s.ok){g+=`<rect x="${x1}" y="${pt}" width="${Math.max(0,x2-x1)}" height="${H-pt-pb}" class="bx-noeval"/>`;return}
   const r1=X(Math.min(b-1,s.a+S.refN-1));if(s.a>=a)g+=`<rect x="${x1}" y="${pt}" width="${Math.max(0,r1-x1)}" height="${H-pt-pb}" class="bx-refz"/>`;
   g+=`<line x1="${x1}" x2="${x2}" y1="${Y(s.mu)}" y2="${Y(s.mu)}" class="bx-mu"/><line x1="${x1}" x2="${x2}" y1="${Y(s.mu+3*s.sd)}" y2="${Y(s.mu+3*s.sd)}" class="bx-lim"/><line x1="${x1}" x2="${x2}" y1="${Y(s.mu-3*s.sd)}" y2="${Y(s.mu-3*s.sd)}" class="bx-lim"/>`});
+ if(tl)tl.forEach((v,k)=>{g+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(v)}" y2="${Y(v)}" class="bx-tol"/><text x="${W-pr-4}" y="${Y(v)+(k?-4:11)}" class="bx-ax bx-tolt" text-anchor="end">tolérance ${k?'max':'min'} ${fmt(v)}</text>`});
  // zone dérive
  if(S.mode==='derive'&&R.drift){const s0=Math.max(a,S.drift.start),s1=Math.min(b,R.drift.seg.b)-1;if(s1>s0)g+=`<rect x="${X(s0)}" y="${pt}" width="${X(s1)-X(s0)}" height="${H-pt-pb}" fill="url(#hatch)" class="bx-dz"/><text x="${X(s0)+4}" y="${pt+12}" class="bx-dzt">Dérive artificielle</text>`}
  // séries
@@ -259,7 +274,7 @@ function renderChart(){
  // épisodes
  T.ep.forEach(e=>{if(e.start<a||e.start>=b)return;const inD=S.mode==='derive'&&R.drift&&e.end>=S.drift.start&&e.start<R.drift.seg.b;const v=(ys||xs)[e.start];if(isFinite(v))g+=`<circle cx="${X(e.start)}" cy="${Y(v)}" r="4" class="${inD?'bx-hit':'bx-al'}"><title>Signal ${U(1)} ${e.start+1} : ${rulesTxt(e.r)}</title></circle>`});
  svg.innerHTML=`<defs><pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#e8841f14"/><line x1="0" y1="0" x2="0" y2="8" stroke="#e8841f55" stroke-width="3"/></pattern></defs>`+g;
- $('#bx-csub').textContent=S.mode==='derive'?'Gris : valeurs réelles d’origine. Orange : copie modifiée par le simulateur à partir du cycle choisi.':'Chaque point est une valeur réelle du fichier, dans l’ordre du fichier, sans modification.';
+ $('#bx-csub').textContent=S.mode==='derive'?'Gris : valeurs réelles d’origine. Orange : copie modifiée par le simulateur à partir du point choisi.':'Chaque point est une valeur réelle du fichier, dans l’ordre du fichier, sans modification.';
 }
 
 function qualityChart(){
@@ -299,7 +314,7 @@ function renderSide(){
   if(R.segs.filter(s=>s.ok).length&&ds.chrono)h+=`<button type="button" class="btn primary sm" id="bx-go-drift">Tester avec une dérive injectée</button>`;
  } else if(R.drift){
   const D=R.drift;
-  h+=`<h3>Dérive injectée</h3><p class="bx-warnline">Valeurs modifiées par le simulateur à partir du ${U(1)} ${(S.drift.start+1).toLocaleString('fr-FR')}.</p>`;
+  h+=`<h3>Dérive injectée</h3><p class="bx-warnline">Valeurs modifiées par le simulateur à partir ${S.ds.id==="cipdmd"?"de la":"du"} ${U(1)} ${(S.drift.start+1).toLocaleString('fr-FR')}.</p>`;
   h+=D.delay!=null?`<p class="bx-big">${D.delay} <small>${U(D.delay)} entre le début de la dérive et le premier signal qui lui est attribuable</small></p><p>Règle déclenchée : ${rulesTxt(D.rule)}.</p>`:D.masked>D.zone*0.5?`<p class="bx-big">Non attribuable <small>les données d’origine sont déjà en alerte sur ${D.masked} des ${D.zone} points de la zone modifiée</small></p>`:`<p class="bx-big">Non détectée <small>avant la fin du segment</small></p>`;
   h+=`<p>Sur la partie non modifiée de ce segment : ${pl(D.before,'épisode','épisodes')} de signal sur données réelles, à qualifier.</p>`;
   if(D.busy>10)h+=`<p class="bx-warnline">Les données d’origine signalent déjà ${D.busy} des 50 points précédant la dérive : le délai mesuré est peu interprétable ici. Déplacez le début ou allongez la référence.</p>`;
@@ -334,6 +349,7 @@ function renderImport(){
  el.innerHTML=`<p>${ds.rows.length.toLocaleString('fr-FR')} lignes, ${ds.cols.length} colonnes, ${totMiss} valeur${totMiss>1?'s':''} manquante${totMiss>1?'s':''}. Ordre chronologique : <b>${ds.chrono?(ds.id==='import'?'supposé (ordre du fichier)':'oui'):'non'}</b>.${ds.delim?` Séparateur détecté : « ${ds.delim==='\t'?'tabulation':ds.delim} ».`:''}</p>${gaps}<div class="tw"><table class="bx-t"><thead><tr><th>Colonne</th><th>Unité</th><th>Rôle</th><th>Manquantes</th><th>Min</th><th>Max</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
+function R0(){return S.res}
 function renderQuality(){
  const ds=S.ds,el=$('#bx-qual'),wrap=$('#bx-qualsec');
  const x=colX(ds,S.v),c=ds.cols[S.v];
@@ -350,6 +366,19 @@ function renderQuality(){
   const rs=tools.map(t=>{const idx=ds.rows.map((r,i)=>r[0]===t?i:-1).filter(i=>i>=0);return {t,n:idx.length,r:pearson(idx.map(i=>x[i]),idx.map(i=>vb[i])),vb0:vb[idx[0]],vb1:vb[idx[idx.length-1]]}});
   const pos=rs.filter(o=>o.r>0.5).length,neg=rs.filter(o=>o.r<-0.5).length;
   el.innerHTML=S.v===ds.qual?'<p>La variable choisie est l’usure elle-même : choisissez un signal pour comparer.</p>':`<p>Corrélation de « ${esc(c.l)} » avec l’usure VB, outil par outil : ${pos} outil${pos>1?'s':''} sur ${rs.length} au-dessus de +0,5, ${neg} en dessous de −0,5.</p><div class="tw"><table class="bx-t"><thead><tr><th>Outil</th><th>Segments</th><th>VB début → fin (µm)</th><th>Corrélation avec VB</th></tr></thead><tbody>${rs.map(o=>`<tr><td>${o.t}</td><td class="n">${o.n}</td><td class="n">${fmt(o.vb0,0)} → ${fmt(o.vb1,0)}</td><td class="n${Math.abs(o.r)>0.5?' bx-strong':''}">${fmt(o.r,2)}</td></tr>`).join('')}</tbody></table></div><p class="sl">Un signal qui suit l’usure sur un outil peut aussi suivre un changement des conditions de coupe programmées. À confirmer en séparant les conditions de coupe.</p>`;
+  wrap.hidden=false;return}
+ if(ds.poids!=null){
+  const segs=R0().segs,w=colX(ds,ds.poids),k=colX(ds,ds.cote),cw=ds.cols[ds.poids],ck=ds.cols[ds.cote];
+  const self=S.v===ds.poids;
+  const rs=segs.map(s=>{const I=[];for(let i=s.a;i<s.b;i++)I.push(i);const xv=I.map(i=>x[i]),wv=I.map(i=>w[i]),kv=I.map(i=>k[i]);const mw=mean(wv);return {s,n:I.length,mx:mean(xv),mw,sw:sd(wv,mw),mk:mean(kv),r:pearson(xv,wv)}});
+  const rAll=pearson(x,w);
+  el.innerHTML=`<p>${self?'Poids pièce par phase.':`Corrélation de « ${esc(c.l)} » avec le poids pièce sur toute la série : <b>${fmt(rAll,2)}</b>. Détail par phase ci-dessous.`}</p><div class="tw"><table class="bx-t"><thead><tr><th>Phase</th><th>Cycles</th>${self?'':`<th>${esc(c.l)}</th>`}<th>Poids moyen (g)</th><th>Écart-type poids (g)</th><th>${esc(ck.l)} moy. (µm)</th>${self?'':'<th>Corrélation avec le poids</th>'}</tr></thead><tbody>${rs.map(o=>`<tr${o.s.ok?'':' class="bx-miss"'}><td>${esc(ds.rows[o.s.a][1])}</td><td class="n">${o.n}</td>${self?'':`<td class="n">${fmt(o.mx)}</td>`}<td class="n">${fmt(o.mw,3)}</td><td class="n">${fmt(o.sw,3)}</td><td class="n">${fmt(o.mk,0)}</td>${self?'':`<td class="n${Math.abs(o.r)>0.5?' bx-strong':''}">${o.n>=10?fmt(o.r,2):'–'}</td>`}</tr>`).join('')}</tbody></table></div><p class="sl">Corrélation, pas causalité : plusieurs grandeurs varient ensemble quand le plan d’essai change un réglage. Les phases grisées sont des transitions, non évaluées.</p>`;
+  wrap.hidden=false;return}
+ if(ds.tolerances){
+  const segs=R0().segs,keys=Object.keys(ds.tolerances),J=keys.map(kk=>ds.cols.findIndex(cc=>cc.k===kk));
+  const out=(j,i)=>{const v=ds.rows[i][j],t=ds.tolerances[ds.cols[j].k];return isFinite(v)&&(v<t[0]||v>t[1])};
+  const tot=J.map(j=>ds.rows.filter((_,i)=>out(j,i)).length);
+  el.innerHTML=`<p>Tiges hors tolérance sur ${ds.rows.length} : ${J.map((j,m)=>`${esc(ds.cols[j].l.toLowerCase())} ${tot[m]}`).join(', ')}. Moyenne de « ${esc(c.l)} » et dépassements par période.</p><div class="tw"><table class="bx-t"><thead><tr><th>Période</th><th>Tiges</th><th>Moyenne</th><th>Écart-type</th>${J.map(j=>`<th>Hors tol. ${esc(ds.cols[j].l.toLowerCase())}</th>`).join('')}</tr></thead><tbody>${segs.map(s=>{const v=x.slice(s.a,s.b).filter(isFinite),m=mean(v);return `<tr${s.ok?'':' class="bx-miss"'}><td>${esc(ds.rows[s.a][3])}</td><td class="n">${s.b-s.a}</td><td class="n">${fmt(m)}</td><td class="n">${v.length>2?fmt(sd(v,m)):'–'}</td>${J.map(j=>{let k=0;for(let i=s.a;i<s.b;i++)if(out(j,i))k++;return `<td class="n${k?' bx-strong':''}">${k||'–'}</td>`}).join('')}</tr>`}).join('')}</tbody></table></div><p class="sl">Tolérances du jeu d’origine : diamètre ±18 µm, longueur 163,45 à 163,75 mm, coaxialité 0 à 50 µm. Une tige hors tolérance n’est pas forcément signalée par les règles : la surveillance compare à la référence de la période, pas à la tolérance.</p>`;
   wrap.hidden=false;return}
  if(ds.id==='loki'){
   const segs=segments(ds,'colonne'),setI=ds.cols.map((c,i)=>c.t==='set'?i:-1).filter(i=>i>=0);

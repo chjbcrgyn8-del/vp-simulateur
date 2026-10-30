@@ -45,8 +45,11 @@
   <div class="bx-ds" role="group" aria-label="Jeu de données">
    <button type="button" data-ds="caoutchouc" aria-pressed="false">Caoutchouc · 13 527 cycles</button>
    <button type="button" data-ds="loki" aria-pressed="false">Injection · SKZ LoKI</button>
+   <button type="button" data-ds="kassel1" aria-pressed="false">Injection · Kassel boîtier</button>
+   <button type="button" data-ds="kassel3" aria-pressed="false">Injection · Kassel bac</button>
    <button type="button" data-ds="iguzzini" aria-pressed="false">Injection · iGuzzini qualité</button>
    <button type="button" data-ds="vicomtech" aria-pressed="false">Tournage · Vicomtech usure</button>
+   <button type="button" data-ds="cipdmd" aria-pressed="false">Tournage · CiP-DMD tiges</button>
    <button type="button" data-ds="import" id="bx-dsimp" aria-pressed="false" hidden>Mon fichier</button>
    <label class="bx-file btn ghost sm">Importer mon fichier CSV<input type="file" id="bx-file" accept=".csv,.txt,text/csv"></label>
   </div>
@@ -69,7 +72,7 @@
    <label>Début <span id="bx-startv"></span><input type="range" id="bx-start" min="0" max="100" step="1"></label>
    <label>Amplitude <span id="bx-ampv">2 σ</span><input type="range" id="bx-amp" min="0.5" max="4" step="0.25" value="2"></label>
    <label>Forme<select id="bx-kind"><option value="rampe" selected>Rampe progressive</option><option value="palier">Palier brusque</option></select></label>
-   <label id="bx-lenw">Durée de la rampe (cycles)<input type="number" id="bx-len" min="5" max="2000" value="150"></label>
+   <label id="bx-lenw">Durée de la rampe (points)<input type="number" id="bx-len" min="5" max="2000" value="150"></label>
    <label>Sens<select id="bx-dir"><option value="1">En hausse</option><option value="-1">En baisse</option></select></label>
   </div>
  </div>
@@ -91,19 +94,21 @@
 
 <section class="bx-sec" aria-labelledby="bx-mt"><h2 id="bx-mt">Méthode</h2><div class="bx-card bx-method">
  <ol>
-  <li><b>Séparer avant de calculer.</b> Une nouvelle campagne commence à chaque changement de consigne ou de colonne de campagne (essai, outil, OF). Tolérance : tout changement pour le caoutchouc, 1 % par défaut, 5 % pour les vitesses de coupe Vicomtech. Une transition d’un ou deux points est rattachée au segment suivant. Un réglage voulu n’est pas une dérive spontanée.</li>
+  <li><b>Séparer avant de calculer.</b> Une nouvelle campagne commence à chaque changement de consigne ou de colonne de campagne (essai, outil, OF, phase, période). Tolérance : tout changement pour le caoutchouc, 1 % par défaut, 5 % pour les vitesses de coupe Vicomtech. Une transition d’un ou deux points est rattachée au segment suivant. Un réglage voulu n’est pas une dérive spontanée.</li>
   <li><b>Référence par segment.</b> Moyenne et écart-type sur les premiers points de chaque segment. Si la mesure est trop stable, l’écart-type est ramené à la moitié de la résolution du capteur.</li>
   <li><b>Trois règles VP Predict.</b> Valeur hors ± 3 σ, 7 points consécutifs du même côté, tendance lissée EWMA (λ 0,2, L 3) hors zone. Des signaux espacés de moins de 10 points forment un seul épisode.</li>
   <li><b>Deux modes jamais mélangés.</b> La relecture brute ne modifie aucune valeur. La dérive injectée travaille sur une copie, signalée sur la courbe, dans le panneau et dans l’export.</li>
  </ol>
  <p class="sl">Ce banc vérifie le comportement des règles : délai de détection d’une dérive artificielle, signaux sur données réelles à qualifier. Il ne démontre ni un taux de fausses alertes industriel, ni un gain : ces points se valident en pilote sur vos presses. <a href="banc-modele-import.csv" download>Télécharger le modèle d’import CSV</a> · <a href="presse.html">Simulateur presse</a> · <a href="savoir.html">Savoir technique</a></p>
 </div></section>
-<p class="legal">Données publiques citées avec leur licence : SKZ LoKI (CC BY 4.0), Vicomtech (CC BY-SA 4.0, extrait diffusé sous la même licence), iGuzzini (chargé depuis le dépôt d’origine, usage recherche et enseignement). Cycles caoutchouc transmis par notre expert plasturgie partenaire. Votre fichier importé est lu dans votre navigateur : rien n’est envoyé ni conservé.</p>
+<p class="legal">Données publiques citées avec leur licence : SKZ LoKI (CC BY 4.0), université de Kassel scatimdata (CC BY 4.0), Vicomtech (CC BY-SA 4.0, extrait diffusé sous la même licence), TU Darmstadt CiP-DMD (licence des données non précisée, reprise avec citation), iGuzzini (chargé depuis le dépôt d’origine, usage recherche et enseignement). Cycles caoutchouc transmis par notre expert plasturgie partenaire. Votre fichier importé est lu dans votre navigateur : rien n’est envoyé ni conservé.</p>
 </main>
 <script src="cycles-caoutchouc.js?v=20261029-c10"></script>
 <script src="banc-data-loki.js?v=20261030-b1"></script>
 <script src="banc-data-vicomtech.js?v=20261030-b1"></script>
-<script src="banc-essai.js?v=20261030-b1"></script>
+<script src="banc-data-kassel.js?v=20261030-b2"></script>
+<script src="banc-data-cipdmd.js?v=20261030-b2"></script>
+<script src="banc-essai.js?v=20261030-b2"></script>
 <script src="typo.js"></script>
 <script src="ux.js?v=20261029-ux"></script>
 </body>

@@ -99,3 +99,5 @@
 .bx-method li{margin:0 0 8px;font-size:14.5px}
 @media(max-width:640px){.bx-mode{width:100%}.bx-mode button{flex:1}.bx-ctrl label{width:100%}.bx-ctrl select,.bx-ctrl input{max-width:none;width:100%}.bx-ctrl #bx-ref{width:100%}}
 .bx-leg[hidden],.bx-foot[hidden]{display:none!important}
+#bx-chart .bx-tol{stroke:#1f5f8b;stroke-width:1.2;stroke-dasharray:8 4}
+#bx-chart .bx-tolt{fill:#1f5f8b}
