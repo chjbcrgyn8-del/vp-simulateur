@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Simulateur traitement de surface · zinc-nickel et anodisation · Vella Partners</title>
+<meta name="description" content="Deux lignes de traitement de surface simulées, zinc-nickel alcalin au tonneau et anodisation sulfurique : lancez une dérive d’épaisseur, d’alliage ou de bain, puis suivez la contre-mesure, la cause, l’action et la vérification.">
+<meta name="theme-color" content="#0a1320">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Vella Partners">
+<meta property="og:title" content="Simulateur traitement de surface · zinc-nickel et anodisation · Vella Partners">
+<meta property="og:description" content="Deux lignes de traitement de surface simulées, zinc-nickel alcalin au tonneau et anodisation sulfurique : lancez une dérive d’épaisseur, d’alliage ou de bain, puis suivez la contre-mesure, la cause, l’action et la vérification.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="sim2.css?v=9">
+<link rel="stylesheet" href="premium.css?v=9">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="signature.css?v=2">
+<link rel="stylesheet" href="industrie.css?v=5">
+<link rel="stylesheet" href="decolletage.css?v=4">
+<link rel="stylesheet" href="ux.css?v=20261031-ts">
+<link rel="stylesheet" href="traitement-surface.css?v=2">
+<link rel="icon" type="image/png" href="img/favicon.png">
+</head>
+<body class="press dec ts">
+<a class="skip" href="#main">Aller au contenu</a>
+<header class="top">
+  <a class="brand" href="index.html" aria-label="Vella Partners, accueil"><img src="img/logo-vella-partners.png" alt="Vella Partners" width="517" height="150"></a>
+  <nav class="tabs sector" aria-label="Secteur"><span class="seclab">Secteur :</span><a href="presse.html">Injection plastique</a><a href="presse-caoutchouc.html">Caoutchouc</a><a href="machine-decolletage.html">Décolletage</a><a href="machine-traitement-surface.html" aria-current="page">Traitement de surface</a></nav><nav class="tabs menu" aria-label="Menu"><a href="index.html">Accueil</a><a href="index.html#offres">Nos offres</a><a href="index.html#essayer" aria-current="page">Essayer</a><a href="savoir.html">Savoir technique</a></nav>
+</header>
+<main id="main" class="smain">
+<h1 class="vh">Simulateur traitement de surface · zinc-nickel au tonneau et anodisation sulfurique</h1>
+<p class="legal"><b>Simulation pédagogique uniquement.</b> Signal simulé autour de plages publiées par des fournisseurs, des normes et des études (voir les sources) : aucune mesure réelle de ligne n’est utilisée. Les causes et actions sont des règles candidates TS01 à TS07 issues d’une recherche documentaire non validée par un expert traitement de surface ; ce ne sont pas des consignes de ligne. Aucune quantité d’ajout, valeur de courant ou de temps n’est proposée.</p>
+<nav class="tslines" aria-label="Ligne simulée"><span>Ligne simulée :</span><a href="machine-traitement-surface.html?ligne=znni" data-line="znni">Zinc-nickel alcalin au tonneau</a><a href="machine-traitement-surface.html?ligne=anod" data-line="anod">Anodisation sulfurique à l’attache</a><a href="machine-traitement-surface.html?ligne=chim" data-line="chim">Nickel chimique en paniers</a></nav>
+<section class="console" aria-label="Simulateur">
+ <div class="sbar">
+  <div class="hmi"><span class="tlight" id="tlight" data-s="off" aria-hidden="true"><i></i><i></i><i></i></span><span class="pname" id="pname"></span></div>
+  <div class="status" id="status"><i></i><span>Calcul de la référence en cours</span></div>
+  <span class="cyc"><span id="unitl">Charge</span> <b id="cycle">0</b></span>
+  <span class="toolw" id="toolw"><span id="counterl">Analyse labo</span> · <b id="toolc">0</b> <span id="counteru"></span></span>
+  <div class="ctrls"><button class="btn ghost sm" id="play" type="button">Pause</button><div class="speed" role="group" aria-label="Vitesse de simulation"><button type="button" data-v="1" aria-pressed="true">×1</button><button type="button" data-v="2" aria-pressed="false">×2</button><button type="button" data-v="4" aria-pressed="false">×4</button></div><button class="btn primary sm" id="drift" type="button" disabled>Je simule une dérive</button></div>
+ </div>
+ <details class="seuils"><summary><span class="vpx vpp">VP Predict</span> Seuils de surveillance et configuration de la ligne</summary>
+  <div class="setgrid">
+   <fieldset><legend>Méthode de seuil</legend>
+    <label><input type="radio" name="meth" value="recette" checked> Tolérance de la spécification et plage de réglage du bain</label>
+    <label><input type="radio" name="meth" value="stat"> Moyenne ± 3 σ <small>sur la référence</small></label></fieldset>
+   <fieldset><legend>Règles d’alerte</legend>
+    <label><input type="checkbox" data-r="seuil" checked> Hors limite : tolérance ou plage franchie</label>
+    <label><input type="checkbox" data-r="cote" checked> Alerte préventive : 7 <span class="unitsl">charges</span> du même côté</label>
+    <label><input type="checkbox" data-r="ewma" checked> Alerte préventive : tendance lissée hors zone <button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Moyenne glissante (EWMA, λ 0,2, L 3) qui gomme le bruit d’une charge à l’autre et montre une dérive lente avant la tolérance."></span></button></label></fieldset>
+   <fieldset class="cfgfs"><legend>Configuration de la ligne</legend>
+    <label id="membw"><input type="checkbox" data-memb> <span id="membl">Anodes à membrane</span></label>
+    <label><input type="checkbox" data-opc checked> <span id="opcl">Analyseur de bain en ligne</span> <small>(lecture seule)</small></label>
+    <p class="sl">Avec anodes à membrane, la piste de dégradation anodique des additifs est masquée. Une analyse non disponible s’affiche « absente », jamais à zéro. Modifiable hors dérive.</p></fieldset>
+  </div></details>
+ <div class="sgrid">
+  <aside class="tiles" id="tiles" aria-label="Mesures suivies, choisissez le graphe"></aside>
+  <div class="chartcard">
+   <div class="chead"><div><h2 id="ctitle"></h2><p id="csub" class="sl"></p></div>
+    <ul class="legend"><li><i class="l-ref"></i>Référence</li><li><i class="l-tol"></i>Tolérance ou plage</li><li><i class="l-ew"></i>Tendance lissée</li></ul></div>
+   <svg id="chart" viewBox="0 0 720 300" role="img" aria-label="Courbe de la mesure choisie"></svg>
+  </div>
+  <div class="side" id="side" aria-live="polite"></div>
+ </div>
+</section>
+<p class="duo">VP Predict repère la dérive sur vos lignes connectées, VP Expert aide à choisir les contrôles sur tout l’atelier. <a href="index.html#offres">Voir les offres</a> · Un défaut sur pièce traitée ? <a href="enquete-traitement-surface.html">Enquête défaut traitement de surface</a> · <a href="st-reperes-traitement-surface.html">Repères chiffrés et cycles</a> · <a href="st-mesures-traitement-surface.html">Mesures de ligne</a> · <a href="sources-traitement-surface.html">Sources et limites</a></p>
+<section class="histo" aria-labelledby="hh">
+ <h2 id="hh">Historique des dérives, causes et actions</h2>
+ <p class="legal hist-demo"><b>Historique de démonstration, non conservé.</b> Il vit dans votre navigateur et disparaît au rechargement de la page. Dans l’application VP Expert, l’historique serait partagé par site, ligne, bain, référence pièce, lot, défaut, action et résultat vérifié.</p>
+ <div class="tw"><table><thead><tr><th>Date</th><th>Heure</th><th>Dérive</th><th>Cause</th><th>Action</th><th>Règle</th></tr></thead><tbody id="hist"></tbody></table></div>
+ <p class="legal">Démonstrateur : lignes fictives. Zinc-nickel : une charge de tonneau sort toutes les 12 min, épaisseur et taux de nickel mesurés au XRF, plages reprises des valeurs fabricant citées par Lindner et al. (Fraunhofer IST, 2026) : Zn 6,5–8,5 g/L, Ni 0,9–1,2 g/L, 8–12 µm, 12–16 % Ni. Anodisation : une barre toutes les 20 min, domaine du bain et classe AA15 repris des spécifications Qualanod 2026. Nickel chimique : une charge toutes les 30 min, vitesse de dépôt sur éprouvette ; sensibilité à la température reprise de la règle « ×2 par 10 °C » du NBS (1974), valeurs centrales illustratives. Tolérances simulées, bruit et poids des causes sont illustratifs. Les règles TS01 à TS07 sont des règles candidates Vella Partners rattachées à 68 sources publiques ; TS01-R04 est une proposition VP. Aucune n’est approuvée : elles sont à relire par un expert traitement de surface. Une action n’entre dans l’historique qu’après vérification simulée. Le rappel au chef d’équipe est simulé.</p>
+</section>
+</main>
+<div class="modal" id="modal" hidden><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="mt">
+ <button type="button" class="mx" id="mclose" aria-label="Fermer">×</button>
+ <h2 id="mt">Je simule une dérive</h2>
+ <p class="ml">1. Quelle mesure ?</p><div class="mp"></div>
+ <p class="ml">2. Dans quel sens ?</p><div class="md"><button type="button" class="choice" data-md="up">En hausse</button><button type="button" class="choice" data-md="down">En baisse</button></div><p class="mdn" id="mdn"></p>
+ <button type="button" class="btn primary" id="go" disabled>Lancer la dérive</button>
+</div></div>
+<script src="traitement-surface-data.js?v=2"></script>
+<script src="kb-traitement-surface.js?v=2"></script>
+<script>(function(){var C=window.SIM_CFG,$=function(i){return document.getElementById(i)};
+$('pname').textContent=C.pname;$('unitl').textContent=C.unit[0].toUpperCase()+C.unit.slice(1);$('counterl').textContent=C.counterS;$('counteru').textContent=C.counterU;
+$('toolw').title=C.counterL+' (repère illustratif '+C.life+')';$('opcl').textContent=C.opcL;
+document.querySelectorAll('.unitsl').forEach(function(e){e.textContent=C.units});
+if(!C.membL){$('membw').remove();document.querySelector('.cfgfs .sl').textContent='Une analyse non disponible en ligne s’affiche « absente », jamais à zéro. Modifiable hors dérive.';}
+document.querySelectorAll('[data-line]').forEach(function(a){if(a.dataset.line===C.line)a.setAttribute('aria-current','page')});
+document.title=C.machine+' · simulateur traitement de surface · Vella Partners';})();</script>
+<script src="sim-traitement-surface.js?v=1"></script>
+<script src="tips.js"></script>
+<script src="typo.js"></script>
+<script src="ux.js?v=20261029-ux"></script>
+<script src="vp-documentary-entry.js?v=20261030-consolide-r1"></script>
+</body>
+</html>

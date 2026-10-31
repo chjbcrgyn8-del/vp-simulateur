@@ -1,0 +1,36 @@
+/* Compléments traitement de surface · sélecteur de ligne, repères et tableaux */
+.tslines{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 14px}
+.tslines span{font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-right:4px}
+.tslines a{display:inline-block;padding:8px 14px;border:1px solid var(--line,#d0d5da);border-radius:999px;color:var(--navy,#173a6b);text-decoration:none;font-weight:600;font-size:14px;background:#fff}
+.tslines a[aria-current=page]{background:var(--navy,#173a6b);color:#fff;border-color:var(--navy,#173a6b)}
+.tslines a:focus-visible{outline:2px solid var(--orange,#e0752d);outline-offset:2px}
+.tsdoc{max-width:1100px;margin:0 auto;padding:24px 20px 60px;line-height:1.55}
+.tsdoc h1{font-size:clamp(28px,4vw,40px);line-height:1.15;margin:8px 0 12px}
+.tsdoc h2{margin:36px 0 10px;font-size:24px}.tsdoc h3{margin:24px 0 8px;font-size:18px}
+.tsdoc .lead{font-size:17px;color:#3d4452;max-width:820px}
+.tsdoc table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0 6px}
+.tsdoc th,.tsdoc td{border-bottom:1px solid #e3e6ea;padding:8px 10px;text-align:left;vertical-align:top}
+.tsdoc th{background:#f4f6f8;font-weight:600;color:#1d2433}
+.tsdoc .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tsdoc .src{font-size:12.5px;color:#5a6270;margin:2px 0 14px}
+.tsdoc .src a{color:#173a6b}
+.tsdoc .note{border-left:4px solid var(--orange,#e0752d);background:#fbfaf7;padding:10px 14px;margin:14px 0;border-radius:0 8px 8px 0}
+.tsdoc .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.tsdoc .card{border:1px solid #e3e6ea;border-radius:12px;padding:14px 16px;background:#fff}
+.tsdoc .card h3{margin-top:0}
+.tsdoc svg.tsch{width:100%;height:auto;background:#fff;border:1px solid #e3e6ea;border-radius:10px}
+.tsch .ax{font:11px var(--mono,monospace);fill:#5a6270}.tsch .gl{stroke:#eef0f4}.tsch .ln{fill:none;stroke-width:2.2}
+.tsch .pt{stroke:#fff;stroke-width:1.5}.tsch .lb{font:600 11.5px var(--font,sans-serif)}
+.tsdoc .calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;align-items:end}
+.tsdoc .calc label{display:flex;flex-direction:column;font-size:13px;color:#3d4452;gap:4px}
+.tsdoc .calc input,.tsdoc .calc select{font:inherit;font-size:15px;padding:8px 10px;border:1px solid #c9ced6;border-radius:8px}
+.tsdoc .out{font:600 18px var(--font,sans-serif);color:#173a6b;margin:12px 0 4px}
+.tsdoc .tag{display:inline-block;font:500 11px var(--mono,monospace);padding:1px 7px;border-radius:5px;background:#eef0f4;color:#173a6b;margin-right:4px}
+.tsdoc .tag.sim{background:#fff1e6;color:#8a4310}.tsdoc .tag.pub{background:#e8f4ef;color:#0f5e46}.tsdoc .tag.no{background:#f6e9e9;color:#8a1c1c}
+.tsdoc ol.srcl{padding-left:22px}.tsdoc ol.srcl li{margin:0 0 12px}
+.tsdoc ol.srcl small{display:block;color:#5a6270}
+.tsdoc .filters{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.tsdoc .filters button{font:inherit;font-size:13px;padding:6px 12px;border-radius:999px;border:1px solid #c9ced6;background:#fff;cursor:pointer}
+.tsdoc .filters button[aria-pressed=true]{background:#173a6b;color:#fff;border-color:#173a6b}
+@media(max-width:640px){.tsdoc{padding:16px 14px 40px}.tsdoc table{font-size:13px}.tslines a{flex:1;text-align:center;font-size:13px}}
+@media(max-width:640px){.tslines a{flex:1 1 44%}.tslines span{flex:1 1 100%}.tsdoc .tw table{min-width:640px}}

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mesures d’une ligne de traitement de surface · Savoir technique · Vella Partners</title>
+<meta name="description" content="Ce qu’une ligne de traitement de surface expose : redresseur, bain, laboratoire, XRF, traçabilité. Grandeurs publiées, simulées ou non simulées, et état des données ouvertes.">
+<meta name="theme-color" content="#0a1320">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Vella Partners">
+<meta property="og:title" content="Mesures d’une ligne de traitement de surface · Savoir technique · Vella Partners">
+<meta property="og:description" content="Ce qu’une ligne de traitement de surface expose : redresseur, bain, laboratoire, XRF, traçabilité. Grandeurs publiées, simulées ou non simulées, et état des données ouvertes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="st.css">
+<link rel="stylesheet" href="premium.css?v=9">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="signature.css?v=2">
+<link rel="stylesheet" href="industrie.css?v=5">
+<link rel="stylesheet" href="decolletage.css?v=4">
+<link rel="stylesheet" href="traitement-surface.css?v=2">
+<link rel="stylesheet" href="ux.css?v=20261031-ts">
+<link rel="icon" type="image/png" href="img/favicon.png">
+</head>
+<body class="stp">
+<a class="skip" href="#main">Aller au contenu</a>
+<header class="top">
+  <a class="brand" href="index.html" aria-label="Vella Partners, accueil"><img src="img/logo-vella-partners.png" alt="Vella Partners" width="517" height="150"></a>
+  <nav class="tabs menu" aria-label="Menu"><a href="index.html">Accueil</a><a href="index.html#offres">Nos offres</a><a href="index.html#essayer">Essayer</a><a href="savoir.html" aria-current="page">Savoir technique</a></nav>
+</header>
+<main id="main" class="st"><p class="crumb"><a href="savoir.html">Savoir technique</a> › Mesures d’une ligne de traitement de surface</p>
+<header class="ds-hero"><div class="eyebrow">TRAITEMENT DE SURFACE · DONNÉES DE LIGNE</div><h1>Ce que la ligne mesure, et ce qu’elle ne voit pas.</h1><p class="ds-lead">Redresseur, sondes, laboratoire, XRF et traçabilité des charges : fréquence, limites et statut dans le simulateur. Aucun jeu de données industriel public n’a été trouvé.</p></header>
+<nav class="tslines" aria-label="Pages traitement de surface"><span>Traitement de surface :</span><a href="machine-traitement-surface.html">Simulateur de ligne</a><a href="enquete-traitement-surface.html">Enquête défaut</a><a href="st-reperes-traitement-surface.html">Repères et cycles</a><a href="st-mesures-traitement-surface.html" aria-current="page">Mesures d’une ligne</a><a href="sources-traitement-surface.html">Règles et sources</a></nav>
+<div class="tsdoc">
+
+<div class="note"><b>Ce que cette page distingue.</b> « Publié » : la grandeur et sa méthode sont décrites dans une source. « Simulé » : le simulateur Vella Partners la génère. « Non simulé » : elle existe en usine mais n’est pas reproduite. Aucune donnée réelle de ligne n’est utilisée sur ce site.</div>
+<h2>Ce qu’une ligne expose, et à quel rythme</h2>
+<div class="tw"><table><thead><tr><th>Origine</th><th>Grandeur</th><th>Fréquence habituelle</th><th>Statut</th><th>Limite</th><th>Source</th></tr></thead><tbody>
+<tr><td>Redresseur</td><td>Courant, tension, ampères-heures cumulés</td><td>En continu (automate ou redresseur communicant)</td><td><span class="tag pub">publié</span><span class="tag sim">simulé</span></td><td>Le compteur d’ampères-heures sert au dosage des additifs ; l’étalonnage de l’ampèremètre se vérifie périodiquement</td><td><a href="https://www.platingclub.com/pl/blog/plating-rectifier-selection-calibration-ampere-hour-metering-voltage-control" target="_blank" rel="noopener noreferrer">Plating Club</a></td></tr>
+<tr><td>Redresseur</td><td>Ondulation résiduelle</td><td>Rarement enregistrée</td><td><span class="tag pub">publié</span><span class="tag no">non simulé</span></td><td>Utile pour expliquer certains aspects, mais peu de lignes l’exposent</td><td><a href="https://www.platingclub.com/pl/blog/plating-rectifier-selection-calibration-ampere-hour-metering-voltage-control" target="_blank" rel="noopener noreferrer">Plating Club</a></td></tr>
+<tr><td>Bain</td><td>Température</td><td>En continu, sonde de régulation</td><td><span class="tag pub">publié</span><span class="tag sim">simulé</span></td><td>Une sonde unique ne voit pas les écarts près des pièces (Qualanod : 2 °C au plus près des pièces en anodisation)</td><td><a href="https://www.qualital.net/q1119/wp-content/uploads/QUALANOD-Specifications_20260101.pdf" target="_blank" rel="noopener noreferrer">Qualanod</a></td></tr>
+<tr><td>Bain</td><td>pH, conductivité</td><td>En continu sur certaines lignes, sinon relevé manuel</td><td><span class="tag pub">publié</span><span class="tag sim">simulé</span></td><td>Électrode à étalonner ; la valeur dépend de la température de mesure</td><td><a href="https://www.pfonline.com/articles/balancing-an-electroless-nickel-bath-to-optimize-performance" target="_blank" rel="noopener noreferrer">Products Finishing</a></td></tr>
+<tr><td>Bain</td><td>Zinc, nickel, soude, carbonates</td><td>Titrage ou spectrométrie au laboratoire, 1 à quelques fois par poste</td><td><span class="tag pub">publié</span><span class="tag sim">simulé</span></td><td>Donnée discontinue : une dérive entre deux analyses n’est pas vue</td><td><a href="https://finishingandcoating.com/index.php/plating/3058-from-lab-to-plant-data-driven-modelling-of-an-electroplating-process" target="_blank" rel="noopener noreferrer">Lindner et al.</a></td></tr>
+<tr><td>Bain</td><td>Additifs et brillanteurs</td><td>Cellule de Hull, analyse fournisseur</td><td><span class="tag pub">publié</span><span class="tag no">non simulé</span></td><td>Lecture d’éprouvette : à photographier et tracer pour devenir exploitable</td><td><a href="https://www.pfonline.com/articles/the-hull-cell-key-to-better-electroplating-part-ii" target="_blank" rel="noopener noreferrer">Products Finishing</a></td></tr>
+<tr><td>Pièces</td><td>Épaisseur et nickel du dépôt</td><td>XRF de laboratoire ou en ligne ; environ toutes les 15 min dans l’étude de référence</td><td><span class="tag pub">publié</span><span class="tag sim">simulé</span></td><td>La mesure dépend de la zone, de l’étalon et du collimateur</td><td><a href="https://www.iso.org/fr/standard/20319.html" target="_blank" rel="noopener noreferrer">ISO 3497</a></td></tr>
+<tr><td>Pièces</td><td>Épaisseur d’anodisation</td><td>Courants de Foucault</td><td><span class="tag pub">publié</span><span class="tag sim">simulé</span></td><td>Sensible à la géométrie et au substrat</td><td><a href="https://cdn.standards.iteh.ai/samples/69943/a6932a23657246ad8f45381e96b7c80c/ISO-2360-2017.pdf" target="_blank" rel="noopener noreferrer">ISO 2360</a></td></tr>
+<tr><td>Pièces</td><td>Qualité de colmatage</td><td>Admittance, tache de colorant, perte de masse</td><td><span class="tag pub">publié</span><span class="tag sim">simulé</span></td><td>Admittance limitée à 20 µS ; non applicable à certains colorés foncés</td><td><a href="https://www.qualital.net/q1119/wp-content/uploads/QUALANOD-Specifications_20260101.pdf" target="_blank" rel="noopener noreferrer">Qualanod</a></td></tr>
+<tr><td>Produit</td><td>Tenue au brouillard salin</td><td>Essai de laboratoire, 240 à 720 h ou plus</td><td><span class="tag pub">publié</span><span class="tag no">non simulé</span></td><td>Résultat très tardif : un indicateur de fin de chaîne, pas un signal de pilotage</td><td><a href="https://www.iso.org/standard/81744.html" target="_blank" rel="noopener noreferrer">ISO 9227</a></td></tr>
+<tr><td>Traçabilité</td><td>Charge, tonneau ou barre, temps, ordre de fabrication</td><td>Automate de ligne ou papier</td><td><span class="tag pub">publié</span><span class="tag sim">simulé</span></td><td>Sans lien charge–analyse–mesure, aucune corrélation n’est possible</td><td><a href="https://finishingandcoating.com/index.php/plating/3058-from-lab-to-plant-data-driven-modelling-of-an-electroplating-process" target="_blank" rel="noopener noreferrer">Lindner et al.</a></td></tr>
+</tbody></table></div>
+<h2>Données ouvertes : état des lieux</h2>
+<div class="grid2">
+<div class="card"><h3>Pas de jeu de données industriel public</h3><p>La recherche documentaire n’a trouvé aucun jeu de données de ligne de traitement de surface publié avec les analyses de bain, le courant et les mesures de dépôt reliés par charge. L’étude <a href="https://finishingandcoating.com/index.php/plating/3058-from-lab-to-plant-data-driven-modelling-of-an-electroplating-process" target="_blank" rel="noopener noreferrer">Lindner et al.</a> précise que ses données ne sont pas partageables.</p></div>
+<div class="card"><h3>Un jumeau numérique synthétique</h3><p>Le dépôt <a href="https://github.com/vybhav345/Anodising-Digital-Twin" target="_blank" rel="noopener noreferrer">Anodising Digital Twin</a> sur GitHub génère des données d’anodisation synthétiques. Utile pour tester un code, pas pour démontrer une performance.</p></div>
+<div class="card"><h3>Des modèles publiés</h3><p>Prédiction de l’épaisseur et du taux de nickel par apprentissage automatique (<a href="https://www.tandfonline.com/doi/abs/10.1080/00202967.2021.1898183" target="_blank" rel="noopener noreferrer">Transactions of the IMF</a>), modélisation prédictive de procédés sans chrome hexavalent (<a href="https://www.leuze-verlag.de/en/essays/predictive-modelling-for-the-optimization-of-cr-vi-free-electroplating-processes" target="_blank" rel="noopener noreferrer">Leuze Verlag</a>), simulation de la répartition d’épaisseur (<a href="https://link.springer.com/article/10.1007/s00170-024-14337-6" target="_blank" rel="noopener noreferrer">Ahmadkhaniha et al.</a>).</p></div>
+<div class="card"><h3>Conséquence pour un pilote</h3><p>Le premier livrable d’un pilote VP Predict est la jonction charge – analyse de bain – courant – mesure de dépôt sur l’historique du site. Sans elle, le simulateur reste une démonstration.</p></div>
+</div>
+<h2>Ce que fait le simulateur</h2>
+<ul><li>Ligne zinc-nickel au tonneau : épaisseur et nickel du dépôt mesurés par XRF, zinc et nickel du bain, température, rendement cathodique.</li><li>Ligne d’anodisation : épaisseur, acide libre, aluminium dissous, température, densité de courant, admittance de colmatage.</li><li>Ligne de nickel chimique : vitesse de dépôt, pH, température et nickel du bain, utilisés par l’enquête défaut.</li></ul>
+<p class="src">Valeurs centrales et tolérances : ordres de grandeur tirés des sources de la page Repères ; bruit et dérives inventés pour la démonstration.</p>
+<p><a class="btn primary" href="machine-traitement-surface.html">Ouvrir le simulateur de ligne</a> <a class="btn" href="st-reperes-traitement-surface.html">Repères et cycles</a></p>
+</div>
+</main>
+<script src="tips.js"></script>
+<script src="typo.js"></script>
+<script src="ux.js?v=20261029-ux"></script>
+
+</body>
+</html>

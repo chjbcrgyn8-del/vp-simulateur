@@ -17,6 +17,7 @@
  (window.VPDC?.rules||[]).forEach(r=>{DCMAP['DOC'+r.id]=[r.id]});
  function sourceHTML(s){return `<li><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.name)}</a>. ${esc(s.type||'')}<br>Domaine : ${esc(s.scope||'non précisé')}<br>Limites : ${esc(s.limit||'à qualifier')}${s.locator?'<br>Repère : '+esc(s.locator):''}</li>`}
  function rulesFor(api){
+  const ADP=window.VP_SECTOR_ADAPTERS?.[api.sector];if(ADP)return ADP.rulesFor(api);
   if(api.sector!=='DC')return (window.VP_DOC.defects.find(d=>d.legacy===api.S.def)?.rules||[]).map(normalize);
   const ids=new Set();
   api.cands().forEach(c=>(DCMAP[c.id.split('_').pop()]||[]).forEach(id=>ids.add(id)));
@@ -25,6 +26,7 @@
   return window.VPDC.rules.map(normalize).filter(r=>ids.has(r.id));
  }
  function cardRules(api,card,all){
+  const ADP=window.VP_SECTOR_ADAPTERS?.[api.sector];if(ADP)return ADP.cardRules(api,card,all);
   if(api.sector==='DC'){
    const k=card.dataset.id?.split('_').pop(),ids=DCMAP[k]||[];
    return all.filter(r=>ids.includes(r.id));
@@ -49,9 +51,10 @@
    document.body.classList.add('expert-consolide');
    let data=blank(),dirty=false,pending=null,hydrating=false,drafts={},activeKey=api.KEY();
    const defaults=clone(api.S),main=document.querySelector('main');
-   const sources=api.sector==='DC'?Object.fromEntries(window.VPDC.sources.map(s=>[s.id,{...s,name:s.title}])):window.VP_DOC.sources;
+   const ADP=window.VP_SECTOR_ADAPTERS?.[api.sector];
+   const sources=ADP?ADP.sources:api.sector==='DC'?Object.fromEntries(window.VPDC.sources.map(s=>[s.id,{...s,name:s.title}])):window.VP_DOC.sources;
    const bar=document.createElement('aside');bar.className='expert-dev';bar.id='expert-toolbar';
-   bar.innerHTML=`<strong>VP Expert · un seul dossier, du défaut au suivi</strong><p>Démonstrateur public. Les réponses et contrôles restent dans cette enquête. Les sources détaillent le raisonnement, sans créer d’action approuvée.</p><div class="expert-tools"><button class="expert-primary" id="expert-export">Exporter le dossier JSON</button><button id="expert-report">Synthèse du dossier</button><button id="expert-import">Reprendre un dossier</button><button id="expert-new">Nouveau dossier</button>${api.sector==='DC'?'<button id="expert-example">Essayer le cas fictif</button>':''}<a href="lot3-documentaire.html" data-keep>Sources et méthode</a></div><p id="expert-status" role="status">Pas de sauvegarde serveur. Exportez avant de quitter. Le JSON consolidé utilise un nouveau format ; les anciens exports restent lisibles dans les pages historiques.</p><input hidden id="expert-file" type="file" accept=".json,application/json">`;
+   bar.innerHTML=`<strong>VP Expert · un seul dossier, du défaut au suivi</strong><p>Démonstrateur public. Les réponses et contrôles restent dans cette enquête. Les sources détaillent le raisonnement, sans créer d’action approuvée.</p><div class="expert-tools"><button class="expert-primary" id="expert-export">Exporter le dossier JSON</button><button id="expert-report">Synthèse du dossier</button><button id="expert-import">Reprendre un dossier</button><button id="expert-new">Nouveau dossier</button>${api.sector==='DC'||ADP?.example?'<button id="expert-example">Essayer le cas fictif</button>':''}<a href="${ADP?.sourcesPage||'lot3-documentaire.html'}" data-keep>Sources et méthode</a></div><p id="expert-status" role="status">Pas de sauvegarde serveur. Exportez avant de quitter. Le JSON consolidé utilise un nouveau format ; les anciens exports restent lisibles dans les pages historiques.</p><input hidden id="expert-file" type="file" accept=".json,application/json">`;
    main.prepend(bar);
    // Keep dossier management secondary; the main task is still the enquiry.
    const actions=document.createElement('details');actions.id='expert-dossier-actions';
@@ -61,7 +64,7 @@
    const context=document.createElement('details');context.className='expert-panel';context.id='expert-context';
    context.innerHTML='<summary>Références du dossier : machine, matière, outillage et qualité</summary><p class="expert-muted">À renseigner une seule fois. Le QQOQC ci-dessous demeure le seul questionnaire de description du défaut ; ses valeurs initiales sont des exemples, à vérifier.</p>'+fields('context',CONTEXT);
    const guide=window.VP_DOC?.collectionGuide?.[api.sector==='CA'?'Caoutchouc':'Thermoplastique'];
-   if(api.sector!=='DC'&&guide)context.innerHTML+='<details class="expert-proof"><summary>Aide à la collecte : conventions et points de vigilance</summary>'+guide.map(g=>`<article><strong>${esc(g.title)}</strong><p>${esc(g.text)}</p><ul>${g.refs.map(id=>sourceHTML(sources[id])).join('')}</ul></article>`).join('')+'</details>';
+   if(api.sector!=='DC'&&!ADP&&guide)context.innerHTML+='<details class="expert-proof"><summary>Aide à la collecte : conventions et points de vigilance</summary>'+guide.map(g=>`<article><strong>${esc(g.title)}</strong><p>${esc(g.text)}</p><ul>${g.refs.map(id=>sourceHTML(sources[id])).join('')}</ul></article>`).join('')+'</details>';
    $('s2').insertBefore(context,$('qs'));
    const doc=document.createElement('details');doc.id='expert-doc-list';doc.className='expert-panel';
    $('s3').insertBefore(doc,$('res'));
@@ -109,7 +112,7 @@
     if(Object.entries(c.evidence).some(([k,v])=>k.length>300||typeof v!=='string'||v.length>15000)||Object.keys(c.evidence).length>200)throw Error('Preuves invalides');
     const n=c.native;cleanObject(n);cleanObject(n.state);if(typeof n.key!=='string'||n.key.length>200)throw Error('Clé de cas invalide');
     for(const [k,v] of Object.entries(n.state)){if(!Object.hasOwn(api.choices,k))throw Error('Champ enquête inconnu');const a=api.choices[k];if(a==='text'?(typeof v!=='string'||v.length>200):a==='boolean'?typeof v!=='boolean':!a.includes(v))throw Error('Valeur enquête invalide : '+k);}
-    if(!n.state.def||!n.state.br||!n.state.param||typeof n.state.qd!=='string'||!n.state.fam||(api.sector==='DC'&&!n.state.mach)||(api.sector!=='TP'&&!n.state.dir))throw Error('Enquête incomplète');
+    if(!n.state.def||!n.state.br||!n.state.param||typeof n.state.qd!=='string'||!n.state.fam||((api.sector==='DC'||api.sector==='TS')&&!n.state.mach)||(api.sector!=='TP'&&!n.state.dir))throw Error('Enquête incomplète');
     for(const values of [n.nonconforming,n.conforming]){cleanObject(values);if(Object.keys(values).length>100||Object.entries(values).some(([id,v])=>id.length>100||v!==1))throw Error('Contrôles invalides')}
     if(!Array.isArray(n.history)||n.history.length>200)throw Error('Journal invalide');
     n.history.forEach(h=>{cleanObject(h);if(Object.keys(h).some(k=>!['key','id','r','g','t','d','c'].includes(k))||!['ok','nc'].includes(h.r)||!/^\d{2}:\d{2}$/.test(h.t)||['id','key','d','c'].some(k=>typeof h[k]!=='string'||h[k].length>1000)||(h.g!==undefined&&typeof h.g!=='boolean'))throw Error('Entrée de journal invalide')});
@@ -161,9 +164,21 @@
     // No native status is silently promoted from fictional narrative or imported observation.
     $('expert-context').open=true;status('Cas fictif prérempli dans le même parcours. Aucun contrôle marqué automatiquement conforme ; les données et autorisations sont inventées.');
    }
+   // Generic fictive example for sectors exposing an adapter (TS). DC keeps its historical loader.
+   function exampleADP(){
+    const f=ADP.example.spec,d=blank();d.fictional=true;
+    for(const k of Object.keys(CONTEXT))d.context[k]=f.context[k]||'';
+    for(const k of Object.keys(TRIAL))d.trial[k]=f.trial[k]||'';for(const k of Object.keys(RESULT))d.result[k]=f.result[k]||'';
+    const state={...defaults,...f.state};
+    for(const [id,o]of Object.entries(f.observations))d.evidence[f.key+'::'+id]=[o.status,o.note,o.reference].filter(Boolean).join('\n');
+    load({case:{...d,native:{state,key:f.key,conforming:{},nonconforming:{},history:[]}}});
+    $('expert-context').open=true;status('Cas fictif prérempli dans le même parcours. Aucun contrôle marqué automatiquement conforme ; les données et autorisations sont inventées.');
+   }
    if(api.sector==='DC')$('expert-example').onclick=()=>replace(example);
+   else if(ADP?.example)$('expert-example').onclick=()=>replace(exampleADP);
    hydrating=true;fill();hydrating=false;dirty=false;
    if(api.sector==='DC'&&new URLSearchParams(location.search).get('example')==='wear-thermal')example();
+   if(ADP?.example&&new URLSearchParams(location.search).get('example')===ADP.example.query)exampleADP();
   }
  };
 })();

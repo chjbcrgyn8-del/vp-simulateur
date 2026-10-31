@@ -71,3 +71,7 @@ a,button,summary,.btn,.choice{-webkit-tap-highlight-color:transparent}
  .top{flex-wrap:wrap;row-gap:6px!important}
  .top .tabs.menu{order:4!important;width:100%;justify-content:flex-end;border-top:1px solid rgba(255,255,255,.08)!important;padding-top:4px!important}
 }
+/* 4 secteurs : sur mobile, grille 2 × 2 au lieu d'une barre qui déborde (ajout traitement de surface, 31/10/2026) */
+@media(max-width:640px){.top .tabs.sector{display:grid!important;grid-template-columns:1fr 1fr;gap:2px;width:100%!important;max-width:100%!important;border-radius:16px!important;overflow:hidden}.top .tabs.sector .seclab{display:none!important}.top .tabs.sector a{text-align:center!important;white-space:nowrap;padding:7px 6px!important;font-size:12px!important}}
+@media(min-width:641px) and (max-width:1500px){.top .tabs.sector .seclab{display:none!important}.top .tabs.sector a{padding:6px 10px!important;font-size:12.5px!important}}
+@media(min-width:641px) and (max-width:1320px){.top{flex-wrap:wrap!important;row-gap:8px}.top::after{content:"";order:4;flex-basis:100%;height:0}.top .tabs.sector{order:5!important;margin:0 auto 4px!important;flex-basis:auto}}
