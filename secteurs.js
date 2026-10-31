@@ -22,7 +22,7 @@
       const s = S[k];
       return `<a class="sx-tile" href="${hub(k)}"><span class="sx-n">${s.num}</span><span class="sx-go" aria-hidden="true">→</span>
         <h3>${esc(s.nom)}</h3><p>${nb(s.accroche)}</p>
-        <ul class="sx-tl">${['scan', 'expert', 'predict'].map(o => `<li><i class="sx-dot ${s[o].statut}"></i><b>${ON[o]}</b><span>${esc(s[o].statutL)}</span></li>`).join('')}</ul>
+        <ul class="sx-tl">${['expert', 'scan', 'predict'].map(o => `<li><i class="sx-dot ${s[o].statut}"></i><b>${ON[o]}</b><span>${esc(s[o].statutL)}</span></li>`).join('')}</ul>
         <div class="sx-stat"><b>${esc(s.chiffre)}</b><span>${esc(s.chiffreL)}</span></div></a>`;
     }).join('');
     keep($('sx-tiles'));
@@ -30,7 +30,7 @@
   if ($('sx-mx')) {
     $('sx-mx').innerHTML = keys.map(k => {
       const s = S[k];
-      return `<tr><th scope="row"><a href="${hub(k)}">${esc(s.nom)}</a></th>${['scan', 'expert', 'predict'].map(o => {
+      return `<tr><th scope="row"><a href="${hub(k)}">${esc(s.nom)}</a></th>${['expert', 'scan', 'predict'].map(o => {
         const c = s[o];
         return `<td data-l="${ON[o]}">${badge(c.statut, c.statutL, c.demo)}</td>`;
       }).join('')}</tr>`;
@@ -67,7 +67,7 @@
         <p class="sx-lead">${nb(s.accroche)}</p><p class="sx-ex"><b>Exemples</b>${nb(s.exemple)}</p>
         <nav class="sx-secnav" aria-label="Changer de secteur">${keys.map(k => `<a href="${hub(k)}"${k === cur ? ' aria-current="page"' : ''}>${esc(S[k].court)}</a>`).join('')}</nav></header>
       <section class="sx-flow" aria-label="Les trois offres pour ce secteur">${O.map(col).join('')}</section>
-      <div class="sx-loop"><span class="sx-lk">La boucle</span><p><b>VP Expert</b> résout le défaut constaté, sur toutes les ${esc(s.machines)}, connectées ou non. <b>VP Predict</b> anticipe la dérive sur les ${esc(s.machines)} connectées, l’identifie, puis ouvre les mêmes contrôles de VP Expert pour la résoudre. Chaque résolution confirmée par le régleur enrichit la mémoire de l’atelier.</p></div>
+      <div class="sx-loop"><span class="sx-lk">La boucle</span><p><b>VP Expert</b> guide l’analyse et la résolution du défaut constaté, sur toutes les ${esc(s.machines)}, connectées ou non. <b>VP Scan</b> chiffre les enjeux en amont quand les priorités restent à objectiver. <b>VP Predict</b>, en extension, anticipe la dérive sur les ${esc(s.machines)} connectées, l’identifie, puis ouvre les mêmes contrôles de VP Expert. Chaque essai tracé, validé par vos méthodes, enrichit la mémoire de l’atelier.</p></div>
       <section class="sx-res"><p class="eyebrow">Ressources du secteur</p><h2>Ce sur quoi nous nous appuyons</h2>
         <div class="sx-reslist">${s.ressources.map(r => `<a href="${r[1]}">${esc(r[0])}<span aria-hidden="true">→</span></a>`).join('')}</div>
         <div class="sx-next"><a href="${hub(prev)}">← Secteur précédent<b>${esc(S[prev].nom)}</b></a><a href="${hub(nxt)}">Secteur suivant →<b>${esc(S[nxt].nom)}</b></a></div></section>`;

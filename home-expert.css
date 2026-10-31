@@ -1,0 +1,55 @@
+/* Accueil centré sur VP Expert · 31 octobre 2026.
+   Version de référence avant ce changement : tag ref-avant-expert-centre-2026-10-31.
+   Le héros montre un dossier VP Expert illustratif (défaut, contrôles dans l'ordre, constat ≠ cause démontrée)
+   à la place de l'animation de dérive VP Predict, qui reste dans la section Technologie. */
+
+/* Titre plus long : on desserre la contrainte de largeur et on baisse légèrement le corps */
+.hhero.h2.xh h1{font-size:clamp(34px,4vw,56px)!important;max-width:19ch!important;line-height:1.08!important;margin-bottom:20px!important}
+.hhero.h2.xh h1 .h1q{display:block;color:#e3b47c;font-size:.82em;margin-bottom:.12em}
+.hhero.h2.xh .lead{max-width:56ch!important}
+.hhero.h2.xh .hnext.hsx{color:#aeb8c6;margin-top:18px}
+.hhero.h2.xh .hnext.hsx a{color:#fff;border-bottom-color:rgba(255,255,255,.3)}
+.hhero.h2.xh .hnext.hsx a:hover{border-bottom-color:#fff}
+.hhero.h2.xh .hnext+.hnext{margin-top:8px}
+
+/* Carte VP Expert dans le héros */
+.hhero.h2.xh .lv-screen.xs{padding:18px 22px 14px!important}
+.hhero.h2.xh .lv-badge{background:#fbf0de;color:#9a5f28;white-space:nowrap}
+.hhero.h2.xh .lv-cyc{white-space:nowrap}
+.xs-k{margin:14px 0 8px;font:500 11px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent,#9a5f28)}
+.xs-ctl{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.xs-ctl li{display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:start;padding:10px 12px;border:1px solid var(--line,#e4ded2);border-radius:10px;background:#fff}
+.xs-ctl li.done{opacity:.86}
+.xs-ctl li.now{border-color:#173a6b;box-shadow:0 0 0 2px rgba(23,58,107,.08);background:#f7f9fc}
+.xs-n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;background:#eef0f4;color:#173a6b;font:600 12px var(--mono)}
+.xs-ctl li.now .xs-n{background:#173a6b;color:#fff}
+.xs-ctl li.done .xs-n{background:#e4f0e8;color:#22613f}
+.xs-ctl li b{display:block;font-size:14px;line-height:1.3;color:#0b111c}
+.xs-ctl li div>span{display:block;margin-top:2px;font-size:12.5px;line-height:1.45;color:#5a6270}
+.xs-ctl li div>span em{font-style:normal;font-weight:600;color:#0b111c}
+.xs-tag{font:500 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;font-style:normal;padding:5px 8px;border-radius:999px;white-space:nowrap;margin-top:3px}
+.xs-tag.c{background:#e4f0e8;color:#22613f}
+.xs-tag.e{background:#fbf0de;color:#9a5f28}
+.xs-tag.a{background:#eef0f4;color:#5a6270}
+.xs-foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:12px 0 0;font-size:12px;line-height:1.4;color:#5a6270}
+.xs-foot span:last-child{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:#173a6b}
+
+/* Pas de téléphone dans ce héros : la carte occupe toute la largeur de la colonne */
+.hhero.h2.xh .lvh{padding-right:0!important}
+.hhero.h2.xh .lvh figcaption{max-width:none}
+
+/* Étape cœur dans « Choisissez votre métier » */
+.sx-step.sx-core{border-color:#173a6b;box-shadow:0 0 0 2px rgba(23,58,107,.08)}
+.sx-step.sx-core .sx-sk{color:#173a6b}
+
+/* Note d'introduction du comparatif */
+.cmpn{margin:0 0 14px;font-size:14.5px;line-height:1.55;color:#4a5160;max-width:78ch}
+
+@media(max-width:860px){
+  .hhero.h2.xh h1{max-width:none!important}
+}
+@media(max-width:560px){
+  .xs-ctl li{grid-template-columns:24px 1fr}
+  .xs-tag{grid-column:2;justify-self:start;margin-top:0}
+  .xs-foot{flex-direction:column;gap:4px}
+}
