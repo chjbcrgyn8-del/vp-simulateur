@@ -40,8 +40,8 @@
     },
     decolletage: {
       sets: { cipdmd: 'Tiges de vérin inox · 607 pièces' },
-      file: 'banc-data-cipdmd.js?v=1', refN: 12, warm: 0, recent: 15, unitL: 'Pièce', machine: 'Tour Index C65',
-      src: 'TU Darmstadt, PTW, <a href="https://zenodo.org/records/8420132" target="_blank" rel="noopener">CiP-DMD, Procedia CIRP 2023</a>. Article sous licence CC BY 4.0 ; licence des données non précisée par le dépôt, réutilisation à confirmer auprès des auteurs. Pièces mesurées et horodatées uniquement.',
+      file: 'banc-data-cipdmd.js?v=2', refN: 12, warm: 0, recent: 15, unitL: 'Pièce', machine: 'Tour Index C65',
+      src: 'TU Darmstadt, PTW, <a href="https://zenodo.org/records/8420132" target="_blank" rel="noopener">CiP-DMD, Procedia CIRP 2023</a>. Article sous licence CC BY 4.0 ; données utilisées sous licence d’utilisation obtenue par Vella Partners. Pièces mesurées et horodatées uniquement.',
       watch: k => ['diam_um', 'coaxiality', 'length'].includes(k),
       journal: 'Le journal de production indique les changements de plaquette, de fileteuse et les reprises de début de journée.',
       expert: 'enquete-decolletage.html'
