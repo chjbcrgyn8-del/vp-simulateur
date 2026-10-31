@@ -69,11 +69,11 @@ window.VP_SECTEURS = {
     exemple: 'Diamètre hors tolérance, rugosité qui se dégrade, bavures, longueur qui varie.',
     chiffre: '16', chiffreL: 'défauts documentés',
     scan: {
-      statut: 'todo', statutL: 'Calculateur à construire',
+      statut: 'cand', statutL: 'Calculateur · valeurs d’exemple',
       question: 'Où vos machines perdent-elles de l’argent ?',
-      fait: ['Rebuts, retouches et arrêts chiffrés en euros', 'Moyens de mesure et machines connectables', 'Machines critiques et feuille de route'],
-      base: 'Grille terrain à construire avec un expert décolletage',
-      demo: null, demoL: 'Échanger sur vos machines'
+      fait: ['Six postes chiffrés en euros : arrêts, réglages, rebuts, lots bloqués, tri, outils', 'Données existantes et machines connectables', 'Trois priorités, chacune reliée à VP Expert ou VP Predict'],
+      base: 'Valeurs de départ illustratives et objectifs Vella Partners ; grille à valider avec un expert décolletage',
+      demo: 'scan-decolletage.html', demoL: 'Chiffrer mes pertes · 3 min'
     },
     expert: {
       statut: 'cand', statutL: 'Référentiel candidat',
@@ -99,11 +99,11 @@ window.VP_SECTEURS = {
     exemple: 'Épaisseur de zinc-nickel trop faible, colmatage insuffisant, piqûres de chromage, manques de galvanisation, peau d’orange en peinture poudre.',
     chiffre: '41', chiffreL: 'défauts documentés',
     scan: {
-      statut: 'todo', statutL: 'Calculateur à construire',
+      statut: 'cand', statutL: 'Calculateur · valeurs d’exemple',
       question: 'Où vos lignes perdent-elles de l’argent ?',
-      fait: ['Retouches, décapages et rebuts chiffrés en euros', 'Analyses de bain, mesures et lignes instrumentées', 'Lignes critiques et feuille de route'],
-      base: 'Grille terrain à construire avec un expert traitement de surface',
-      demo: null, demoL: 'Échanger sur vos lignes'
+      fait: ['Six postes chiffrés en euros : retouches, arrêts, réclamations, vidanges, corrections de bain, chimie', 'Analyses de bain, épaisseurs et lignes connectables', 'Trois priorités, chacune reliée à VP Expert ou VP Predict'],
+      base: 'Valeurs de départ illustratives et objectifs Vella Partners ; grille à valider avec un expert traitement de surface',
+      demo: 'scan-traitement-surface.html', demoL: 'Chiffrer mes pertes · 3 min'
     },
     expert: {
       statut: 'cand', statutL: 'Référentiel candidat',
