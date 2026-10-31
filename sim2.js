@@ -57,6 +57,14 @@ const w=x=>x.n;
 function ranked(list){const tot=list.reduce((s,x)=>s+w(x),0)||1;return list.map(x=>({x,pc:Math.round(100*w(x)/tot)})).sort((a,b)=>w(b.x)-w(a.x));}
 const causesOf=(p,dir)=>(CFG.kb[p]&&CFG.kb[p][dir])||[];
 const checksOf=p=>(CFG.checks[p]||CFG.checks._all||[]);
+
+/* Résolution garantie : une cause sans effet est écartée, et le contrôle simulé désigne ensuite la bonne piste. */
+const tried=c=>!!(S.tried&&S.tried.includes(c));
+const hinted=c=>{const t=S.drift&&S.drift.truth;return !!(t&&c===t&&S.tried&&S.tried.length>0);};
+function rankC(list){const r=ranked(list.filter(c=>!tried(c)));r.sort((a,b)=>hinted(b.x)-hinted(a.x));return r.concat(list.filter(tried).map(x=>({x,pc:0})));}
+const cCls=x=>tried(x)?' out':hinted(x)?' hint':'';
+const cTag=x=>tried(x)?'<span class="rk-tag rk-out">Écartée : l’action n’a pas ramené la mesure</span>':hinted(x)?'<span class="rk-tag rk-hint">Contrôle simulé : écart relevé sur ce point · piste à traiter</span>':'';
+const failMsg=()=>S.failed?'<p class="emsgf">Cause écartée : l’action n’a pas ramené la mesure. Revenez au réglage d’origine, puis traitez la piste signalée par le contrôle.</p>':'';
 function srcTxt(x){return x.n?`poids illustratif ${x.n}, non calibré`:'ajout de démonstration, non validé';}
 
 /* ---------- Affichage ---------- */
@@ -100,8 +108,8 @@ function renderSide(){const el=$('side');const a=S.alert;
  S.seen=a;
  h+=`<div class="pane alertp${out?' hors':''}"><p class="vpx vpp">VP Predict · repère la dérive</p><p class="kick">${out?outL:'Alerte préventive'} · cycle ${a.fc||a.cycle} · ${a.at.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</p><h3>${esc(p.n)} ${DIRL[a.dir]}</h3><p class="sl">${out?(stat?'La valeur mesurée est sortie de la zone moyenne ± 3 σ de la référence : ce n’est pas une tolérance produit, mais un signal fort. Contrôler les pièces et agir.':'La valeur mesurée est sortie de sa tolérance : agir maintenant et contrôler les pièces produites depuis l’alerte.'):esc(a.why)+(stat?'. La valeur reste dans la bande statistique.':'. La valeur reste dans la tolérance de recette.')+' Ce signal ne démontre ni un défaut pièce ni une avance de détection réelle.'}</p></div>`;
  if(!S.cause){
-  h+=`<div class="pane"><p class="vpx">VP Expert · guide les contrôles <button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="VP Expert classe les causes et les actions à partir de poids de démonstration, sans apprentissage de votre historique. Il fonctionne aussi sur les presses non connectées : le régleur saisit le paramètre qui bouge."></span></button></p><h4>Causes à contrôler, par priorité <button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Score de pertinence sur 100, et non une probabilité : classement issu de poids illustratifs initiaux, non calibré ; les clics de démonstration ne modifient pas les poids."></span></button></h4><ol class="rank">`+
-   ranked(list).map(({x,pc},i)=>`<li><button type="button" class="rk" data-c="${list.indexOf(x)}"><span class="rl">${esc(x.l)}</span><span class="bar"><i style="width:${pc}%"></i></span><span class="pc">${pc}<small class="pt"> pts</small></span><small>${srcTxt(x)}</small></button></li>`).join('')+`</ol>
+  h+=`<div class="pane"><p class="vpx">VP Expert · guide les contrôles <button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="VP Expert classe les causes et les actions à partir de poids de démonstration, sans apprentissage de votre historique. Il fonctionne aussi sur les presses non connectées : le régleur saisit le paramètre qui bouge."></span></button></p><h4>Causes à contrôler, par priorité <button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Score de pertinence sur 100, et non une probabilité : classement issu de poids illustratifs initiaux, non calibré ; les clics de démonstration ne modifient pas les poids."></span></button></h4>${failMsg()}<ol class="rank">`+
+   rankC(list).map(({x,pc},i)=>`<li><button type="button" class="rk${cCls(x)}" data-c="${list.indexOf(x)}"${tried(x)?' disabled':''}><span class="rl">${esc(x.l)}</span><span class="bar"><i style="width:${pc}%"></i></span><span class="pc">${tried(x)?'–':pc+'<small class="pt"> pts</small>'}</span><small>${srcTxt(x)}</small>${cTag(x)}</button></li>`).join('')+`</ol>
    <div class="alt"><button type="button" class="btn ghost sm" id="dunno" aria-expanded="${S.dunno}">Je ne sais pas</button><button type="button" class="btn ghost sm" id="newc" aria-expanded="${S.newCause}">Nouvelle cause</button></div>`;
   if(S.dunno)h+=`<div class="chk"><p><b>Vérifications suggérées</b>, dans l’ordre :</p><ol>${checksOf(a.p).map(t=>`<li>${esc(t)}</li>`).join('')}</ol><p class="sl">Choisissez une hypothèse pour explorer le scénario, sans la considérer comme démontrée.</p></div>`;
   if(S.newCause)h+=`<form class="newf" id="fc"><label>Nouvelle cause<input id="ic" required maxlength="120" placeholder="ex. Thermocouple débranché"></label><button class="btn primary sm">Valider</button></form>`;
@@ -125,7 +133,7 @@ function bind(){const el=$('side'),q=s=>el.querySelector(s),a=S.alert;
  if(q('#fa'))q('#fa').onsubmit=e=>{e.preventDefault();const t=q('#ia').value.trim();if(!t)return;const x={l:t,n:0,h:0};S.cause.a.push(x);apply(x);};}
 /* B : la dérive simulée a une cause réelle, tirée au sort parmi les causes connues (pondérée, pas forcément la première). */
 function pickTruth(p,dir){const l=causesOf(p,dir);if(!l.length)return null;const tot=l.reduce((s,x)=>s+w(x)+1,0);let r=Math.random()*tot;for(const x of l){r-=w(x)+1;if(r<=0)return x;}return l.at(-1);}
-function effective(c){const t=S.drift&&S.drift.truth;return !t||c===t||!!c.nouv;}
+function effective(c){const t=S.drift&&S.drift.truth;return !t||c===t||!!c.nouv||!causesOf(S.drift.p,S.drift.dir).includes(t);}
 function apply(act){const a=S.alert,c=S.cause;
  S.verify={a,c,act,at:S.cycle,ok:effective(c)};
  if(S.verify.ok)S.drift.fixedAt=S.cycle;S.alert=null;S.cause=null;S.taken=false;S.dunno=false;S.newAct=false;
@@ -135,9 +143,9 @@ function verifyPane(){const v=S.verify,n=S.cycle-v.at,ready=n>=6;
  return `<div class="pane vrf"><p class="kick">Étape 4 · vérification simulée</p><h3>Action simulée : ${esc(v.act.l)}</h3><p class="sl">Ce scénario calcule un retour simulé. Aucune pièce réelle n’est contrôlée ici ; les résultats et réglages ne sont pas transférables à une machine sans validation.</p>${ready?`<p class="q"><b>Le signal simulé est-il revenu dans sa zone ? La conformité réelle des pièces reste à vérifier sur site.</b></p>${v.ok?'':'<p class="sl">Lisez la courbe : la mesure continue de s’écarter. Une action qui ne touche pas la vraie cause ne corrige rien.</p>'}${S.badOk?'<p class="emsgf">La mesure n’est pas revenue dans sa zone : l’action ne peut pas être déclarée efficace. Choisissez « Non, pas d’effet », revenez au réglage d’origine, puis changez de cause.</p>':''}<div class="alt"><button type="button" class="btn primary sm" id="vok">Enregistrer le résultat simulé</button><button type="button" class="btn ghost sm" id="vko">Non, pas d’effet</button></div>`:`<p class="sl wait">Observation des cycles suivants : ${n} / 6</p>`}</div>`;}
 function bindVerify(){const q=s=>$('side').querySelector(s);
  if(q('#vok'))q('#vok').onclick=()=>{if(!S.verify.ok){S.badOk=true;renderSide();return;}S.badOk=false;const {a,c,act}=S.verify;
-  HIST.unshift({at:new Date(),p:PK[a.p].n,dir:DIRL[a.dir],c:c.l,a:act.l,nc:!!c.nouv});S.verify=null;S.drift=null;renderHist();
+  HIST.unshift({at:new Date(),p:PK[a.p].n,dir:DIRL[a.dir],c:c.l,a:act.l,nc:!!c.nouv});S.verify=null;S.drift=null;S.tried=[];S.failed=false;renderHist();
   $('side').innerHTML=`<div class="pane done"><h3>Résultat simulé enregistré</h3><p class="sl">Ce résultat illustre le parcours de vérification. Il ne prouve ni une cause réelle ni l’efficacité industrielle de l’action, et ne modifie pas le classement.</p></div>`;};
- if(q('#vko'))q('#vko').onclick=()=>{const {a,c}=S.verify;S.badOk=false;S.verify=null;S.drift.fixedAt=null;S.alert=a;S.cause=c;S.failed=true;renderSide();};}
+ if(q('#vko'))q('#vko').onclick=()=>{const {a,c}=S.verify;S.badOk=false;S.verify=null;S.drift.fixedAt=null;S.alert=a;S.tried=S.tried||[];if(!c.nouv&&!S.tried.includes(c))S.tried.push(c);S.cause=null;S.failed=true;renderSide();};}
 function renderHist(){const t=$('hist');if(!HIST.length){t.innerHTML=`<tr><td colspan="5" class="empty">Aucune dérive traitée pour l’instant. Chaque dérive traitée s’ajoute ici.</td></tr>`;return;}
  t.innerHTML=HIST.map((r,i)=>`<tr${i===0?' class="new"':''}><td>${r.at.toLocaleDateString('fr-FR')}</td><td>${r.at.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</td><td><b>${esc(r.p)}</b> ${r.dir}</td><td>${esc(r.c)}</td><td>${esc(r.a)}</td></tr>`).join('');}
 
@@ -185,7 +193,7 @@ $('drift').onclick=openModal;
 $('mclose').onclick=closeModal;$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 $('go').onclick=()=>{S.jump=null;if(MODE==='real'){const p=PK[pick.p];if(!calmFor(S.ri,p,LOOK)){const i=findStart(S.ri,[p],LOOK);seekTo(i);S.jump=RD.rows[i][0];}else P.forEach(q=>S.ref[q.id]=refP(S.ri,q));}
- S.drift={p:pick.p,dir:pick.dir,start:S.cycle,fixedAt:null,truth:pickTruth(pick.p,pick.dir)};S.focus=pick.p;S.running=true;closeModal();renderSide();draw();};
+ S.drift={p:pick.p,dir:pick.dir,start:S.cycle,fixedAt:null,truth:pickTruth(pick.p,pick.dir)};S.focus=pick.p;S.running=true;S.tried=[];S.failed=false;closeModal();renderSide();draw();};
 document.querySelectorAll('[data-r],input[name=meth]').forEach(x=>x.onchange=()=>draw());
 for(let i=0;i<8;i++)tick();renderSide();
 let SPEED=1;window.vpSpeed=()=>SPEED;

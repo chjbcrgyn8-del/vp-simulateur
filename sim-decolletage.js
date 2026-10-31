@@ -53,6 +53,14 @@ function ranked(list){const tot=list.reduce((s,x)=>s+w(x),0)||1;return list.map(
 const causesOf=(p,dir)=>((CFG.kb[p]&&CFG.kb[p][dir])||[]).filter(c=>canon()||!c.canon);
 const hiddenOf=(p,dir)=>canon()?0:((CFG.kb[p]&&CFG.kb[p][dir])||[]).filter(c=>c.canon).length;
 const checksOf=(p,dir)=>(CFG.checks[p+'_'+dir]||(PK[p].dim?CFG.checks._dim:CFG.checks._all)).filter(t=>canon()||!/canon/i.test(t));
+
+/* Résolution garantie : une cause sans effet est écartée, et le contrôle simulé désigne ensuite la bonne piste. */
+const tried=c=>!!(S.tried&&S.tried.includes(c));
+const hinted=c=>{const t=S.drift&&S.drift.truth;return !!(t&&c===t&&S.tried&&S.tried.length>0);};
+function rankC(list){const r=ranked(list.filter(c=>!tried(c)));r.sort((a,b)=>hinted(b.x)-hinted(a.x));return r.concat(list.filter(tried).map(x=>({x,pc:0})));}
+const cCls=x=>tried(x)?' out':hinted(x)?' hint':'';
+const cTag=x=>tried(x)?'<span class="rk-tag rk-out">Écartée : l’action n’a pas ramené la mesure</span>':hinted(x)?'<span class="rk-tag rk-hint">Contrôle simulé : écart relevé sur ce point · piste à traiter</span>':'';
+const failMsg=()=>S.failed?'<p class="emsgf">Cause écartée : l’action n’a pas ramené la mesure. Revenez au réglage d’origine, puis traitez la piste signalée par le contrôle.</p>':'';
 function srcTxt(x){return x.n?`poids illustratif ${x.n}, non calibré`:'ajout de démonstration, non validé';}
 const rtag=r=>r&&RU[r]?`<span class="rtag" title="${esc(RU[r].t)} · sources ${esc(RU[r].s.join(', '))}">${esc(r)}</span>`:'';
 /* ---------- Affichage ---------- */
@@ -106,8 +114,8 @@ function renderSide(){const el=$('side');const a=S.alert;
  h+=`<div class="pane alertp${out?' hors':''}"><p class="vpx vpp">VP Predict · repère la dérive</p><p class="kick">${out?outL:'Alerte préventive'} · pièce ${a.cycle.toLocaleString('fr-FR')} · ${hm}</p><h3>${esc(p.sn)} ${DIRL[a.dir]}</h3><p class="sl">${out?(stat?'La valeur est sortie de la zone moyenne ± 3 σ de la référence : ce n’est pas une tolérance plan, mais un signal fort.':(p.dim?'La cote mesurée est sortie de la tolérance plan : isoler les pièces depuis l’alerte, puis contre-mesurer.':'La valeur est sortie de sa plage de réglage : contrôler et agir.')):esc(a.why)+'. La valeur reste dans sa bande.'+' Ce signal ne démontre ni un défaut pièce ni une avance de détection réelle.'}</p>${ctxPane(a.ctx)}</div>`;
  if(p.dim&&!S.cause)h+=cmPane(a);
  if(!S.cause){const hid=hiddenOf(a.p,a.dir);
-  h+=`<div class="pane${gate?' locked':''}"><p class="vpx">VP Expert · guide les contrôles <button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="VP Expert classe les causes et les actions à partir de poids de démonstration, sans apprentissage de votre historique. Il fonctionne aussi sur les machines non connectées : le régleur saisit la cote qui bouge."></span></button></p><h4>Causes à contrôler, par priorité <button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Score de pertinence sur 100, et non une probabilité : classement issu de poids illustratifs, non calibré, ajusté par la contre-mesure. Les clics de démonstration ne modifient pas les poids."></span></button></h4>${gate?'<p class="lockt sl">Verrouillé jusqu’à la contre-mesure.</p>':''}<ol class="rank">`+
-   ranked(list).map(({x,pc})=>`<li><button type="button" class="rk" data-c="${list.indexOf(x)}"${gate?' disabled':''}><span class="rl">${esc(x.l)} ${rtag(x.r)}</span><span class="bar"><i style="width:${pc}%"></i></span><span class="pc">${pc}<small class="pt"> pts</small></span><small>${srcTxt(x)}${S.cm&&x.meas?(S.cm.res==='nc'?' · remonté par la contre-mesure':' · moins probable après contre-mesure'):''}</small></button></li>`).join('')+`</ol>`+
+  h+=`<div class="pane${gate?' locked':''}"><p class="vpx">VP Expert · guide les contrôles <button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="VP Expert classe les causes et les actions à partir de poids de démonstration, sans apprentissage de votre historique. Il fonctionne aussi sur les machines non connectées : le régleur saisit la cote qui bouge."></span></button></p><h4>Causes à contrôler, par priorité <button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Score de pertinence sur 100, et non une probabilité : classement issu de poids illustratifs, non calibré, ajusté par la contre-mesure. Les clics de démonstration ne modifient pas les poids."></span></button></h4>${gate?'<p class="lockt sl">Verrouillé jusqu’à la contre-mesure.</p>':''}${failMsg()}<ol class="rank">`+
+   rankC(list).map(({x,pc})=>`<li><button type="button" class="rk${cCls(x)}" data-c="${list.indexOf(x)}"${gate||tried(x)?' disabled':''}><span class="rl">${esc(x.l)} ${rtag(x.r)}</span><span class="bar"><i style="width:${pc}%"></i></span><span class="pc">${tried(x)?'–':pc+'<small class="pt"> pts</small>'}</span><small>${srcTxt(x)}${S.cm&&x.meas?(S.cm.res==='nc'?' · remonté par la contre-mesure':' · moins probable après contre-mesure'):''}</small>${cTag(x)}</button></li>`).join('')+`</ol>`+
    (hid?`<p class="sl hidnote">${hid} piste${hid>1?'s':''} canon masquée${hid>1?'s':''} : machine configurée sans canon ${rtag('DC01-R04')}.</p>`:'')+
    (gate?'':`<div class="alt"><button type="button" class="btn ghost sm" id="dunno" aria-expanded="${S.dunno}">Je ne sais pas</button><button type="button" class="btn ghost sm" id="newc" aria-expanded="${S.newCause}">Nouvelle cause</button></div>`);
   if(S.dunno&&!gate)h+=`<div class="chk"><p><b>Vérifications suggérées</b>, dans l’ordre :</p><ol>${checksOf(a.p,a.dir).map(t=>`<li>${esc(t)}</li>`).join('')}</ol><p class="sl">Choisissez une hypothèse pour explorer le scénario, sans la considérer comme démontrée.</p></div>`;
@@ -135,7 +143,7 @@ function bind(){const el=$('side'),q=s=>el.querySelector(s),a=S.alert;
  if(q('#fa'))q('#fa').onsubmit=e=>{e.preventDefault();const t=q('#ia').value.trim();if(!t)return;const x={l:t,n:0};S.cause.a.push(x);apply(x);};}
 /* La dérive simulée a une cause tirée au sort parmi les causes visibles (pondérée, pas forcément la première). */
 function pickTruth(p,dir){const l=causesOf(p,dir);if(!l.length)return null;const tot=l.reduce((s,x)=>s+x.n+1,0);let r=Math.random()*tot;for(const x of l){r-=x.n+1;if(r<=0)return x;}return l.at(-1);}
-function effective(c){const t=S.drift&&S.drift.truth;return !t||c===t||!!c.nouv;}
+function effective(c){const t=S.drift&&S.drift.truth;return !t||c===t||!!c.nouv||!causesOf(S.drift.p,S.drift.dir).includes(t);}
 function apply(act){const a=S.alert,c=S.cause;
  S.verify={a,c,act,at:S.cycle,ok:effective(c)};if(act.reset)S.tool=0;
  if(S.verify.ok)S.drift.fixedAt=S.cycle;S.alert=null;S.cause=null;S.taken=false;S.dunno=false;S.newAct=false;S.running=true;
@@ -147,9 +155,9 @@ function verifyPane(){const v=S.verify,n=S.cycle-v.at,ready=n>=6;
  return `<div class="pane vrf"><p class="kick">Vérification simulée</p><h3>Action simulée : ${esc(v.act.l)}</h3><p class="sl">Le scénario calcule un retour simulé. Aucune pièce réelle n’est contrôlée ici ; les réglages ne sont pas transférables à une machine sans validation.</p>${CFG.verif&&CFG.verif[v.a.p]?`<p class="sl"><b>Sur site, la vérification du retour se fait</b> ${esc(CFG.verif[v.a.p])} <span class="rtag">DC01-R05</span></p>`:''}${ncl(v.c.r)}${v.c.r!=='DC01-R05'?ncl('DC01-R05'):''}${ready?`<p class="q"><b>La mesure simulée est-elle revenue dans sa zone ? La conformité réelle des pièces reste à vérifier sur site.</b></p>${v.ok?'':'<p class="sl">Lisez la courbe : la mesure continue de s’écarter. Une action qui ne touche pas la vraie cause ne corrige rien.</p>'}${S.badOk?'<p class="emsgf">La mesure n’est pas revenue dans sa zone : l’action ne peut pas être déclarée efficace. Choisissez « Non, pas d’effet », revenez au réglage d’origine, puis changez de cause.</p>':''}<div class="alt"><button type="button" class="btn primary sm" id="vok">Enregistrer le résultat simulé</button><button type="button" class="btn ghost sm" id="vko">Non, pas d’effet</button></div>`:`<p class="sl wait">Observation des pièces suivantes : ${n} / 6</p>`}</div>`;}
 function bindVerify(){const q=s=>$('side').querySelector(s);
  if(q('#vok'))q('#vok').onclick=()=>{if(!S.verify.ok){S.badOk=true;renderSide();return;}S.badOk=false;const {a,c,act}=S.verify;
-  HIST.unshift({at:new Date(),p:PK[a.p].sn,dir:DIRL[a.dir],c:c.l,a:act.l,r:c.r||'—',cm:PK[a.p].dim});S.verify=null;S.drift=null;S.cm=null;renderHist();
+  HIST.unshift({at:new Date(),p:PK[a.p].sn,dir:DIRL[a.dir],c:c.l,a:act.l,r:c.r||'—',cm:PK[a.p].dim});S.verify=null;S.drift=null;S.tried=[];S.failed=false;S.cm=null;renderHist();
   $('side').innerHTML=`<div class="pane done"><h3>Résultat simulé enregistré</h3><p class="sl">Ce résultat illustre le parcours de vérification. Il ne prouve ni une cause réelle ni l’efficacité industrielle de l’action, et ne modifie pas le classement.</p></div>`;};
- if(q('#vko'))q('#vko').onclick=()=>{const {a,c}=S.verify;S.badOk=false;S.verify=null;S.drift.fixedAt=null;S.alert=a;S.cause=c;S.failed=true;renderSide();};}
+ if(q('#vko'))q('#vko').onclick=()=>{const {a,c}=S.verify;S.badOk=false;S.verify=null;S.drift.fixedAt=null;S.alert=a;S.tried=S.tried||[];if(!c.nouv&&!S.tried.includes(c))S.tried.push(c);S.cause=null;S.failed=true;renderSide();};}
 function renderHist(){const t=$('hist');if(!HIST.length){t.innerHTML=`<tr><td colspan="6" class="empty">Aucune dérive traitée pour l’instant. Chaque dérive traitée s’ajoute ici.</td></tr>`;return;}
  t.innerHTML=HIST.map((r,i)=>`<tr${i===0?' class="new"':''}><td>${r.at.toLocaleDateString('fr-FR')}</td><td>${r.at.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</td><td><b>${esc(r.p)}</b> ${r.dir}${r.cm?' <small>· contre-mesure faite</small>':''}</td><td>${esc(r.c)}</td><td>${esc(r.a)}</td><td>${esc(r.r)}</td></tr>`).join('');}
 /* ---------- Fenêtre « Je simule une dérive » ---------- */
@@ -172,7 +180,7 @@ $('go').onclick=()=>{const truth=pickTruth(pick.p,pick.dir);
  /* Contexte cohérent avec la cause tirée au sort : un indice, pas la réponse */
  if(truth){if(truth.shape==='expo'&&/arrêt|redémarrage/i.test(truth.l))S.restart=S.cycle-6;else S.restart=S.cycle-240-Math.round(Math.random()*120);
   if(/^Usure/.test(truth.l))S.tool=2200+Math.round(Math.random()*250);else if(/changement d’arête/.test(truth.l))S.tool=8+Math.round(Math.random()*10);else S.tool=500+Math.round(Math.random()*900);}
- S.drift={p:pick.p,dir:pick.dir,start:S.cycle,fixedAt:null,truth};S.focus=pick.p;S.running=true;closeModal();renderSide();draw();};
+ S.drift={p:pick.p,dir:pick.dir,start:S.cycle,fixedAt:null,truth};S.focus=pick.p;S.running=true;S.tried=[];S.failed=false;closeModal();renderSide();draw();};
 document.querySelectorAll('[data-r],input[name=meth]').forEach(x=>x.onchange=()=>draw());
 document.querySelectorAll('input[name=canon],[data-opc]').forEach(x=>x.onchange=()=>{draw();renderSide();});
 for(let i=0;i<8;i++)tick();renderSide();
