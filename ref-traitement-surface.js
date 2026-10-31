@@ -1,8 +1,9 @@
-/* Référentiel candidat traitement de surface · 24 défauts, 4 familles, 4 types de ligne.
+/* Référentiel candidat traitement de surface · 41 défauts, 9 familles, 9 types de ligne (extension du 31 octobre 2026 :
+   chromage dur, phosphatation, électropolissage, galvanisation à chaud, peinture poudre ; ces cinq lignes ne sont pas simulées).
    Ordre de contrôle : proposé par Vella Partners à partir de la recherche documentaire mondiale
-   du 30–31 octobre 2026 (sources TS-S01 à TS-S68, voir sources-traitement-surface.html).
+   du 30–31 octobre 2026 (sources TS-S01 à TS-S87, TS-S68 fusionnée avec TS-S01, voir sources-traitement-surface.html).
    Statut : RECHERCHE_DOCUMENTAIRE_NON_VALIDEE. À relire par un expert traitement de surface avant tout usage atelier.
-   lines = types de ligne concernés (tonneau, attache, anod, chim) ; mes = défaut mesuré (épaisseur, composition) :
+   lines = types de ligne concernés (tonneau, attache, anod, chim, chrome, phos, ep, galva, poudre) ; mes = défaut mesuré (épaisseur, composition) :
    contre-mesure avant toute correction de bain (TS01-R01). */
 (function(){
 const EL=['tonneau','attache'],ALL=['tonneau','attache','anod','chim'],ST=['tonneau','attache','chim'];
@@ -31,7 +32,25 @@ window.VELLA_REF_TS={
   {tab:'F03',fam:'perf',mes:true,lines:EL,defect:'Rouille rouge prématurée',hint:'tenue NSS insuffisante',levers:['M','X','N','V','O','S']},
   {tab:'F04',fam:'perf',lines:ST,defect:'Rupture différée',hint:'fragilisation par l’hydrogène soupçonnée',levers:['E','P','S','D','A']},
   {tab:'F05',fam:'perf',lines:ALL,defect:'Cratères ou cloques sur cataphorèse',hint:'peinture électrophorétique après traitement',levers:['W','P','C','G']},
-  {tab:'F06',fam:'perf',lines:ALL,defect:'Phosphatation poudreuse ou incomplète',hint:'avant peinture ou cataphorèse',levers:['P','W','C','I']}],
+  {tab:'F06',fam:'perf',lines:ALL,defect:'Phosphatation poudreuse ou incomplète',hint:'avant peinture ou cataphorèse',levers:['P','W','C','I']},
+  /* Extension du 31 octobre 2026 : chromage dur, phosphatation, électropolissage, galvanisation à chaud, peinture poudre (sources TS-S69 à TS-S87, règles TS08 à TS12). */
+  {tab:'C01',fam:'chrome',lines:['chrome'],defect:'Piqûres en chromage dur',hint:'après rectification surtout',levers:['RE','CR','CI','P','S','G'],src:['TS-S70','TS-S45']},
+  {tab:'C02',fam:'chrome',lines:['chrome'],defect:'Brûlure, nodules sur arêtes',hint:'forte densité de courant',levers:['D','T','CR','G','CI'],src:['TS-S69','TS-S71','TS-S72']},
+  {tab:'C03',fam:'chrome',lines:['chrome'],defect:'Dépôt terne, gris ou laiteux, mauvaise couverture',hint:'zones de faible densité',levers:['CR','CI','T','D','G'],src:['TS-S69','TS-S72']},
+  {tab:'C04',fam:'chrome',mes:true,lines:['chrome'],defect:'Vitesse de dépôt trop faible',hint:'épaisseur non atteinte au temps prévu',levers:['M','CR','CI','R','D','T'],src:['TS-S71','TS-S45']},
+  {tab:'P01',fam:'phos',mes:true,lines:['phos'],defect:'Poids de couche hors plage',hint:'g/m² trop faible ou trop fort',levers:['M','PA','PF','T','P'],src:['TS-S73','TS-S74','TS-S75']},
+  {tab:'P02',fam:'phos',lines:['phos'],defect:'Cristaux grossiers ou couche poudreuse',hint:'avant peinture, cataphorèse ou déformation',levers:['PA','PF','P','W','T'],src:['TS-S73','TS-S75']},
+  {tab:'P03',fam:'phos',lines:['phos'],defect:'Attaque du métal ou couche qui ne se forme pas',hint:'acidité libre hors plage',levers:['PA','T','P'],src:['TS-S73']},
+  {tab:'EP01',fam:'ep',lines:['ep'],defect:'Piqûres ou traînées de gaz',hint:'bulles accrochées, positions hautes',levers:['EA','EC','G','EW','S'],src:['TS-S77','TS-S78','TS-S79']},
+  {tab:'EP02',fam:'ep',lines:['ep'],defect:'Aspect terne ou attaqué (etching)',hint:'souvent en faible densité de courant',levers:['EC','EW','T','P','G'],src:['TS-S76','TS-S78','TS-S79']},
+  {tab:'EP03',fam:'ep',mes:true,lines:['ep'],defect:'Enlèvement de matière hors tolérance',hint:'cotes, arêtes trop arrondies',levers:['M','EC','T','G','R'],src:['TS-S76','TS-S77']},
+  {tab:'G01',fam:'galva',lines:['galva'],defect:'Manques de zinc (bare spots)',hint:'zones non revêtues',levers:['P','GF','GB','S'],src:['TS-S81','TS-S82']},
+  {tab:'G02',fam:'galva',mes:true,lines:['galva'],defect:'Épaisseur trop forte, revêtement cassant ou qui s’écaille',hint:'aciers réactifs (silicium)',levers:['M','GS','GB','GT'],src:['TS-S80','TS-S83','TS-S81']},
+  {tab:'G03',fam:'galva',mes:true,lines:['galva'],defect:'Épaisseur sous le minimum ISO 1461',hint:'moyenne ou locale',levers:['M','X','GS','GT','P'],src:['TS-S80','TS-S83']},
+  {tab:'G04',fam:'galva',lines:['galva'],defect:'Inclusions de matte, cendres ou flux',hint:'aspérités, grumeaux',levers:['GB','GF','GT'],src:['TS-S81','TS-S82']},
+  {tab:'PP01',fam:'poudre',lines:['poudre'],defect:'Peau d’orange',hint:'tendu insuffisant',levers:['PE','PK','PC','PP'],src:['TS-S84','TS-S85','TS-S86']},
+  {tab:'PP02',fam:'poudre',lines:['poudre'],defect:'Sous-cuisson : adhérence ou résistance insuffisantes',hint:'température métal non atteinte',levers:['PC','PE','P','W'],src:['TS-S86','TS-S85']},
+  {tab:'PP03',fam:'poudre',mes:true,lines:['poudre'],defect:'Épaisseur hors plage ou retour d’ionisation',hint:'cratères, zones rugueuses',levers:['M','PK','PE','PP'],src:['TS-S84','TS-S85']}],
  /* Leviers : famille Ishikawa, mesure de ligne éventuelle (p), indices QQOQC, contrôle, règle candidate.
     gate = contre-mesure ; adj = correction de bain ou de courant, verrouillée tant que la contre-mesure n'est pas faite. */
  levers:{
@@ -61,6 +80,22 @@ window.VELLA_REF_TS={
   V:{n:'Passivation Cr(III) : pH, température, temps',b:'Post-traitement',p:null,lines:['tonneau','attache'],ind:{quand:['ajout','serie']},ctl:'Mesurer pH, température, temps et concentration de la passivation, contaminations fer et zinc ; vérifier le séchage.',r:'TS05-R01'},
   E:{n:'Dégazage : dureté, durée, délai, ordre',b:'Post-traitement',p:null,ind:{quand:['lot']},ctl:'Relever dureté réelle, classe de dégazage exigée, enregistrement du four, délai entre dépôt et four, ordre dégazage / passivation.',r:'TS05-R02'},
   L:{n:'Colmatage : température, pH, temps, eau',b:'Post-traitement',p:'adm',lines:['anod'],ind:{quand:['serie']},ctl:'Contrôler température (≥96 °C en colmatage à chaud), pH, temps (2 min/µm) et qualité de l’eau.',r:'TS05-R03'},
-  I:{n:'Stockage, séchage et emballage',b:'Post-traitement',p:null,ind:{terme:['long'],ou:['local']},ctl:'Vérifier séchage, condensation, emballage, durée et conditions de stockage avant expédition ou essai.',r:'TS06-R03'}}
+  I:{n:'Stockage, séchage et emballage',b:'Post-traitement',p:null,ind:{terme:['long'],ou:['local']},ctl:'Vérifier séchage, condensation, emballage, durée et conditions de stockage avant expédition ou essai.',r:'TS06-R03'},
+  CR:{n:'Rapport acide chromique / sulfate',b:'Bain et chimie',p:null,adj:true,lines:['chrome'],ind:{quand:['ajout','serie'],terme:['moyen']},ctl:'Titrer CrO3 et sulfate, calculer le rapport (bain standard ≈ 100:1 ; 75:1–130:1 selon catalyseur) ; corriger le sulfate plutôt que l’acide chromique.',r:'TS08-R01',src:['TS-S69','TS-S72']},
+  CI:{n:'Impuretés du bain de chrome (Fe, Cu, Cr3+)',b:'Bain et chimie',p:null,lines:['chrome'],ind:{terme:['long','moyen'],quand:['serie']},ctl:'Analyser Fe, Cu, Cr3+ ; repères d’article : Fe ≤5 g/L, Cu ≤5 g/L, Cr3+ ≤3 % du CrO3 ; les impuretés faussent le rapport effectif.',r:'TS08-R02',src:['TS-S45','TS-S45']},
+  RE:{n:'Décapage anodique (reverse etch) avant chromage',b:'Préparation et substrat',p:null,lines:['chrome'],ind:{quand:['lot'],ou:['tout']},ctl:'Vérifier le temps de décapage anodique selon nuance et dureté : trop court, les aspérités de rectification restent ; trop long, l’acier est attaqué.',r:'TS08-R03',src:['TS-S70']},
+  PA:{n:'Acidité libre, acidité totale et rapport',b:'Bain et chimie',p:null,adj:true,lines:['phos'],ind:{quand:['ajout','serie'],freq:['chaque']},ctl:'Titrer acidité totale (phénolphtaléine) et libre (bleu de bromophénol / méthylorange) en points, calculer le rapport, comparer à la plage du fournisseur.',r:'TS09-R01',src:['TS-S73','TS-S74','TS-S75']},
+  PF:{n:'Accélérateur et fer dissous',b:'Bain et chimie',p:null,lines:['phos'],ind:{terme:['moyen','long'],quand:['serie']},ctl:'Doser l’accélérateur et le fer dissous (permanganate) ; le fer influe sur le poids de couche.',r:'TS09-R02',src:['TS-S73']},
+  EC:{n:'Densité de courant, température et temps d’électropolissage',b:'Courant et montage',p:null,adj:true,lines:['ep'],ind:{ou:['lcd','hcd'],quand:['lot']},ctl:'Recalculer la densité réelle sur la surface chargée, comparer à la gamme (ordre de grandeur publié 5–25 A/dm², 40–75 °C) ; la procédure qualifiée ne se modifie pas sans requalification.',r:'TS10-R01',src:['TS-S76','TS-S77']},
+  EW:{n:'Électrolyte : eau, métaux dissous, densité',b:'Bain et chimie',p:null,lines:['ep'],ind:{terme:['moyen','long'],ou:['lcd']},ctl:'Contrôler densité, teneur en eau et métaux dissous ; un excès d’eau fait passer du polissage à l’attaque.',r:'TS10-R02',src:['TS-S78','TS-S79']},
+  EA:{n:'Agitation et évacuation des bulles',b:'Courant et montage',p:null,lines:['ep'],ind:{ou:['local'],freq:['charge']},ctl:'Vérifier agitation, orientation des pièces et espacement ; les bulles accrochées laissent piqûres et traînées.',r:'TS10-R03',src:['TS-S77','TS-S79']},
+  GS:{n:'Composition de l’acier (Si, P) et réactivité',b:'Préparation et substrat',p:null,lines:['galva'],ind:{quand:['lot'],terme:['court']},ctl:'Relire le certificat matière (Si, P) : la réactivité de l’acier détermine l’épaisseur obtenue.',r:'TS11-R01',src:['TS-S83','TS-S80']},
+  GT:{n:'Bain de zinc : température, temps d’immersion, retrait',b:'Bain et chimie',p:null,lines:['galva'],ind:{quand:['demar','serie'],freq:['chaque']},ctl:'Relever température du bain, durée d’immersion et vitesse de sortie ; comparer à la gamme pour l’épaisseur de section.',r:'TS11-R02',src:['TS-S80']},
+  GF:{n:'Fluxage et préparation avant zinc',b:'Préparation et substrat',p:null,lines:['galva'],ind:{ou:['local'],quand:['serie']},ctl:'Contrôler dégraissage, décapage, concentration et état du flux ; laitier de soudure et sable de moulage provoquent des manques.',r:'TS11-R03',src:['TS-S81']},
+  GB:{n:'Conception, accrochage et égouttage',b:'Courant et montage',p:null,lines:['galva'],ind:{ou:['local','lcd'],freq:['charge']},ctl:'Vérifier trous d’évent et d’écoulement, orientation et accrochage ; matte reprise au fond du bain.',r:'TS11-R04',src:['TS-S81','TS-S82']},
+  PE:{n:'Épaisseur de film poudre',b:'Mesure',p:null,lines:['poudre'],ind:{freq:['charge'],ou:['hcd','lcd']},ctl:'Mesurer l’épaisseur cuite (magnétique ou courants de Foucault), comparer à la fiche technique de la poudre.',r:'TS12-R01',src:['TS-S84','TS-S85']},
+  PK:{n:'Pistolet : tension, distance, débit',b:'Courant et montage',p:null,lines:['poudre'],ind:{ou:['hcd','lcd'],quand:['entretien']},ctl:'Relever kV, distance pistolet–pièce, débit poudre ; tension trop haute = retour d’ionisation.',r:'TS12-R02',src:['TS-S84','TS-S85']},
+  PC:{n:'Cuisson : température métal réelle',b:'Post-traitement',p:null,lines:['poudre'],ind:{freq:['charge'],quand:['demar']},ctl:'Enregistrer la courbe de température pièce (pas l’air du four) et la comparer à la fenêtre de cuisson de la fiche technique.',r:'TS12-R03',src:['TS-S86','TS-S85']},
+  PP:{n:'Poudre : lot, stockage, taux de récupération',b:'Bain et chimie',p:null,lines:['poudre'],ind:{quand:['lot'],terme:['court']},ctl:'Vérifier lot, durée et conditions de stockage, part de poudre recyclée, granulométrie.',r:'TS12-R04',src:['TS-S84','TS-S85']}}
 };
 })();

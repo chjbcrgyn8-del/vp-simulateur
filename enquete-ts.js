@@ -1,12 +1,13 @@
 (function(){
 /* Enquête défaut traitement de surface · même parcours que l'enquête décolletage (enquete-d.js) : défaut → mesures → QQOQC → leviers → Ishikawa.
-   Référentiel candidat de 24 défauts (ref-traitement-surface.js), ordre de contrôle proposé par Vella Partners, à valider par un expert traitement de surface.
+   Référentiel candidat de 41 défauts sur 9 types de ligne (ref-traitement-surface.js), ordre de contrôle proposé par Vella Partners, à valider par un expert traitement de surface.
    Garde-fous : contre-mesure avant correction de bain (TS01-R01), leviers sans objet masqués selon le type de ligne,
-   donnée absente ≠ conforme. Le mode « une mesure dérive » utilise la configuration de ligne de kb-traitement-surface.js. */
+   donnée absente ≠ conforme. Le mode « une mesure dérive » utilise la configuration de ligne de kb-traitement-surface.js ;
+   il n'existe que pour les trois lignes simulées (zinc-nickel, anodisation, nickel chimique). */
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const R=window.VELLA_REF_TS,REF=R.defects,LV=R.levers,CFGS=window.SIM_CFGS,RU=CFGS.znni.rules||{};let CFG=CFGS.znni;
-const FAM=[['dep','Dépôts électrolytiques'],['anod','Anodisation'],['chim','Nickel chimique'],['perf','Adhérence, corrosion, fragilisation, peinture']];
+const FAM=[['dep','Dépôts électrolytiques'],['anod','Anodisation'],['chim','Nickel chimique'],['perf','Adhérence, corrosion, fragilisation, peinture'],['chrome','Chromage dur'],['phos','Phosphatation'],['ep','Électropolissage'],['galva','Galvanisation à chaud'],['poudre','Peinture poudre']];
 const FC=k=>k==='dep'||k==='anod'?'dim':'vul';
 const OU=[['hcd','Arêtes, angles, zones exposées'],['lcd','Creux, alésages, zones masquées'],['contact','Autour des contacts ou de l’accroche'],['tout','Toute la surface'],['local','Zone localisée, aléatoire']];
 const QUAND=[['demar','Au démarrage ou après un arrêt du bain'],['serie','Au fil de la production'],['ajout','Après un ajout ou une correction de bain'],['lot','Après un changement de lot de pièces ou de matière'],['entretien','Après un entretien : anodes, filtration, redresseur']];
@@ -14,13 +15,14 @@ const FREQ=[['chaque','Sur toutes les charges'],['charge','Selon le tonneau, la 
 const TERME=[['court','Apparu d’un coup'],['moyen','Progressif sur la série'],['long','Depuis longtemps']];
 const QUI=[['op','Opératrice / opérateur de ligne'],['regl','Laboratoire ou contrôle final'],['qual','Service qualité'],['client','Client']];
 const COMBIEN=[['rare','Quelques pièces'],['part','Une part régulière des charges'],['toutes','Toutes les charges']];
-const MACH=[['tonneau','Électrolytique au tonneau'],['attache','Électrolytique à l’attache'],['anod','Anodisation'],['chim','Nickel chimique']];
-const LCFG=m=>m==='anod'?CFGS.anod:m==='chim'?CFGS.chim:CFGS.znni;
+const MACH=[['tonneau','Électrolytique au tonneau'],['attache','Électrolytique à l’attache'],['anod','Anodisation'],['chim','Nickel chimique'],['chrome','Chromage dur'],['phos','Phosphatation'],['ep','Électropolissage inox'],['galva','Galvanisation à chaud'],['poudre','Peinture poudre']];
+const SIMS=['tonneau','attache','anod','chim'],NOSIM={params:[],kb:{},rules:RU};
+const LCFG=m=>!SIMS.includes(m)?NOSIM:m==='anod'?CFGS.anod:m==='chim'?CFGS.chim:CFGS.znni;
 const LBL={};[OU,QUAND,FREQ,TERME,QUI,COMBIEN].forEach(l=>l.forEach(([v,t])=>LBL[v]=LBL[v]||t));
 const lab=(l,v)=>(l.find(x=>x[0]===v)||[,''])[1];
 const BR=['Mesure','Bain et chimie','Courant et montage','Préparation et substrat','Post-traitement'];
 const S={def:'E01',fam:'all',qd:'',br:'sans',mach:'tonneau',param:'e',dir:'down',ou:'lcd',quand:'serie',freq:'chaque',terme:'moyen',qui:'op',combien:undefined};
-function syncLine(){const d=REF.find(x=>x.tab===S.def);if(d&&!d.lines.includes(S.mach))S.mach=d.lines[0];CFG=LCFG(S.mach);const P=CFG.params.find(p=>p.id===S.param)||CFG.params[0];S.param=P.id;const ds=P.dirs||['up','down'];if(!ds.includes(S.dir))S.dir=ds[0];}
+function syncLine(){const d=REF.find(x=>x.tab===S.def);if(d&&!d.lines.includes(S.mach))S.mach=d.lines[0];CFG=LCFG(S.mach);if(!CFG.params.length){if(S.br==='derive')S.br='sans';return;}const P=CFG.params.find(p=>p.id===S.param)||CFG.params[0];S.param=P.id;const ds=P.dirs||['up','down'];if(!ds.includes(S.dir))S.dir=ds[0];}
 const HIST=[],REC={},OK={},NUM={};
 const base=()=>S.br==='derive'?'d|'+S.param+S.dir+'|'+S.mach:'p|'+S.def+'|'+S.mach;
 const KEY=()=>base()+'#'+(NUM[base()]||0);
@@ -38,13 +40,13 @@ const pills=(k,l)=>`<div class="opts" data-k="${k}">`+l.map(([v,t])=>`<button ty
 const q=(a,t,b)=>`<div class="q"><span class="ql">${a}</span><div><b>${t}</b>${b}</div></div>`;
 const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 function draw0(){const f=S.fam,qd=norm(S.qd.trim());
- $('fams').innerHTML='<span class="famlab nv">4 familles</span>'+[['all','Tous',REF.length],...FAM.map(([k,l])=>[k,l,REF.filter(d=>d.fam===k).length])].map(([k,l,n])=>`<button type="button" class="${k==='all'?'':'f-'+FC(k)}" data-fam="${k}" aria-pressed="${f===k}">${l} <small>${n}</small></button>`).join('');
+ $('fams').innerHTML='<span class="famlab nv">'+FAM.length+' familles</span>'+[['all','Tous',REF.length],...FAM.map(([k,l])=>[k,l,REF.filter(d=>d.fam===k).length])].map(([k,l,n])=>`<button type="button" class="${k==='all'?'':'f-'+FC(k)}" data-fam="${k}" aria-pressed="${f===k}">${l} <small>${n}</small></button>`).join('');
  const L=REF.filter(d=>(f==='all'||d.fam===f)&&(!qd||norm(d.defect+' '+d.hint).includes(qd)));
  $('defs').innerHTML=L.length?L.map(d=>`<button type="button" class="dt ${FC(d.fam)}" data-def="${d.tab}" aria-pressed="${S.def===d.tab}"><b>${esc(d.defect)}</b><small>${esc(d.hint)}</small></button>`).join(''):'<p class="sl">Aucun défaut trouvé. Essayez un autre mot.</p>';
- $('mach').innerHTML='<p class="ml">Type de ligne</p>'+pills('mach',MACH.filter(([v])=>DEF().lines.includes(v)))+(hiddenN()?`<p class="sl hidnote">${hiddenN()} levier${hiddenN()>1?'s':''} sans objet pour une ligne « ${esc(lab(MACH,S.mach).toLowerCase())} », masqué${hiddenN()>1?'s':''}.</p>`:'');}
+ $('mach').innerHTML='<p class="ml">Type de ligne</p>'+pills('mach',MACH.filter(([v])=>DEF().lines.includes(v)))+(hiddenN()?`<p class="sl hidnote">${hiddenN()} levier${hiddenN()>1?'s':''} sans objet pour une ligne « ${esc(lab(MACH,S.mach).toLowerCase())} », masqué${hiddenN()>1?'s':''}.</p>`:'')+(SIMS.includes(S.mach)?'':'<p class="sl hidnote">Ligne non simulée : enquête sur le référentiel documentaire seul, sans le mode « une mesure dérive ».</p>');}
 const SIT=[['sans','Pas de données de ligne','Le défaut est vu par une personne : contrôle visuel, XRF ponctuel, essai client. Tous les leviers sont à vérifier.'],['conforme','Mesures conformes','Analyses de bain, température, courant et mesures d’épaisseur dans leur plage.'],['derive','Une mesure dérive','On cherche l’origine de la dérive, dans l’ordre de contrôle candidat.']];
 function draw1(){const nM=nMesOf(),NT=cands().length;
- $('sit').innerHTML=SIT.map(([v,t,d])=>`<button type="button" class="sc" data-b="${v}" aria-pressed="${S.br===v}"><em class="stag ${v==='sans'?'ex':'pr'}">${v==='sans'?'VP Expert seul':'Avec VP Predict'}</em><b>${t}</b><span>${d}</span></button>`).join('');
+ $('sit').innerHTML=SIT.filter(([v])=>v!=='derive'||CFG.params.length).map(([v,t,d])=>`<button type="button" class="sc" data-b="${v}" aria-pressed="${S.br===v}"><em class="stag ${v==='sans'?'ex':'pr'}">${v==='sans'?'VP Expert seul':'Avec VP Predict'}</em><b>${t}</b><span>${d}</span></button>`).join('');
  const PS=CFG.params.filter(p=>!p.opc||S.br!=='derive'||true);
  $('drv').innerHTML=S.br==='derive'?'<p class="ml">Quelle mesure dérive ?</p>'+pills('param',PS.map(p=>[p.id,p.sn]))+'<p class="ml">Dans quel sens ?</p>'+pills('dir',(CFG.params.find(p=>p.id===S.param).dirs||['up','down']).map(d=>[d,d==='up'?'En hausse':'En baisse'])):'';
  const P=CFG.params.find(p=>p.id===S.param);
@@ -129,13 +131,13 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
  if(b.dataset.new){NUM[base()]=(NUM[base()]||0)+1;render();return}
  if(b.id==='print'){window.print();return}
  const o=b.closest('.opts');if(o){const k=o.dataset.k,v=b.dataset.v;S[k]=(S[k]===v&&!['param','dir','mach'].includes(k))?undefined:v;
-  if(k==='param'){const ds=CFG.params.find(p=>p.id===v).dirs||['up','down'];if(!ds.includes(S.dir))S.dir=ds[0];}if(k==='mach'){CFG=LCFG(S.mach);if(!CFG.params.some(p=>p.id===S.param)){S.param=CFG.params[0].id;}}render();}});
+  if(k==='param'){const ds=CFG.params.find(p=>p.id===v).dirs||['up','down'];if(!ds.includes(S.dir))S.dir=ds[0];}if(k==='mach'){syncLine();}render();}});
 $('dq').addEventListener('input',e=>{S.qd=e.target.value;draw0()});
 document.body.classList.add('rc');
 render();
 window.VP_SECTOR_ADAPTERS=window.VP_SECTOR_ADAPTERS||{};
 {const TSR=window.VPTS.rules,norm=r=>({...r,collect:r.check,closure:r.proof,refs:r.sources||[],blocked:!!r.blocked});
- const famOf=()=>({dep:'TS02',anod:'TS06',chim:'TS02',perf:'TS05'})[DEF().fam];
+ const famOf=()=>({dep:'TS02',anod:'TS06',chim:'TS02',perf:'TS05',chrome:'TS08',phos:'TS09',ep:'TS10',galva:'TS11',poudre:'TS12'})[DEF().fam];
  const dRules=()=>((CFG.kb[S.param]||{})[S.dir]||[]).map(c=>c.r);
  window.VP_SECTOR_ADAPTERS.TS={
   sources:Object.fromEntries(window.VPTS.sources.map(x=>[x.id,{...x,name:x.title}])),
