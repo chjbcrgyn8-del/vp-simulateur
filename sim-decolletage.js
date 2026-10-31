@@ -145,6 +145,7 @@ function bind(){const el=$('side'),q=s=>el.querySelector(s),a=S.alert;
 function pickTruth(p,dir){const l=causesOf(p,dir);if(!l.length)return null;const tot=l.reduce((s,x)=>s+x.n+1,0);let r=Math.random()*tot;for(const x of l){r-=x.n+1;if(r<=0)return x;}return l.at(-1);}
 function effective(c){const t=S.drift&&S.drift.truth;return !t||c===t||!!c.nouv||!causesOf(S.drift.p,S.drift.dir).includes(t);}
 function apply(act){const a=S.alert,c=S.cause;
+ if(S.drift&&c&&!c.nouv)S.drift.truth=c;/* v2 : l’action menée sur la cause retenue résout la dérive simulée */
  S.verify={a,c,act,at:S.cycle,ok:effective(c)};if(act.reset)S.tool=0;
  if(S.verify.ok)S.drift.fixedAt=S.cycle;S.alert=null;S.cause=null;S.taken=false;S.dunno=false;S.newAct=false;S.running=true;
  renderSide();draw();}
