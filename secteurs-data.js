@@ -7,7 +7,7 @@ window.VP_SECTEURS = {
     machines: 'presses', machine: 'presse',
     accroche: 'Rebuts, réglages qui varient d’un régleur à l’autre, dérives repérées trop tard.',
     exemple: 'Retassures, bavures, pièces incomplètes, dérive de la température matière.',
-    chiffre: '24', chiffreL: 'défauts documentés',
+    chiffre: '2 479', chiffreL: 'cycles réels rejoués',
     scan: {
       statut: 'ok', statutL: 'Calculateur en ligne',
       question: 'Où vos presses perdent-elles de l’argent ?',
@@ -23,11 +23,11 @@ window.VP_SECTEURS = {
       demo: 'enquete.html', demoL: 'Diagnostiquer un défaut'
     },
     predict: {
-      statut: 'ok', statutL: 'Simulateur · cycles simulés et rejeu réel',
+      statut: 'ok', statutL: 'Rejeu de cycles réels',
       question: 'Quelle presse commence à dériver, et que faire ?',
       mesures: ['Température matière', 'Pression de commutation', 'Matelas', 'Temps de dosage'],
       connexion: 'Euromap 77 (OPC UA), Euromap 63 avec adaptateur, ou votre MES',
-      base: 'Cycles simulés ; mode « cycles réels » : essais Kassel (CC BY 4.0) rejoués dans l’ordre, résolution proposée comparée au journal de l’essai ; 19 147 cycles réels de jeux publics (SKZ LoKI, Kassel, Foxconn) au banc d’essai',
+      base: '2 479 cycles réels rejoués (Kassel), sans dérive ajoutée ; dérive simulée au choix ; 19 147 cycles réels au banc d’essai',
       demo: 'presse.html', demoL: 'Voir une dérive détectée'
     },
     ressources: [['Mesures d’une presse', 'st-mesures-plastique.html'], ['Audit AMDEC', 'st-amdec.html'], ['Sources et niveaux de preuve', 'st-sources.html']]
@@ -67,7 +67,7 @@ window.VP_SECTEURS = {
     machines: 'tours et décolleteuses', machine: 'machine',
     accroche: 'Cotes qui dérivent avec l’usure d’outil, contrôles tardifs, séries perdues.',
     exemple: 'Diamètre hors tolérance, rugosité qui se dégrade, bavures, longueur qui varie.',
-    chiffre: '16', chiffreL: 'défauts documentés',
+    chiffre: '607', chiffreL: 'pièces réelles rejouées',
     scan: {
       statut: 'cand', statutL: 'Calculateur · valeurs d’exemple',
       question: 'Où vos machines perdent-elles de l’argent ?',
@@ -83,11 +83,11 @@ window.VP_SECTEURS = {
       demo: 'enquete-decolletage.html', demoL: 'Diagnostiquer une dérive'
     },
     predict: {
-      statut: 'cand', statutL: 'Simulateur · simulé et pièces réelles',
+      statut: 'cand', statutL: 'Rejeu de pièces réelles',
       question: 'Quelle machine commence à dériver, et que faire ?',
       mesures: ['Diamètre extérieur', 'Longueur totale', 'Rugosité Ra', 'Charge broche', 'Température huile'],
       connexion: 'Commande numérique et moyens de mesure, selon l’équipement',
-      base: 'Dérive simulée ; mode « pièces réelles » : 607 pièces TU Darmstadt CiP-DMD rejouées, résolution proposée comparée au journal ; jeux publics de tournage (Vicomtech, CiP-DMD) au banc d’essai',
+      base: '607 pièces réelles rejouées (TU Darmstadt), sans dérive ajoutée ; dérive simulée au choix ; jeux de tournage Vicomtech et CiP-DMD au banc d’essai',
       demo: 'machine-decolletage.html', demoL: 'Voir une dérive détectée'
     },
     ressources: [['Mesures d’un tour', 'st-mesures-decolletage.html'], ['Repères techniques', 'st-reperes-decolletage.html'], ['Règles candidates et sources', 'sources-decolletage.html']]
