@@ -33,7 +33,7 @@ fs.writeFileSync(file,`<!doctype html>
 <link rel="stylesheet" href="industrie.css?v=5">
 <link rel="stylesheet" href="decolletage.css?v=4">
 <link rel="stylesheet" href="traitement-surface.css?v=2">
-<link rel="stylesheet" href="ux.css?v=20261029-dec">
+<link rel="stylesheet" href="ux.css?v=20261031-ts">
 <link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 <body class="stp">
@@ -82,7 +82,7 @@ const enChart=chart({xs:[45,100],ys:[0.5,20],logy:true,xlab:'Température du bai
 
 /* ---------- Repères ---------- */
 const reperes=`
-<div class="note"><b>Statut.</b> Recherche documentaire Vella Partners du 31 octobre 2026 (registre ${esc(V.version)}, ${V.sources.length} sources TS-S01 à TS-S${V.sources.length}), non relue par un expert traitement de surface. Chaque valeur est rattachée à sa source et à ses conditions. Aucune n’est une consigne de bain, de courant ou de temps : la fiche du fournisseur du bain et la gamme du site priment.</div>
+<div class="note"><b>Statut.</b> Recherche documentaire Vella Partners du 31 octobre 2026 (registre ${esc(V.version)}, ${V.sources.length} sources TS-S01 à ${V.sources[V.sources.length-1].id}, TS-S68 fusionnée avec TS-S01), non relue par un expert traitement de surface. Chaque valeur est rattachée à sa source et à ses conditions. Aucune n’est une consigne de bain, de courant ou de temps : la fiche du fournisseur du bain et la gamme du site priment.</div>
 
 <h2>La filière en chiffres publiés</h2>
 <div class="grid2">
@@ -128,6 +128,17 @@ ${enChart}
 </tbody></table></div>
 <p class="src">Source : ${L('TS-S34','Qualanod, spécifications au 1er janvier 2026')}. Ce sont les exigences d’un label pour l’anodisation architecturale et décorative ; elles ne s’appliquent pas telles quelles à l’anodisation dure.</p>
 
+<h2>Cinq autres procédés : ordres de grandeur publiés</h2>
+<div class="tw"><table><thead><tr><th>Procédé</th><th>Repère publié</th><th>Source</th></tr></thead><tbody>
+<tr><td>Chromage dur</td><td>Rapport acide chromique / sulfate 100:1 en bain standard ; 75:1–130:1 en catalyseurs mixtes ; 190:1–260:1 en bains fluorés</td><td>${L('TS-S69','FinishingAndCoating.com')}</td></tr>
+<tr><td>Chromage dur</td><td>Impuretés : Fe ≤5 g/L, Cu ≤5 g/L, Cr3+ ≤3 % de l’acide chromique, chlorures ≤50 ppm</td><td>${L('TS-S45','FinishingAndCoating.com')}</td></tr>
+<tr><td>Phosphatation au zinc</td><td>Acidité totale 10–25 points, acidité libre 0,5–3 points (étude) ; rapport total / libre de 6:1 à 10:1 environ selon la chimie</td><td>${L('TS-S75','PMC')} · ${L('TS-S73','Products Finishing')} · ${L('TS-S74','Products Finishing')}</td></tr>
+<tr><td>Électropolissage inox</td><td>5–25 A/dm², 40–75 °C, 2–20 min ; enlèvement typique 5–10 µm</td><td>${L('TS-S76','Worldstainless')}</td></tr>
+<tr><td>Galvanisation à chaud</td><td>Acier &gt;6 mm : 70 µm local et 85 µm moyen au minimum ; 5 mesures minimum par surface de référence</td><td>${L('TS-S83','Galvanizers Association')} · ${L('TS-S80','ISO 1461:2022')}</td></tr>
+<tr><td>Peinture poudre</td><td>Cuisson jugée sur la température pièce relevée, pas sur l’air du four</td><td>${L('TS-S86','Enclosure Metal')}</td></tr>
+</tbody></table></div>
+<p class="src">Ordres de grandeur de fournisseurs, d’études ou d’associations. Ces cinq procédés ne sont pas simulés : l’enquête défaut s’appuie sur le référentiel documentaire seul, et la fiche du fournisseur ou la spécification client prime toujours.</p>
+
 <h2>Calculateur de cycle</h2>
 <p>Trois calculs d’ordre de grandeur pour discuter un temps de cycle avec un industriel. Ils ne remplacent ni une mesure, ni la fiche du fournisseur.</p>
 <div class="card" id="calc">
@@ -139,7 +150,7 @@ ${enChart}
 
 <h2>Normes et spécifications citées</h2>
 <div class="tw"><table><thead><tr><th>Référence</th><th>Objet</th></tr></thead><tbody>
-${['TS-S21','TS-S22','TS-S23','TS-S24','TS-S25','TS-S27','TS-S28','TS-S29','TS-S30','TS-S31','TS-S32','TS-S33','TS-S35','TS-S60','TS-S61'].map(id=>{let [a,...b]=S[id].title.split(' · ');if(id==='TS-S27'){a='VDA 233-102';b=['Essai de corrosion cyclique (méthode décrite par Ascott Analytical)']}return `<tr><td>${L(id,a)}</td><td>${esc(b.join(' · ')||S[id].scope)}</td></tr>`}).join('\n')}
+${['TS-S21','TS-S22','TS-S23','TS-S24','TS-S25','TS-S27','TS-S28','TS-S29','TS-S30','TS-S31','TS-S32','TS-S33','TS-S35','TS-S60','TS-S61','TS-S80'].map(id=>{let [a,...b]=S[id].title.split(' · ');if(id==='TS-S27'){a='VDA 233-102';b=['Essai de corrosion cyclique (méthode décrite par Ascott Analytical)']}return `<tr><td>${L(id,a)}</td><td>${esc(b.join(' · ')||S[id].scope)}</td></tr>`}).join('\n')}
 </tbody></table></div>
 <p class="src">Les liens renvoient vers la notice officielle ou un extrait public. GMW4700 est une copie publique non officielle : à remplacer par la version client lors d’une mission.</p>
 
@@ -160,7 +171,7 @@ function run(){const v={};document.querySelectorAll('#cin input').forEach(i=>v[i
 document.querySelectorAll('#calc [data-m]').forEach(b=>b.onclick=()=>{m=b.dataset.m;document.querySelectorAll('#calc [data-m]').forEach(x=>x.setAttribute('aria-pressed',x===b));draw();});
 $('cin').addEventListener('input',run);draw();})();
 </script>`;
-shell('st-reperes-traitement-surface.html','Repères traitement de surface · Savoir technique','Données publiées sur le zinc-nickel, le nickel chimique et l’anodisation, limites Qualanod, normes et calculateur de cycle. Références de contexte, jamais des consignes.','Repères traitement de surface','TRAITEMENT DE SURFACE · REPÈRES PUBLIÉS','Des chiffres publiés, et leurs conditions.','Taux de nickel selon la densité de courant, vitesse du nickel chimique selon la température, limites du label Qualanod, ligne zinc-nickel instrumentée et calculateur de cycle. Chaque valeur est sourcée ; aucune n’est une consigne à recopier.',reperes,calcJS);
+shell('st-reperes-traitement-surface.html','Repères traitement de surface · Savoir technique','Données publiées sur le zinc-nickel, le nickel chimique, l’anodisation et cinq autres procédés, limites Qualanod, normes et calculateur de cycle. Références de contexte, jamais des consignes.','Repères traitement de surface','TRAITEMENT DE SURFACE · REPÈRES PUBLIÉS','Des chiffres publiés, et leurs conditions.','Taux de nickel selon la densité de courant, vitesse du nickel chimique selon la température, limites du label Qualanod, ligne zinc-nickel instrumentée et calculateur de cycle. Chaque valeur est sourcée ; aucune n’est une consigne à recopier.',reperes,calcJS);
 
 /* ---------- Mesures ---------- */
 const rows=[
@@ -207,15 +218,15 @@ const rulesH=Object.entries(V.families).map(([f,n])=>`<h3>${f} · ${esc(n)}</h3>
 <p class="src">Sources : ${r.sources.map(id=>L(id,id)).join(', ')}</p></div>`).join('')).join('\n');
 const cats=[...new Set(V.sources.map(s=>cat(s.type)))];
 const srcH=`<div class="filters" role="group" aria-label="Filtrer par type"><button type="button" data-c="" aria-pressed="true">Toutes (${V.sources.length})</button>${cats.map(c=>`<button type="button" data-c="${esc(c)}" aria-pressed="false">${esc(c)} (${V.sources.filter(s=>cat(s.type)===c).length})</button>`).join('')}</div>
-<ol class="srcl">${V.sources.map(s=>`<li data-c="${esc(cat(s.type))}" id="${s.id}"><b>${s.id}</b> · ${L(s.id,s.title)}<small>${esc(s.type)} · Domaine : ${esc(s.scope)} · Limite : ${esc(s.limit)}</small></li>`).join('\n')}</ol>`;
+<ol class="srcl">${V.sources.map(s=>`<li data-c="${esc(cat(s.type))}" id="${s.id}" value="${+s.id.slice(4)}"><b>${s.id}</b> · ${L(s.id,s.title)}<small>${esc(s.type)} · Domaine : ${esc(s.scope)} · Limite : ${esc(s.limit)}</small></li>`).join('\n')}</ol>`;
 const blocked=V.rules.filter(r=>r.blocked).map(r=>r.id).join(', ');
 const sources=`
-<div class="note"><b>Statut.</b> ${V.rules.length} règles candidates, rédigées par Vella Partners à partir de ${V.sources.length} sources (registre ${esc(V.version)}). Aucune n’est validée par un expert traitement de surface. ${blocked?`Règle bloquée tant qu’une source primaire n’est pas obtenue : ${blocked}.`:''} Une règle candidate oriente un contrôle ; elle ne prouve pas une cause et ne remplace ni la fiche du fournisseur, ni la gamme du site.</div>
+<div class="note"><b>Statut.</b> ${V.rules.length} règles candidates, rédigées par Vella Partners à partir de ${V.sources.length} sources (registre ${esc(V.version)}). Registre relu source par source le 31 octobre 2026 : libellés corrigés, ISO 2081 mise à jour (édition 2025), TS-S67 remplacée par la référence officielle, TS-S68 fusionnée avec TS-S01. Aucune règle n’est validée par un expert traitement de surface. ${blocked?`Règle bloquée tant qu’une source primaire n’est pas obtenue : ${blocked}.`:''} Une règle candidate oriente un contrôle ; elle ne prouve pas une cause et ne remplace ni la fiche du fournisseur, ni la gamme du site.</div>
 <h2>Règles candidates par famille</h2>
 ${rulesH}
 <h2>Registre des sources</h2>
 <p>Normes, fournisseurs de bains, publications scientifiques et retours d’expérience d’Europe, d’Amérique du Nord et d’Asie. Pour chaque source : le type, le domaine couvert et la limite d’usage.</p>
 ${srcH}`;
 const srcJS=`<script>document.querySelectorAll('.filters [data-c]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filters [data-c]').forEach(x=>x.setAttribute('aria-pressed',x===b));document.querySelectorAll('ol.srcl li').forEach(li=>li.hidden=!!b.dataset.c&&li.dataset.c!==b.dataset.c)});</script>`;
-shell('sources-traitement-surface.html','Règles candidates et sources traitement de surface · Savoir technique',`${V.rules.length} règles candidates et ${V.sources.length} sources mondiales sur le zinc-nickel, l’anodisation, le nickel chimique, la passivation et la fragilisation par l’hydrogène.`,'Règles et sources traitement de surface','TRAITEMENT DE SURFACE · REGISTRE DOCUMENTAIRE','Chaque contrôle renvoie à ses sources.',`${V.rules.length} règles candidates en 7 familles, ${V.sources.length} sources avec leur domaine et leurs limites. Recherche documentaire non validée, à relire par un expert traitement de surface.`,sources,srcJS);
+shell('sources-traitement-surface.html','Règles candidates et sources traitement de surface · Savoir technique',`${V.rules.length} règles candidates et ${V.sources.length} sources mondiales sur le zinc-nickel, l’anodisation, le nickel chimique, le chromage dur, la phosphatation, l’électropolissage, la galvanisation à chaud, la peinture poudre, la passivation et la fragilisation par l’hydrogène.`,'Règles et sources traitement de surface','TRAITEMENT DE SURFACE · REGISTRE DOCUMENTAIRE','Chaque contrôle renvoie à ses sources.',`${V.rules.length} règles candidates en ${Object.keys(V.families).length} familles, ${V.sources.length} sources avec leur domaine et leurs limites. Recherche documentaire non validée, à relire par un expert traitement de surface.`,sources,srcJS);
 console.log('ok',V.rules.length,V.sources.length,cats);
