@@ -1,8 +1,10 @@
 (function(root){
-  // Grille 2026 v2 (octobre 2026) : pilote 20 000 € + 7 000 € par presse pilote (2 en plastique, 3 en caoutchouc), dont 50 % crédités sur l'abonnement VP Predict de la première année ;
-  // abonnement VP Predict hybride : 250 €/mois par site + 100 €/presse/mois (part fixe) + 25 % des économies de rebuts vérifiées attribuées à VP Predict (part variable), 3 presses minimum ;
-  // presses ajoutées après le pilote : 4 000 € + 600 € par presse ; VP Scan 10 000 € HT (8 000 € en collectif), mise en place VP Expert offerte après un VP Scan.
-  const PREDICT_PRICE=100,PREDICT_PRICE_11=100,PREDICT_SITE=250,PREDICT_MIN=3,PREDICT_SUCCESS=.25,PILOT_BASE=20000,PILOT_PER=7000,PILOT_CREDIT=.5,EXT_BASE=4000,EXT_PER=600,SCAN_PRICE=10000,FOCUS_EXP=.5;
+  // Grille « Offres 2026 » (plaquette du 1er novembre 2026), tarifs indicatifs HT à confirmer par devis :
+  // VP Expert : pilote de mise en place 8 900 € (6 à 8 semaines indicatives), puis abonnement par site dès 300 €/mois (3 600 €/an) selon résultat et périmètre ;
+  // VP Scan : forfait indicatif 4 900 € (un site, un atelier ciblé), non requis avant VP Expert, sans gratuité de la mise en place VP Expert ;
+  // VP Predict : pilote connecté dès 15 000 € sur 1 à 3 presses (sous réserve de faisabilité), puis option dès 150 €/presse/mois en complément de l'abonnement VP Expert ; pas de part variable.
+  // Matériel, licences tierces et raccordements spécifiques chiffrés séparément ; avoir éventuel sur le pilote non compté ; aides étudiées au cas par cas.
+  const PREDICT_PRICE=150,PREDICT_PRICE_11=150,PREDICT_SITE=0,PREDICT_MIN=1,PREDICT_DEFAULT=3,PREDICT_SUCCESS=0,PILOT_BASE=15000,PILOT_PER=0,PILOT_CREDIT=0,EXT_BASE=0,EXT_PER=0,SCAN_PRICE=4900,EXPERT_PILOT=8900,EXPERT_SITE=300,FOCUS_EXP=.5;
   // Pack Usine retiré de la grille publique (sur devis pour les groupes) : constantes conservées, non utilisées.
   const PACK=[{add:18000,cap:12},{add:24000,cap:25},{add:30000,cap:40}],PACK_C=[{add:18000,cap:8},{add:24000,cap:20},{add:30000,cap:32}],PACK_EXTRA=100;
   const defaults={
@@ -12,7 +14,7 @@
     costMode:'euros',scrapCost:200000,scrapRate:3,productionCost:7000000,avoidable:60,
     targetTech:25,targetOrg:15,targetProc:20,targetChange:70,targetPerformance:94,targetQuality:20,
     addressTech:40,addressOrg:25,addressProc:70,addressChange:40,addressPerf:60,addressQuality:60,
-    financeMode:'benchmark',caHour:null,contribution:80,revenue:6000000,margin:45,monetization:60,investment:8000,internalCost:6000,annualCost:18000,priceAuto:true,startMonth:3,rampMonths:6,
+    financeMode:'benchmark',caHour:null,contribution:80,revenue:6000000,margin:45,monetization:60,investment:8900,internalCost:6000,annualCost:3600,priceAuto:true,startMonth:3,rampMonths:6,
     offer:'option',diagHours:30,techRate:45,targetDiag:30,aidPilot:false,entry:'direct',predictFocus:'critiques',scenario:'prudent',connMode:'none',c77:null,c63:null,c0:null,dataStatus:'illustrative',siteRotation:'unknown',siteCauses:'unknown',siteRejects:'unknown',tonnage:null
   };
   // Repères terrain : CA / heure de fonctionnement presse, données réelles transmises par un expert plasturgie partenaire (2 sites de plasturgie, avec accord).
@@ -27,11 +29,11 @@
   const TON_CA=[24, 27, 33, 33, 36, 36, 48, 44, 48, 59, 59, 75, 75, 83, 83, 98, 98, 124, 124, 149, 149, 176, 224];
   function benchmarkCA(presses,tonnage){if(Array.isArray(tonnage)){let n=0,t=0;tonnage.forEach((k,i)=>{k=+k||0;n+=k;t+=k*(TON_CA[i]||0);});if(n>0)return t/n;}let w=0,t=0;presses.forEach((p,i)=>{const h=(+p.n||0)*(+p.h||0);w+=h;t+=h*(BENCH_CA[i]??BENCH_CA.at(-1));});return w>0?t/w:null;}
   // Tarif VP Expert par tranche de presses (plasturgie) — business plan v5.2
-  const PRICE_TIERS=[{max:6,price:7200,label:'jusqu’à 6 presses'},{max:12,price:12000,label:'7 à 12 presses'},{max:25,price:18000,label:'13 à 25 presses'},{max:Infinity,price:24000,label:'plus de 25 presses'}];
-  const PRICE_TIERS_C=[{max:5,price:7200,label:'jusqu’à 5 presses'},{max:8,price:12000,label:'6 à 8 presses'},{max:20,price:18000,label:'9 à 20 presses'},{max:Infinity,price:24000,label:'plus de 20 presses'}];
+  const PRICE_TIERS=[{max:Infinity,price:12*EXPERT_SITE,label:'par site, dès 300 € HT par mois'}];
+  const PRICE_TIERS_C=PRICE_TIERS;
   function priceTier(n,act){return (act==='caoutchouc'?PRICE_TIERS_C:PRICE_TIERS).find(t=>n<=t.max);}
   const scenarioFactors={prudent:.5,central:.75,cible:1};
-  const MODEL_VERSION='VP-PUBLIC-2026-10-29-R1';
+  const MODEL_VERSION='VP-PUBLIC-2026-11-01-R1';
   const ASSUMPTIONS_ID='base-depot-principal-20-60-illustrative';
   function calculate(s){
     if(!s||typeof s!=='object'||Array.isArray(s)||!Array.isArray(s.presses)||!s.presses.length||s.presses.some(p=>!p||typeof p!=='object'||Array.isArray(p)))return {errors:['Structure des données invalide : renseigner le parc de presses.']};
@@ -108,13 +110,13 @@
     const capacityGain=equivalent===null||contribution===null?null:equivalent*contribution*s.monetization/100;
     const diagGain=n*(+s.diagHours||0)*(+s.techRate||0)*(+s.targetDiag||0)/100*f;
     const gross=capacityGain===null||qualityGain===null?null:capacityGain+qualityGain+deflashGain+diagGain;
-    // Option VP Predict : hypothèses du business plan (simulateur V14), pondérées par le scénario comme VP Expert (rebuts, énergie et heures) — 25 % des rebuts restant après VP Expert, 1 000 € d'énergie et capacité calculée sur les aléas restants ; abonnement et pilote selon la grille 2026 ; connexion payée par le client.
+    // Option VP Predict : hypothèses du business plan (simulateur V14), pondérées par le scénario comme VP Expert (rebuts, énergie et heures) — 25 % des rebuts restant après VP Expert, 1 000 € d'énergie et capacité calculée sur les aléas restants ; abonnement et pilote selon la grille « Offres 2026 » ; connexion payée par le client.
     const split=[Math.round(n*.5),Math.round(n*.3)];const c77=finite(s.c77)?+s.c77:split[0],c63=finite(s.c63)?+s.c63:split[1],c0=finite(s.c0)?+s.c0:Math.max(0,n-split[0]-split[1]);
     let conn=null;
-    const scan=s.entry==='scan'?SCAN_PRICE:0,setup=s.entry==='scan'?0:+s.investment;
-    // Aide Région AURA « Industrie du Futur » : 50 % d'un accompagnement plafonné à 32 000 €, soit 16 000 € au plus, sur VP Scan + pilote réunis.
+    const scan=s.entry==='scan'?SCAN_PRICE:0,setup=+s.investment;
+    // Aide Région AURA « Industrie du Futur » : 50 % d'un accompagnement plafonné à 32 000 €, soit 16 000 € au plus, sur VP Scan + pilote VP Predict réunis ; sans prise en charge présumée.
     const aidOf=base=>s.aidPilot&&base>0?Math.min(16000,.5*Math.min(base,32000)):0;
-    if(s.connMode&&s.connMode!=='none'){const kc=c77+c63,k=s.connMode==='all'?kc+c0:s.connMode==='critical'?Math.min(kc,Math.max(PREDICT_MIN,Math.round(+s.predictK||PREDICT_MIN))):kc;const share=n>0?Math.min(1,k/n):0;
+    if(s.connMode&&s.connMode!=='none'){const kc=c77+c63,k=s.connMode==='all'?kc+c0:s.connMode==='critical'?Math.min(kc,Math.max(PREDICT_MIN,Math.round(+s.predictK||PREDICT_DEFAULT))):kc;const share=n>0?Math.min(1,k/n):0;
       // Concentration des pertes : les presses placées sous VP Predict sont choisies parmi les plus critiques (rebuts chers, dérives fréquentes, heure chère).
       // Hypothèse Pareto modérée : k presses sur n portent (k/n)^0,5 des pertes restantes, et non k/n. Exemple : 3 presses sur 20 portent 39 % des pertes, pas 15 %. À mesurer au pilote.
       const focus=s.predictFocus!=='uniforme'&&share>0&&share<1,lossShare=focus?Math.pow(share,FOCUS_EXP):share;
@@ -123,7 +125,7 @@
       const predH=((procH-(rp?rp.addressable:0))*.30+(techH-(rt?rt.addressable:0))*.10)*lossShare*f;
       const scrap=remaining*.25*lossShare*f,energy=1000*k*f,other=(P===null||contribution===null)?0:predH*P*Q*contribution*s.monetization/100,grossC=scrap+energy+other,ti=(RUB?PRICE_TIERS_C:PRICE_TIERS).findIndex(t=>n<=t.max),pk=(RUB?PACK_C:PACK)[Math.max(0,Math.min(2,ti-1))],isPack=false,extra=0,billed=k>0?Math.max(PREDICT_MIN,k):0;
       const aboFixed=k>0?12*(PREDICT_SITE+PREDICT_PRICE*billed):0,aboVar=k>0?PREDICT_SUCCESS*scrap:0,abo=aboFixed+aboVar;
-      const pilotN=Math.min(k,RUB?3:2),pocBase=k>0?PILOT_BASE+PILOT_PER*pilotN:0,ext=k>pilotN?EXT_BASE+EXT_PER*(k-pilotN):0;
+      const pilotN=Math.min(k,3),pocBase=k>0?PILOT_BASE+PILOT_PER*pilotN:0,ext=k>pilotN?EXT_BASE+EXT_PER*(k-pilotN):0;
       const aidAll=aidOf(scan+pocBase),aidScan=Math.min(aidAll,.5*scan),aid=aidAll-aidScan,poc=pocBase-aid;
       const credit=k>0?Math.min(aboFixed,PILOT_CREDIT*pocBase):0;
       const a63=s.connMode==='critical'?Math.max(0,k-c77):c63,r0=s.connMode==='all'?c0:0,hw=[a63*890+r0*3000+(k?3*408:0),a63*890+r0*4500+(k?4*475:0),a63*890+r0*6000+(k?5*652:0)];
@@ -148,7 +150,7 @@
     if(conn&&conn.pack&&grossAll/costAll<2)warnings.push(`Le Pack Usine rapporte ${(grossAll/costAll).toFixed(1)} fois son prix, sous le seuil de 2 fois.`);
     if(conn&&!conn.pack&&conn.ratio!==null&&conn.ratio<2)warnings.push(`VP Predict rapporte ${conn.ratio.toFixed(1)} fois son abonnement, sous le seuil de 2 fois : ${conn.k>PREDICT_MIN?'réduisez le périmètre aux presses critiques (forte valeur horaire, rebuts coûteux, dérives fréquentes)':'le pilote doit d’abord confirmer que ces presses concentrent bien les pertes'}. Sans gain mesuré d’au moins 2 fois, l’abonnement VP Predict ne démarre pas.`);
     if(conn&&conn.focus)warnings.push(`Les ${conn.k} presses sous VP Predict sont supposées porter ${Math.round(conn.lossShare*100)} % des pertes restantes (choix des presses les plus critiques), et non ${Math.round(conn.share*100)} % : hypothèse à vérifier au pilote, sur vos relevés de rebuts par presse.`);
-    if(scan>0)warnings.push('Démarrage par VP Scan : la mise en place VP Expert (8 000 €) est offerte, le diagnostic chiffre vos priorités avant tout abonnement.');
+    if(scan>0)warnings.push('Démarrage par VP Scan (4 900 € HT) : le diagnostic chiffre vos pertes et vos priorités avant le pilote VP Expert. Il n’est pas obligatoire.');
     if(gross===null)warnings.push('Données économiques incomplètes : aucun retour sur investissement global n’est affiché.');
     const modeledLosses=P===null||contribution===null||scrapCost===null?null:(changeH+techH+orgH+procH)*P*Q*contribution+H*D*(1-P)*Q*contribution+scrapCost*s.avoidable/100;
     const result={errors:[],warnings,modelVersion:MODEL_VERSION,assumptionsId:ASSUMPTIONS_ID,scan,setup,aidScan:conn?conn.aidScan:aidScanOnly,credit,year1Cost:costAll-credit,netPerPress:n>0&&grossAll!==null?(grossAll-costAll)/n:null,diagGain,RUB,mixH,cycle0,cycle1,cureAddressable,deflashGain,n,H,D,P,Q,trs:P===null?null:D*P*Q*100,changeH,stopH,rows,f,techRecovery,addressRecovery,equivalent,equivalentTechnical,perfAddressable,contribution,benchCA,caHourUsed,scrapCost,qualityTechnical,qualityGain,capacityGain,gross,grossAll,costAll,conn,c77,c63,c0,netRA:gross===null?null:gross-s.annualCost,net:grossAll===null?null:grossAll-costAll,upfront,cash,monthly,payback,year1:gross===null?null:cash[12],modeledLosses,remainingD:D1,projectedTrs:P===null?null:D1*(P+perfDelta*s.addressPerf/100)*Q*100};
@@ -157,6 +159,6 @@
     return result;
   }
   const labels={tech:'Aléas techniques',org:'Aléas organisationnels',proc:'Aléas process',reject:'Rebuts en pièces',avoidable:'Part de coût évitable',targetTech:'Réduction des aléas techniques',targetOrg:'Réduction des aléas organisationnels',targetProc:'Réduction des aléas process',targetQuality:'Réduction du coût évitable des rebuts',addressTech:'Part adressable technique',addressOrg:'Part adressable organisation',addressProc:'Part adressable process',addressChange:'Part adressable changements',addressPerf:'Part adressable performance',addressQuality:'Part adressable qualité',monetization:'Capacité commercialisable'};
-  root.VellaCalc={MODEL_VERSION,ASSUMPTIONS_ID,PREDICT_PRICE_11,PREDICT_MIN,PREDICT_SUCCESS,PILOT_CREDIT,EXT_BASE,EXT_PER,SCAN_PRICE,FOCUS_EXP,defaultsC,PRICE_TIERS_C,PRICE_TIERS,priceTier,BENCH_CA,TON_CA,benchmarkCA,defaults,PACK,PACK_C,PREDICT_PRICE,PREDICT_SITE,PILOT_BASE,PILOT_PER,calculate,scenarioFactors,labels};
+  root.VellaCalc={MODEL_VERSION,ASSUMPTIONS_ID,EXPERT_PILOT,EXPERT_SITE,PREDICT_PRICE_11,PREDICT_MIN,PREDICT_SUCCESS,PILOT_CREDIT,EXT_BASE,EXT_PER,SCAN_PRICE,FOCUS_EXP,defaultsC,PRICE_TIERS_C,PRICE_TIERS,priceTier,BENCH_CA,TON_CA,benchmarkCA,defaults,PACK,PACK_C,PREDICT_PRICE,PREDICT_SITE,PILOT_BASE,PILOT_PER,calculate,scenarioFactors,labels};
   if(typeof module!=='undefined')module.exports=root.VellaCalc;
 })(typeof window!=='undefined'?window:globalThis);
