@@ -97,3 +97,4 @@ a.sx-bo:hover{border-color:#d8c3a5;background:#fffdf9}
   .sx-mxt th,.sx-mxt td{border:0;padding:6px 16px}.sx-mxt td::before{content:attr(data-l);display:block;font:500 11px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#5a6270;margin-bottom:4px}
   .sx-bo em{display:none}.sx-bo.off small{display:none}.sx-bw{gap:4px}.sx-bo{padding:5px 9px;gap:5px;font-size:13px}}
 @media (max-width:430px){.sx-bs,.sx-sep{display:none}.sx-bw{justify-content:space-between}}
+.sx-col{min-width:0}.sx-hd .sx-st{white-space:normal}@media (max-width:420px){.sx-col{padding:20px 16px 18px}}

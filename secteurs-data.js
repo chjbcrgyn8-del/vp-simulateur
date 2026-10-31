@@ -23,11 +23,11 @@ window.VP_SECTEURS = {
       demo: 'enquete.html', demoL: 'Diagnostiquer un défaut'
     },
     predict: {
-      statut: 'ok', statutL: 'Simulateur · cycles simulés',
+      statut: 'ok', statutL: 'Simulateur · cycles simulés et rejeu réel',
       question: 'Quelle presse commence à dériver, et que faire ?',
       mesures: ['Température matière', 'Pression de commutation', 'Matelas', 'Temps de dosage'],
       connexion: 'Euromap 77 (OPC UA), Euromap 63 avec adaptateur, ou votre MES',
-      base: 'Cycles simulés ; 19 147 cycles réels de jeux publics (SKZ LoKI, Kassel, Foxconn) rejoués au banc d’essai',
+      base: 'Cycles simulés ; mode « cycles réels » : essais Kassel (CC BY 4.0) rejoués dans l’ordre, résolution proposée comparée au journal de l’essai ; 19 147 cycles réels de jeux publics (SKZ LoKI, Kassel, Foxconn) au banc d’essai',
       demo: 'presse.html', demoL: 'Voir une dérive détectée'
     },
     ressources: [['Mesures d’une presse', 'st-mesures-plastique.html'], ['Audit AMDEC', 'st-amdec.html'], ['Sources et niveaux de preuve', 'st-sources.html']]
@@ -83,11 +83,11 @@ window.VP_SECTEURS = {
       demo: 'enquete-decolletage.html', demoL: 'Diagnostiquer une dérive'
     },
     predict: {
-      statut: 'cand', statutL: 'Simulateur · données simulées',
+      statut: 'cand', statutL: 'Simulateur · simulé et pièces réelles',
       question: 'Quelle machine commence à dériver, et que faire ?',
       mesures: ['Diamètre extérieur', 'Longueur totale', 'Rugosité Ra', 'Charge broche', 'Température huile'],
       connexion: 'Commande numérique et moyens de mesure, selon l’équipement',
-      base: 'Dérive simulée ; jeux publics de tournage (Vicomtech, TU Darmstadt CiP-DMD) rejoués au banc d’essai',
+      base: 'Dérive simulée ; mode « pièces réelles » : 607 pièces TU Darmstadt CiP-DMD rejouées, résolution proposée comparée au journal ; jeux publics de tournage (Vicomtech, CiP-DMD) au banc d’essai',
       demo: 'machine-decolletage.html', demoL: 'Voir une dérive détectée'
     },
     ressources: [['Mesures d’un tour', 'st-mesures-decolletage.html'], ['Repères techniques', 'st-reperes-decolletage.html'], ['Règles candidates et sources', 'sources-decolletage.html']]
