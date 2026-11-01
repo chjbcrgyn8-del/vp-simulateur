@@ -1,9 +1,9 @@
 (function(root){
   // Grille « Offres 2026 » (plaquette du 1er novembre 2026), tarifs indicatifs HT à confirmer par devis :
-  // VP Expert : pilote de mise en place 8 900 € (6 à 8 semaines indicatives), puis abonnement par site dès 300 €/mois (3 600 €/an) selon résultat et périmètre ;
+  // VP Expert : pilote de mise en place 8 900 € (6 à 8 semaines indicatives), puis abonnement par site dès 300 €/mois (paliers 300 / 450 / 600 / 800 € selon le parc, voir PRICE_TIERS) selon résultat et périmètre ;
   // VP Scan : forfait indicatif 4 900 € (un site, un atelier ciblé), non requis avant VP Expert, sans gratuité de la mise en place VP Expert ;
   // VP Predict : pilote connecté dès 15 000 € sur 1 à 3 presses (sous réserve de faisabilité), puis option dès 150 €/presse/mois en complément de l'abonnement VP Expert ; pas de part variable.
-  // Matériel, licences tierces et raccordements spécifiques chiffrés séparément ; avoir éventuel sur le pilote non compté ; aides étudiées au cas par cas.
+  // Matériel, licences tierces et raccordements spécifiques chiffrés séparément ; aucun avoir chiffré sur le pilote (un avoir éventuel serait précisé dans la proposition) ; aides étudiées au cas par cas.
   const PREDICT_PRICE=150,PREDICT_PRICE_11=150,PREDICT_SITE=0,PREDICT_MIN=1,PREDICT_DEFAULT=3,PREDICT_SUCCESS=0,PILOT_BASE=15000,PILOT_PER=0,PILOT_CREDIT=0,EXT_BASE=0,EXT_PER=0,SCAN_PRICE=4900,EXPERT_PILOT=8900,EXPERT_SITE=300,FOCUS_EXP=.5;
   // Pack Usine retiré de la grille publique (sur devis pour les groupes) : constantes conservées, non utilisées.
   const PACK=[{add:18000,cap:12},{add:24000,cap:25},{add:30000,cap:40}],PACK_C=[{add:18000,cap:8},{add:24000,cap:20},{add:30000,cap:32}],PACK_EXTRA=100;
@@ -29,11 +29,12 @@
   const TON_CA=[24, 27, 33, 33, 36, 36, 48, 44, 48, 59, 59, 75, 75, 83, 83, 98, 98, 124, 124, 149, 149, 176, 224];
   function benchmarkCA(presses,tonnage){if(Array.isArray(tonnage)){let n=0,t=0;tonnage.forEach((k,i)=>{k=+k||0;n+=k;t+=k*(TON_CA[i]||0);});if(n>0)return t/n;}let w=0,t=0;presses.forEach((p,i)=>{const h=(+p.n||0)*(+p.h||0);w+=h;t+=h*(BENCH_CA[i]??BENCH_CA.at(-1));});return w>0?t/w:null;}
   // Tarif VP Expert par tranche de presses (plasturgie) — business plan v5.2
-  const PRICE_TIERS=[{max:Infinity,price:12*EXPERT_SITE,label:'par site, dès 300 € HT par mois'}];
+  // Paliers d'abonnement VP Expert par site (hypothèse Vella Partners du 1er novembre 2026, cohérente avec « dès 300 € HT / mois » de la plaquette) : 300 / 450 / 600 / 800 € HT par mois selon le nombre de presses du site.
+  const PRICE_TIERS=[{max:6,monthly:300,price:3600,label:'jusqu’à 6 presses · 300 € HT par mois'},{max:12,monthly:450,price:5400,label:'7 à 12 presses · 450 € HT par mois'},{max:25,monthly:600,price:7200,label:'13 à 25 presses · 600 € HT par mois'},{max:Infinity,monthly:800,price:9600,label:'plus de 25 presses · 800 € HT par mois'}];
   const PRICE_TIERS_C=PRICE_TIERS;
   function priceTier(n,act){return (act==='caoutchouc'?PRICE_TIERS_C:PRICE_TIERS).find(t=>n<=t.max);}
   const scenarioFactors={prudent:.5,central:.75,cible:1};
-  const MODEL_VERSION='VP-PUBLIC-2026-11-01-R1';
+  const MODEL_VERSION='VP-PUBLIC-2026-11-01-R2';
   const ASSUMPTIONS_ID='base-depot-principal-20-60-illustrative';
   function calculate(s){
     if(!s||typeof s!=='object'||Array.isArray(s)||!Array.isArray(s.presses)||!s.presses.length||s.presses.some(p=>!p||typeof p!=='object'||Array.isArray(p)))return {errors:['Structure des données invalide : renseigner le parc de presses.']};
