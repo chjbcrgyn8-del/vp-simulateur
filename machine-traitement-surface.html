@@ -18,7 +18,7 @@
 <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
 <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="sim2.css?v=9">
+<link rel="stylesheet" href="sim2.css?v=10">
 <link rel="stylesheet" href="premium.css?v=9">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -38,7 +38,6 @@
 </header>
 <main id="main" class="smain">
 <h1 class="vh">Simulateur traitement de surface · zinc-nickel au tonneau et anodisation sulfurique</h1>
-<p class="legal"><b>Simulation pédagogique uniquement.</b> Signal simulé autour de plages publiées par des fournisseurs, des normes et des études (voir les sources) : aucune mesure réelle de ligne n’est utilisée. Les causes et actions sont des règles candidates TS01 à TS07 issues d’une recherche documentaire non validée par un expert traitement de surface ; ce ne sont pas des consignes de ligne. Aucune quantité d’ajout, valeur de courant ou de temps n’est proposée.</p>
 <nav class="tslines" aria-label="Ligne simulée"><span>Ligne simulée :</span><a href="machine-traitement-surface.html?ligne=znni" data-line="znni">Zinc-nickel alcalin au tonneau</a><a href="machine-traitement-surface.html?ligne=anod" data-line="anod">Anodisation sulfurique à l’attache</a><a href="machine-traitement-surface.html?ligne=chim" data-line="chim">Nickel chimique en paniers</a></nav>
 <section class="console" aria-label="Simulateur">
  <div class="sbar">
@@ -46,7 +45,7 @@
   <div class="status" id="status"><i></i><span>Calcul de la référence en cours</span></div>
   <span class="cyc"><span id="unitl">Charge</span> <b id="cycle">0</b></span>
   <span class="toolw" id="toolw"><span id="counterl">Analyse labo</span> · <b id="toolc">0</b> <span id="counteru"></span></span>
-  <div class="ctrls"><button class="btn ghost sm" id="play" type="button">Pause</button><div class="speed" role="group" aria-label="Vitesse de simulation"><button type="button" data-v="1" aria-pressed="true">×1</button><button type="button" data-v="2" aria-pressed="false">×2</button><button type="button" data-v="4" aria-pressed="false">×4</button></div><button class="btn primary sm" id="drift" type="button" disabled>Je simule une dérive</button></div>
+  <div class="ctrls"><button class="btn primary sm" id="drift" type="button" disabled>Je simule une dérive</button></div>
  </div>
  <details class="seuils"><summary><span class="vpx vpp">VP Predict</span> Seuils de surveillance et configuration de la ligne</summary>
   <div class="setgrid">
@@ -76,9 +75,10 @@
 <section class="histo" aria-labelledby="hh">
  <h2 id="hh">Historique des dérives, causes et actions</h2>
  <p class="legal hist-demo"><b>Historique de démonstration, non conservé.</b> Il vit dans votre navigateur et disparaît au rechargement de la page. Dans l’application VP Expert, l’historique serait partagé par site, ligne, bain, référence pièce, lot, défaut, action et résultat vérifié.</p>
- <div class="tw"><table><thead><tr><th>Date</th><th>Heure</th><th>Dérive</th><th>Cause</th><th>Action</th><th>Règle</th></tr></thead><tbody id="hist"></tbody></table></div>
+ <div class="tw"><table><thead><tr><th>Date</th><th>Heure</th><th>Dérive</th><th>Cause</th><th>Action</th><th>Action efficace</th><th>Règle</th></tr></thead><tbody id="hist"></tbody></table></div>
  <p class="legal">Démonstrateur : lignes fictives. Zinc-nickel : une charge de tonneau sort toutes les 12 min, épaisseur et taux de nickel mesurés au XRF, plages reprises des valeurs fabricant citées par Lindner et al. (Fraunhofer IST, 2026) : Zn 6,5–8,5 g/L, Ni 0,9–1,2 g/L, 8–12 µm, 12–16 % Ni. Anodisation : une barre toutes les 20 min, domaine du bain et classe AA15 repris des spécifications Qualanod 2026. Nickel chimique : une charge toutes les 30 min, vitesse de dépôt sur éprouvette ; sensibilité à la température reprise de la règle « ×2 par 10 °C » du NBS (1974), valeurs centrales illustratives. Tolérances simulées, bruit et poids des causes sont illustratifs. Les règles TS01 à TS07 sont des règles candidates Vella Partners rattachées à 68 sources publiques ; TS01-R04 est une proposition VP. Aucune n’est approuvée : elles sont à relire par un expert traitement de surface. Une action n’entre dans l’historique qu’après vérification simulée. Le rappel au chef d’équipe est simulé.</p>
 </section>
+<p class="legal simnote"><b>Simulation pédagogique uniquement.</b> Signal simulé autour de plages publiées par des fournisseurs, des normes et des études (voir les sources) : aucune mesure réelle de ligne n’est utilisée. Les causes et actions sont des règles candidates TS01 à TS07 issues d’une recherche documentaire non validée par un expert traitement de surface ; ce ne sont pas des consignes de ligne. Aucune quantité d’ajout, valeur de courant ou de temps n’est proposée.</p>
 </main>
 <div class="modal" id="modal" hidden><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="mt">
  <button type="button" class="mx" id="mclose" aria-label="Fermer">×</button>
@@ -96,11 +96,11 @@ document.querySelectorAll('.unitsl').forEach(function(e){e.textContent=C.units})
 if(!C.membL){$('membw').remove();document.querySelector('.cfgfs .sl').textContent='Une analyse non disponible en ligne s’affiche « absente », jamais à zéro. Modifiable hors dérive.';}
 document.querySelectorAll('[data-line]').forEach(function(a){if(a.dataset.line===C.line)a.setAttribute('aria-current','page')});
 document.title=C.machine+' · simulateur traitement de surface · Vella Partners';})();</script>
-<script src="sim-traitement-surface.js?v=2"></script>
+<script src="sim-traitement-surface.js?v=20261102-h"></script>
 <script src="tips.js"></script>
 <script src="typo.js"></script>
 <script src="ux.js?v=20261029-ux"></script>
-<script src="vp-documentary-entry.js?v=20261030-consolide-r1"></script>
+<script src="vp-documentary-entry.js?v=20261102-h"></script>
 <script src="secteurs-data.js?v=4"></script>
 <script src="secteurs.js?v=2"></script>
 </body>

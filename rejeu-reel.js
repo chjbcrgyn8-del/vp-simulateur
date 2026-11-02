@@ -56,14 +56,13 @@
 
   host.innerHTML = `
   <div class="rr-head"><div><p class="eyebrow">VP Predict · cycles réels</p><h2>Une dérive réelle, rejouée dans l’ordre</h2>
-    <p class="rr-lead">Chaque point est un ${CFG.unitL.toLowerCase()} réel, rejoué sans dérive ajoutée. Quand une règle se déclenche, vous identifiez la dérive, choisissez une piste VP Expert, puis comparez avec le journal de l’essai.</p></div>
+    <p class="rr-lead">Chaque point est ${/^pi/i.test(CFG.unitL)?'une '+CFG.unitL.toLowerCase()+' réelle':'un '+CFG.unitL.toLowerCase()+' réel'}, rejoué sans dérive ajoutée. Quand une règle se déclenche, vous identifiez la dérive, choisissez une piste VP Expert, puis comparez avec le journal de l’essai.</p></div>
     <p class="rr-badge">Dérive réelle · résolution proposée à vérifier</p></div>
   <div class="rr-bar">
     <label class="rr-sel">Jeu de données <select id="rr-set">${Object.entries(CFG.sets).map(([k, l]) => `<option value="${k}">${l}</option>`).join('')}</select></label>
     <span class="rr-st" id="rr-st"><i></i><span>Chargement des cycles…</span></span>
     <span class="rr-cy">${CFG.unitL} <b id="rr-cy">–</b></span>
     <div class="rr-ctl"><button type="button" class="btn ghost sm" id="rr-play">Lecture</button>
-      <div class="speed" role="group" aria-label="Vitesse">${[1, 5, 20].map(v => `<button type="button" data-rv="${v}" aria-pressed="${v === 1}">×${v}</button>`).join('')}</div>
       <button type="button" class="btn primary sm" id="rr-next">Aller à la prochaine alerte</button>
       <button type="button" class="btn ghost sm" id="rr-reset">Recommencer</button></div>
   </div>
@@ -291,7 +290,6 @@
   $('rr-play').onclick = () => timer ? stop() : play();
   $('rr-next').onclick = () => { if (S.step === 'alert') return; next(); };
   $('rr-reset').onclick = () => reset();
-  host.querySelectorAll('[data-rv]').forEach(b => b.onclick = () => { speed = +b.dataset.rv; host.querySelectorAll('[data-rv]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
   $('rr-set').onchange = e => { setId = e.target.value; load(init); };
   /* Onglets « Dérive simulée / Cycles réels » */
   const tabs = document.querySelector('.rr-tabs');
