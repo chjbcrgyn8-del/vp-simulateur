@@ -1,0 +1,108 @@
+/* =====================================================================
+   VP Scan · habillage du site Vella Partners (graphite, pierre, cuivre)
+   Chargé après app.css. Apparence uniquement : aucun calcul modifié.
+   ===================================================================== */
+:root{
+  --bg:#f5f2eb;--panel:#fffdf9;--ink:#0b111c;--muted:#5a6270;
+  --line:#e4ded2;--line2:#cfc6b6;--soft:#f1ece2;
+  --navy:#0b111c;--navy-d:#0a0f19;
+  --signal:#c98a4b;--warm:#f8eedb;
+  --accent:#9a5f28;--champ1:#e3b47c;--champ2:#b77a3d;
+  --ok:#22613f;--ok-bg:#e4f0e8;--warn:#86520f;--warn-bg:#f8eedb;--bad:#a2342a;--bad-bg:#f8e7e3;
+  --font:'Switzer','Helvetica Neue',system-ui,sans-serif;
+  --display:'General Sans','Switzer',system-ui,sans-serif;
+  --serif:'Instrument Serif','Cormorant Garamond',Georgia,serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --shadow:0 1px 0 rgba(11,17,28,.03),0 12px 32px -18px rgba(11,17,28,.18);
+}
+body{background-color:var(--bg);background-image:
+  linear-gradient(rgba(11,17,28,.034) 1px,transparent 1px),linear-gradient(90deg,rgba(11,17,28,.034) 1px,transparent 1px),
+  linear-gradient(rgba(11,17,28,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(11,17,28,.018) 1px,transparent 1px);
+  background-size:120px 120px,120px 120px,24px 24px,24px 24px;background-position:-1px -1px;
+  font-feature-settings:"ss01","cv11";-webkit-font-smoothing:antialiased}
+::selection{background:rgba(201,138,75,.28)}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--champ1);outline-offset:2px}
+
+/* Typographie */
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(34px,3.6vw,50px);line-height:1.02;letter-spacing:-.012em;margin:8px 0 12px}
+h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.015em}
+.eyebrow,.overline{font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:.16em;color:var(--accent)}
+.vhead p{font-size:16.5px;line-height:1.6}
+
+/* Barre latérale : acier brossé */
+.side{background:linear-gradient(180deg,#1a2230 0%,#0c111a 100%);box-shadow:inset -1px 0 0 rgba(227,180,124,.14)}
+.home-logo{display:block;padding:2px 10px 18px;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.home-logo img{display:block;width:150px;height:auto}
+.brand{padding:0 10px 22px}
+.b1{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--champ1)}
+.b2{font-family:var(--serif);font-weight:400;font-size:38px;letter-spacing:-.01em;line-height:1}
+.b2:after{background:var(--champ1);width:6px;height:6px;margin:0 0 6px 8px}
+#nav a{color:rgba(255,255,255,.74);border-radius:6px}
+#nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+#nav .n{border-color:rgba(227,180,124,.38);font-family:var(--mono);font-size:11px}
+#nav .lbl small{color:rgba(255,255,255,.48)}
+#nav a.on{background:#fffdf9;color:var(--ink);box-shadow:inset 3px 0 0 var(--champ2)}
+#nav a.on .n{border-color:var(--champ2);color:var(--accent)}
+#nav a.on .lbl small{color:var(--muted)}
+#nav a.done .n{background:linear-gradient(135deg,var(--champ1),var(--champ2));border-color:transparent;color:#0b111c}
+.side .btn{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16);color:#fff}
+.side .btn:hover{background:rgba(255,255,255,.12)}
+.side .btn.ghost{background:none;border-color:rgba(255,255,255,.14);color:rgba(255,255,255,.82)}
+.side .btn.ghost:hover{background:rgba(255,255,255,.06);color:#fff}
+.tools .small{color:rgba(255,255,255,.5)}
+
+/* Barre haute et retour à l'accueil */
+.topbar{background:rgba(245,242,235,.9);border-bottom:1px solid var(--line);backdrop-filter:saturate(140%) blur(12px)}
+.topbar strong{font-family:var(--display);font-weight:600}
+.home-link{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 12px;border:1px solid var(--line2);border-radius:6px;
+  color:var(--ink);text-decoration:none;font:500 12.5px/1 var(--font);background:var(--panel);white-space:nowrap}
+.home-link:hover{border-color:var(--ink)}
+.home-link svg{flex:none;margin-left:-2px}
+
+/* Surfaces */
+.card,.press,details.block,.report,.metrics,.intro div,.dec{background:var(--panel);border-color:var(--line);border-radius:8px;box-shadow:var(--shadow)}
+.press{box-shadow:none}
+.card>h2,.report h2{font-size:18px}
+.intro div{position:relative;box-shadow:none}
+.intro i{font-family:var(--mono);color:var(--accent);font-weight:500;letter-spacing:.08em}
+.notice{background:#f4efe6;border-left-color:var(--champ2);color:var(--ink)}
+.notice.warn{background:var(--warm);border-color:var(--champ2);color:#5d3f16}
+.tag{background:#f1ece2;color:#5a4a33}
+.metrics>div.hl,.result .tot,.decision-box,.dec.on{background:#f4efe6}
+.metrics strong{font-family:var(--display);font-weight:600}
+.result div,.kpis div{background:#faf7f1}
+.press-head .num{background:#f1ece2;color:var(--accent);font-family:var(--mono);font-weight:500}
+.dec.on{border-color:var(--ink)}
+.rep-head{border-bottom-color:var(--ink)}
+.rep-head h1{font-size:34px}
+.bar i{background:var(--ink)}.bar.y i{background:var(--champ2)}
+.checks .ok .ic{background:var(--ok-bg)}
+
+/* Champs */
+input,textarea,select,.unit{background:#fffefb;border-color:var(--line2);border-radius:6px}
+input:focus,textarea:focus,select:focus,.unit:focus-within{outline:2px solid rgba(201,138,75,.28);border-color:var(--champ2)}
+.unit input:focus{outline:none}
+.check input{accent-color:var(--ink)}
+
+/* Boutons et choix */
+.btn{background:var(--ink);border-color:var(--ink);border-radius:6px;font-family:var(--font);letter-spacing:.005em}
+.btn:hover{background:#1a2230}
+.btn.ghost{background:var(--panel);color:var(--ink);border-color:var(--line2)}
+.btn.ghost:hover{background:#f4efe6;border-color:var(--ink)}
+.btn.link,details.more>summary{color:var(--accent)}
+.chip{background:var(--panel);border-color:var(--line2)}
+.chip:hover{border-color:var(--ink)}
+.chip.on{background:var(--ink);border-color:var(--ink)}
+.chip.on.c-mid{background:#b7792a;border-color:#b7792a}
+.toast{background:#0b111c;box-shadow:0 0 0 1px rgba(227,180,124,.2)}
+dialog{border-radius:8px}
+dialog h2{font-family:var(--serif);font-weight:400;font-size:26px}
+
+@media (max-width:860px){
+  .home-logo{display:none}
+  .b2{font-size:28px}
+  .home-link{padding:0 10px}
+}
+@media (max-width:370px){.home-link b{display:none}}
+@media print{body{background:#fff}.home-link{display:none}}
