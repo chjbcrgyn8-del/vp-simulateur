@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VP Scan · Diagnostic terrain | Vella Partners</title>
+<meta name="description" content="VP Scan : chiffrer les pertes presse par presse, qualifier les données et la connectivité, désigner les presses critiques et tracer la feuille de route.">
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="app.css?v=site-1">
+<script src="data.js" defer></script>
+<script src="audit.js" defer></script>
+<script src="app.js?v=henry-1" defer></script>
+</head>
+<body>
+<a class="skip" href="#view">Aller au contenu</a>
+<div class="shell">
+  <aside class="side">
+    <a class="brand" href="#mission" aria-label="VP Scan, première étape"><span class="b1">Vella Partners</span><span class="b2">VP Scan</span></a>
+    <nav id="nav" aria-label="Étapes du diagnostic"></nav>
+    <div class="tools">
+      <button class="btn sm" data-act="export">Exporter la mission</button>
+      <button class="btn ghost sm" data-act="import">Importer une mission</button>
+      <button class="btn ghost sm" data-act="exemple">Charger l’exemple fictif</button>
+      <button class="btn ghost sm" data-act="reset">Nouvelle mission</button>
+      <input type="file" id="file" accept=".json,application/json" hidden>
+      <p class="small">Saisie en mémoire de cet onglet, rien n’est envoyé.<br>Exportez avant de fermer.</p>
+      <a class="site-back" href="../index.html">← Retour au site Vella Partners</a>
+    </div>
+  </aside>
+  <div class="workspace">
+    <div class="topbar">
+      <div><span class="overline">Mission</span><strong id="mission-name">Nouvelle mission</strong></div>
+      <div class="save-area"><span id="save-state" role="status"></span><button class="btn ghost sm menu-toggle" data-act="menu" aria-expanded="false">Fichier</button><button class="btn sm" data-act="export">Exporter</button></div>
+    </div>
+    <main id="view" tabindex="-1"></main>
+  </div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<dialog id="ask" aria-labelledby="ask-title">
+  <form method="dialog">
+    <h2 id="ask-title">Confirmer</h2>
+    <p id="ask-msg"></p>
+    <div class="actions"><button class="btn ghost" value="cancel" id="ask-cancel">Annuler</button><button class="btn" value="ok" id="ask-ok">Confirmer</button></div>
+  </form>
+</dialog>
+</body>
+</html>
