@@ -156,3 +156,7 @@ body.revue.rc .emain::before{content:"Mode revue : le formalisme QQOQC repris du
 #mes .emsg{margin-top:10px}
 .q.qp{border-top:1px solid var(--line)}
 @media(max-width:760px){#sit.sit{grid-template-columns:1fr}}
+/* v12 : tableau des mesures par levier pour caoutchouc, décolletage, traitement de surface */
+.vpmes{margin:0 0 18px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.vpmes .emsg{margin-top:10px}
+.vpmesin{width:92px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:14px;margin-right:4px}

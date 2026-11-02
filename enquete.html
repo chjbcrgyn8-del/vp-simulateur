@@ -18,7 +18,7 @@
 <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
 <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="enquete.css?v=11">
+<link rel="stylesheet" href="enquete.css?v=12">
 <link rel="stylesheet" href="premium.css?v=9">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -38,14 +38,14 @@
 <main id="main" class="emain">
 <header class="ehero"><p class="vpx">VP Expert · enquête défaut</p>
 <h1>J’ai un défaut sur une pièce : trouver la cause</h1>
-<p class="lead">Choisissez le défaut, décrivez-le en six questions (QQOQCP<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Quoi, Qui, Où, Quand, Comment, Pourquoi : la méthode qualité classique pour décrire un défaut et sa conséquence avant d’en chercher la cause."></span></button>) : VP Expert classe les causes à contrôler, intègre les mesures de la presse et prépare une synthèse pour la direction.</p></header>
+<p class="lead">Choisissez le défaut, décrivez-le en sept questions (QQOQCP<button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Quoi, Qui, Où, Quand, Comment, Combien, Pourquoi : la méthode qualité classique pour décrire un défaut et sa conséquence avant d’en chercher la cause."></span></button>) : VP Expert classe les causes à contrôler, intègre les mesures de la presse et prépare une synthèse pour la direction.</p></header>
 <ol class="esteps" aria-label="Étapes"><li data-n="1">Le défaut</li><li data-n="2">Enquête QQOQCP</li><li data-n="3">Mesures et causes</li><li data-n="4">Essai et suivi</li><li data-n="5">Synthèse</li></ol>
 <section class="ebox" id="s0"><h2><span class="num">1</span> Quel défaut voyez-vous ?</h2><div class="dsr"><input id="dq" type="search" placeholder="Chercher : bavure, retassure, givrage…" aria-label="Chercher un défaut"><div class="fams" id="fams"></div></div><div class="defs" id="defs"></div></section>
-<section class="ebox" id="s2"><h2><span class="num">2</span> <span id="t2">Enquête QQOQCP</span><span class="qqoqc nv">Méthode QQOQCP</span></h2><p class="sl qqline">Quoi, Qui, Où, Quand, Comment, Pourquoi : six questions pour décrire le défaut et sa conséquence avant d’en chercher la cause.</p><div id="qs"></div>
+<section class="ebox" id="s2"><h2><span class="num">2</span> <span id="t2">Enquête QQOQCP</span><span class="qqoqc nv">Méthode QQOQCP</span></h2><p class="sl qqline">Quoi, Qui, Où, Quand, Comment, Combien, Pourquoi : sept questions pour décrire le défaut et sa conséquence avant d’en chercher la cause.</p><div id="qs"></div>
 <p class="fiche" id="fiche"></p></section>
 <section class="ebox" id="s3"><h2><span class="num">3</span> <span id="t3">Mesures et causes à contrôler</span><button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Score illustratif, non probabiliste. Les clics enregistrent des constats de démonstration, jamais une causalité prouvée ni une fréquence industrielle. Ils ne modifient pas le classement."></span></button></h2><div id="mes"><p class="ml mesh">Mesures de la presse <span class="sl">· d’où viennent-elles ?</span></p><div class="sit" id="sit"></div><div id="drv"></div><p class="emsg" id="msg"></p></div><div id="res"></div></section>
 <section class="ebox" id="s4" hidden><h2 id="ititle">Diagramme d’Ishikawa</h2><p class="sl" id="ihint"></p><div class="ishi" id="ishi"></div>
-<p class="leg"><i class="s3"></i>3 indices ou plus <i class="s2"></i>2 indices <i class="s1"></i>1 indice <i class="x"></i>moins probable, mesures conformes</p></section>
+<p class="leg"><i class="s3"></i>3 de vos réponses ou plus y renvoient <i class="s2"></i>2 réponses <i class="s1"></i>1 réponse <i class="x"></i>moins probable, mesure conforme et stable</p></section>
 <section id="hist" hidden><h2>Contrôles enregistrés dans cette démonstration</h2><p class="sl nv">Ces constats restent démonstratifs : ils ne prouvent pas une cause et ne modifient aucun score. Une erreur de saisie se corrige avec « Corriger ».</p><div class="tw"><table><thead><tr><th>Heure</th><th>Défaut</th><th>Contrôle effectué</th><th>Résultat</th><th class="nv"></th></tr></thead><tbody id="hb"></tbody></table></div></section>
 <div class="vpduo"><div><p class="vpx">VP Expert</p><p><b>Guide les contrôles.</b> Défaut, QQOQCP, causes classées, essai et synthèse. Sur toutes vos presses, sans connexion ; les mesures sont relevées à la main.</p></div><div><p class="vpx vpp">VP Predict</p><p><b>Apporte les mesures.</b> Étape 3 : consigne, valeur actuelle et moyenne des OF précédents pour chaque mesure, avec la tendance. Une mesure conforme mais limite ou en dérive remonte les causes concernées. Sur vos presses connectées.</p></div></div>
 <p class="sl">Démonstration : classements illustratifs non calibrés. Un constat ne prouve pas une cause. Les contrôles et actions doivent être validés pour la machine, la matière et l’outillage concernés avant toute intervention réelle.</p>
@@ -54,10 +54,10 @@
 <script src="expertise.js"></script>
 <script src="kb-enquete.js?v=10"></script>
 <script src="kb-defauts.js?v=9"></script>
-<link rel="stylesheet" href="vp-expert-consolide.css?v=2">
+<link rel="stylesheet" href="vp-expert-consolide.css?v=3">
 <script src="lot2bis-data.js"></script><script src="lot2bis-complements.js"></script>
-<script src="vp-expert-consolide.js?v=2"></script>
-<script src="enquete.js?v=henry-1"></script>
+<script src="vp-expert-consolide.js?v=3"></script>
+<script src="enquete.js?v=henry-2"></script>
 <script src="lot3-data.js?v=1"></script>
 <script src="lot3-reperes.js?v=2"></script>
 <script src="tips.js"></script>

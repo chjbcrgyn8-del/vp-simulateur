@@ -14,8 +14,8 @@
  const RESULT={execution:'Intervention déclarée : date, opérateur et conditions',after:'Résultats après : méthode et pièces repérées',effects:'Effets secondaires et autres caractéristiques',followup:'Tenue du résultat et récidives',qualityReview:'Décision qualité déclarée et référence',assessment:'Conclusion déclarée, limites et contre-hypothèses'};
  const BILAN={cause:'',action:'',outcome:''};
  const OUTCOME=[['disparu','Défaut disparu'],['attenue','Défaut atténué'],['sans','Pas d’effet'],['nonverif','Pas encore vérifié']];
- const POURQUOI=[['aspect','Défaut d’aspect, pièce acceptable sous dérogation'],['tri','Tri ou retouche nécessaires'],['fonction','Pièce non fonctionnelle ou non montable'],['securite','Risque sécurité ou réglementaire']];
- const CRIT=[['faible','Faible'],['moyenne','Moyenne'],['forte','Forte']];
+ const POURQUOI=[['aspect','Aspect visuel'],['fonction','Fonction ou montage'],['secu','Sécurité ou réglementaire'],['client','Réclamation client'],['cout','Rebut ou retouche']];
+ const CRIT=[['mineure','Mineure'],['majeure','Majeure'],['critique','Critique']];
  const lab=(l,v)=>(l.find(x=>x[0]===v)||[,''])[1];
  const NOTICE='Démonstration documentaire. Toute saisie est déclarative, non vérifiée. Une publication, un clic ou une référence d’autorisation ne valide aucune action. Aucun réglage automatique, modèle causal calibré ou connexion machine.';
  const blank=()=>({context:Object.fromEntries(Object.keys(CONTEXT).map(k=>[k,''])),trial:Object.fromEntries(Object.keys(TRIAL).map(k=>[k,''])),result:Object.fromEntries(Object.keys(RESULT).map(k=>[k,''])),bilan:{...BILAN},evidence:{},fictional:false});
@@ -39,6 +39,61 @@
   add(sector,def,c){const a=store('vp-expert-custom');a[sector]=a[sector]||{};(a[sector][def]=a[sector][def]||[]).push(c);store('vp-expert-custom',a)},
   remove(sector,def,id){const a=store('vp-expert-custom');if(a[sector]?.[def]){a[sector][def]=a[sector][def].filter(x=>x.id!==id);store('vp-expert-custom',a)}}
  };
+
+ /* ---------- Mesures machine par cause (caoutchouc, décolletage, traitement de surface) ----------
+    Consigne, tolérance et unité : paramètres du secteur (fichiers kb-*.js, fiche d'exemple VP Predict).
+    Lecture : conforme · conforme mais limite (> 80 % de la tolérance) · hors tolérance ; tendance vs moyenne des OF précédents.
+    Valeurs « VP Predict » : démonstration déterministe, non issues d'une machine réelle. */
+ window.VPMes={make(o){
+  const S=o.S;if(!S.mes||typeof S.mes!=='object')S.mes={};
+  const P=id=>(o.params()||[]).find(p=>p.id===id);
+  const fmt=(p,v)=>Number(v).toFixed(p.dec??1).replace('.',',');
+  const hash=s=>{let h=0;for(const ch of String(s))h=(h*31+ch.charCodeAt(0))>>>0;return h};
+  const unit=p=>p.u?' '+p.u:'';
+  const nameOf=p=>p.sn||p.n;
+  function list(){const out=[];(o.cands()||[]).forEach(c=>{if(!c.t||!c.p||!P(c.p)||out.find(x=>x.p===c.p))return;out.push({p:c.p,dir:o.dirOf(c),n:c.n})});return out}
+  function demo(p,dir,rank){const m=P(p),h=hash(o.key()+p),j=(h%7-3)/10,sg=dir==='bas'?-1:1;
+   if(rank===0)return {avg:m.c+sg*m.tol*0.3+j*m.tol*0.1,cur:m.c+sg*m.tol*0.86};
+   if(rank===1)return {avg:m.c+sg*m.tol*0.1,cur:m.c+sg*m.tol*0.5};
+   return {avg:m.c+j*m.tol*0.2,cur:m.c+j*m.tol*0.3}}
+  function stat(p,dir){const m=P(p);if(!m)return {st:'none',trend:'none'};let cur,avg;
+   if(S.br==='conforme'){const r=list().findIndex(x=>x.p===p),d=demo(p,dir,r<0?9:r);cur=d.cur;avg=d.avg}
+   else{const v=S.mes[p];if(v===undefined||v===''||isNaN(+String(v).replace(',','.')))return {st:'none',trend:'none',txt:'À relever'};cur=+String(v).replace(',','.')}
+   const dev=(cur-m.c)/m.tol,ad=Math.abs(dev),st=ad>1?'hors':ad>0.8?'limite':'ok',side=dev>0?'haut':'bas';
+   let trend='none';if(avg!==undefined){const tr=(cur-avg)/m.tol;trend=Math.abs(tr)<0.3?'stable':(dir==='var'||(tr>0?'haut':'bas')===dir)?'defav':'fav'}
+   const adverse=st!=='ok'&&(dir==='var'||side===dir);
+   const txt=st==='hors'?'Non conforme : hors tolérance ('+(side==='haut'?'trop haut':'trop bas')+')':st==='limite'?'Conforme mais limite '+(side==='haut'?'haute':'basse'):'Conforme';
+   return {st,trend,cur,avg,side,adverse,txt}}
+  const cls=s=>s.st==='none'?'':s.st==='hors'?'hors':(s.adverse||s.trend==='defav')?'lim':s.st==='ok'?'ok':'okl';
+  const label=s=>s.st==='none'?'À relever':s.txt+(s.trend==='defav'?' · tendance défavorable':'');
+  function of(c){if(S.br==='derive'||!c.t||!c.p||!P(c.p))return null;const x=list().find(y=>y.p===c.p);const s=stat(c.p,x?x.dir:'var');return s.st==='none'?null:s}
+  const isLo=ms=>!!(ms&&ms.st==='ok'&&ms.trend!=='defav');
+  function factor(ms){if(!ms)return 1;if(isLo(ms))return .2;if(ms.st==='hors'&&ms.adverse)return 2.2*2.2;if(ms.adverse||ms.trend==='defav')return 2.2;if(ms.st==='limite')return .5;return 1}
+  function why(c,ms){if(!ms)return '';const m=P(c.p);
+   if(ms.st==='hors')return `<b>mesure hors tolérance</b> (${esc(nameOf(m))} ${fmt(m,ms.cur)}${esc(unit(m))})${ms.adverse?'':', mais dans le sens opposé à ce levier'}`;
+   if(ms.adverse&&ms.st==='limite')return `<b>mesure conforme mais limite ${ms.side==='haut'?'haute':'basse'}</b>${ms.trend==='defav'?', tendance défavorable sur les OF précédents':''}`;
+   if(ms.trend==='defav')return '<b>mesure conforme, mais tendance défavorable</b> sur les OF précédents';
+   if(isLo(ms))return '<b>mesure conforme et stable : moins probable</b>, vérifier tout de même capteur et étalonnage';
+   return ''}
+  function table(){if(S.br==='derive')return '';const L=list();const src=o.src||'machine';
+   if(!L.length)return `<div class="emsg"><b>Aucune mesure ${esc(src)} n’est reliée à ce défaut</b> dans le référentiel : les leviers se classent d’après le QQOQCP.</div>`;
+   const man=S.br!=='conforme';
+   const rows=L.map(({p,dir})=>{const m=P(p),s=stat(p,dir),k=cls(s);
+    const val=man?`<input type="text" inputmode="decimal" class="vpmesin" data-mes="${esc(p)}" value="${esc(S.mes[p]??'')}" aria-label="Valeur relevée, ${esc(nameOf(m))}" placeholder="relevé">${esc(unit(m))}`:`<b>${fmt(m,s.cur)}</b>${esc(unit(m))}`;
+    const avg=man?'<span class="sl">avec VP Predict</span>':fmt(m,s.avg)+esc(unit(m));
+    const tr=s.trend==='none'?(man?'<span class="sl">avec VP Predict</span>':'—'):s.trend==='stable'?'Stable':s.trend==='defav'?'<b>Défavorable</b> '+(s.cur>s.avg?'↗':'↘'):'Favorable';
+    return `<tr class="${k}"><th scope="row">${esc(nameOf(m))}<small>${dir==='haut'?'défavorable si trop haut':dir==='bas'?'défavorable si trop bas':'défavorable si hors réglage ou instable'}</small></th><td>${fmt(m,m.c)} ± ${fmt(m,m.tol)}${esc(unit(m))}</td><td>${val}</td><td>${avg}</td><td>${tr}</td><td><span class="mst ${k}">${label(s)}</span></td></tr>`}).join('');
+   const st=L.map(x=>stat(x.p,x.dir)),nOk=st.filter(isLo).length,nLim=st.filter(s=>(s.adverse&&s.st==='limite')||(s.st!=='hors'&&s.trend==='defav')).length,nH=st.filter(s=>s.st==='hors').length,nN=st.filter(s=>s.st==='none').length;
+   const msg=man?(nN===L.length?`<b>Relevé à la main :</b> saisissez les valeurs relevées ${esc(o.where||'sur la machine')}. Sans valeur, les leviers liés aux mesures restent à vérifier comme les autres. Consignes : ${esc(o.fiche||'fiche de réglage')} d’exemple.`
+     :`<b>${L.length-nN} mesure(s) relevée(s) :</b> ${nOk} conforme(s), ${nLim} en limite ou tendance défavorable, ${nH} hors tolérance. Une mesure conforme rend ses leviers moins probables sans les exclure ; une mesure en limite ou hors tolérance les fait remonter.`)
+    :`<b>Lecture VP Predict (démonstration) :</b> ${nOk} mesure(s) conforme(s) et stable(s), ${nLim} conforme(s) mais limite ou en tendance défavorable, ${nH} hors tolérance. On peut être dans la tolérance et pourtant favoriser le défaut : les leviers concernés remontent dans la liste.`;
+   return `<div class="vpmes"><p class="ml mesh">Mesures ${esc(src)} · ${man?'relevé à la main':'remontées par VP Predict'}</p><div class="tw mest"><table><thead><tr><th>Mesure</th><th>Consigne<small>${esc(o.fiche||'fiche de réglage')}</small></th><th>Valeur actuelle</th><th>Moyenne<small>OF précédents</small></th><th>Tendance</th><th>Lecture</th></tr></thead><tbody>${rows}</tbody></table></div><div class="emsg${nLim||nH?' warnm':nOk?' win':''}">${msg}</div></div>`}
+  function measures(){if(S.br==='derive')return [];return list().map(({p,dir})=>{const m=P(p),s=stat(p,dir);return {name:nameOf(m),unit:m.u,set:fmt(m,m.c)+' ± '+fmt(m,m.tol),cur:s.cur===undefined?null:fmt(m,s.cur),avg:s.avg===undefined?null:fmt(m,s.avg),status:s.st,trend:s.trend,adverse:!!s.adverse,txt:s.st==='none'?'Pas de valeur relevée':label(s).replace(' · ',', ')}})}
+  document.addEventListener('input',e=>{const el=e.target;if(!el.matches||!el.matches('.vpmesin'))return;const p=el.dataset.mes;if(el.value.trim()==='')delete S.mes[p];else S.mes[p]=el.value.trim();
+   const x=list().find(y=>y.p===p),s=stat(p,x?x.dir:'var'),row=el.closest('tr');if(row){const k=cls(s);row.className=k;const b=row.querySelector('.mst');if(b){b.className='mst '+k;b.textContent=label(s)}}});
+  document.addEventListener('change',e=>{if(e.target.matches&&e.target.matches('.vpmesin')){o.render();window.dispatchEvent(new Event('vp:enquete-render'))}});
+  return {list,stat,of,isLo,factor,why,table,measures,count:()=>list().length}
+ }};
  function rulesFor(api){
   const ADP=window.VP_SECTOR_ADAPTERS?.[api.sector];if(ADP)return ADP.rulesFor(api);
   if(api.sector!=='DC')return (window.VP_DOC.defects.find(d=>d.legacy===api.S.def)?.rules||[]).map(normalize);
@@ -116,7 +171,7 @@
    /* ----- Question « Pourquoi » (QQOQCP) injectée dans l'enquête ----- */
    function pourquoi(){const qs=$('qs');if(!qs||qs.querySelector('[data-k="pourquoi"]'))return;
     const pill=(k,list)=>`<div class="opts" data-k="${k}">`+list.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${api.S[k]===v}">${esc(l)}</button>`).join('')+'</div>';
-    const div=document.createElement('div');div.className='q qp';div.innerHTML=`<span class="ql">Pourquoi</span><div><b>Pourquoi est-ce un problème ?</b>${pill('pourquoi',POURQUOI)}<p class="ml">Criticité</p>${pill('crit',CRIT)}<p class="hint">Conséquence et criticité orientent le confinement et la priorité, pas le classement des causes.</p></div>`;
+    const div=document.createElement('div');div.className='q qp';div.innerHTML=`<span class="ql">Pourquoi</span><div><b>Pourquoi est-ce un problème ?</b><p class="ml">Quelle conséquence ?</p>${pill('pourquoi',POURQUOI)}<p class="ml">Quelle criticité ?</p>${pill('crit',CRIT)}<p class="hint">Ne change pas l’ordre des causes, mais fixe l’urgence et le confinement. Repris dans la synthèse pour la direction.</p></div>`;
     qs.append(div);
     const f=$('fiche');if(f&&(api.S.pourquoi||api.S.crit)){const sp=document.createElement('span');sp.innerHTML='<i>Pourquoi</i> '+esc([lab(POURQUOI,api.S.pourquoi),api.S.crit?'criticité '+lab(CRIT,api.S.crit).toLowerCase():''].filter(Boolean).join(', '));f.append(sp)}}
    /* ----- Cause ajoutée par l'atelier ----- */
@@ -170,7 +225,7 @@
     body.innerHTML=`<div class="syn-head"><p class="syn-def"><b>${esc(d.def)}</b>${d.ctx.length?' · '+esc(d.ctx.join(' · ')):''}</p><p class="fiche syn-fiche">${fiche||'<span class="expert-muted">Décrivez le défaut à l’étape 2.</span>'}</p></div>
 <div class="syn-grid">
 <div class="syn-card syn-main"><h3>${d.b.outcome==='disparu'&&d.b.cause?'Cause confirmée par l’atelier':d.nc.length||d.b.cause?'Cause(s) probable(s)':'À contrôler en priorité'}</h3>${d.probable.length?'<ol>'+d.probable.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol>':'<p class="expert-muted">Répondez à l’enquête pour classer les causes.</p>'}${d.rex.length?`<p class="syn-rex">Mémoire atelier : ${d.rex.length} retour${d.rex.length>1?'s':''} d’expérience sur ce défaut (${[...new Set(d.rex.map(r=>r.name))].slice(0,3).map(esc).join(', ')}). <button type="button" class="lk" id="rex-clear">Effacer</button></p>`:''}</div>
-${api.measures?`<div class="syn-card"><h3>Mesures de la presse</h3>${d.M.length?(d.mesAlert.length?'<p><b>À surveiller :</b> '+d.mesAlert.map(m=>esc(m.name)+' ('+esc(m.txt.toLowerCase())+(m.cur?' : '+esc(m.cur)+' '+esc(m.unit)+' pour '+esc(m.set):'')+')').join(' ; ')+'.</p>':'')+(d.mesOk.length?'<p>Conformes et stables : '+d.mesOk.map(m=>esc(m.name)).join(', ')+'.</p>':'')+(d.mesNone.length?'<p class="expert-muted">Non relevées : '+d.mesNone.map(m=>esc(m.name)).join(', ')+'.</p>':''):'<p class="expert-muted">Aucune mesure reliée à ce défaut ou pas de relevé.</p>'}</div>`:''}
+${api.measures?`<div class="syn-card"><h3>${esc(api.mesTitle||'Mesures de la presse')}</h3>${d.M.length?(d.mesAlert.length?'<p><b>À surveiller :</b> '+d.mesAlert.map(m=>esc(m.name)+' ('+esc(m.txt.toLowerCase())+(m.cur?' : '+esc(m.cur)+' '+esc(m.unit)+' pour '+esc(m.set):'')+')').join(' ; ')+'.</p>':'')+(d.mesOk.length?'<p>Conformes et stables : '+d.mesOk.map(m=>esc(m.name)).join(', ')+'.</p>':'')+(d.mesNone.length?'<p class="expert-muted">Non relevées : '+d.mesNone.map(m=>esc(m.name)).join(', ')+'.</p>':''):'<p class="expert-muted">Aucune mesure reliée à ce défaut ou pas de relevé.</p>'}</div>`:''}
 <div class="syn-card"><h3>Actions menées</h3>${li(d.done)}</div>
 <div class="syn-card"><h3>Actions à mener</h3>${li(d.todo)}</div>
 </div>

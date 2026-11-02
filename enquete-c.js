@@ -49,6 +49,8 @@ const famOf=t=>lab(FAM,FAMC[t]);
 const DEF=()=>REF.find(d=>d.tab===S.def);
 function cands(){const d=DEF(),N=d.levers.length;return d.levers.map(([r,n,dir],i)=>{const R=RULES.find(x=>x[0].test(n))||[null,'Moule',null,{},'Contrôler ce levier selon la fiche.'];return {id:S.def+'_'+i,rank:r,n,dir,b:R[1],t:R[2]?'mes':'',p:R[2],ind:R[3],ctl:R[4],prior:1+(N-r)/N}});}
 const nMesOf=()=>cands().filter(c=>c.t).length;
+/* Tableau des mesures par levier (consigne, valeur actuelle, moyenne OF précédents, tendance) : couche commune vp-expert-consolide.js */
+const M=window.VPMes.make({S,params:()=>CFG.params,cands:()=>S.br==='derive'?[]:cands(),dirOf:c=>/^baisse$/.test(c.dir||'')?'haut':/^(AV ?\/ ?)?hausse$/.test(c.dir||'')?'bas':'var',key:()=>S.def,render:()=>render(),src:'de la presse',where:'sur la presse',fiche:'fiche de réglage'});
 const why=ind=>{const w=[];for(const k in ind)if(S[k]&&ind[k].includes(S[k]))w.push(LBL[S[k]].toLowerCase());return w};
 const pills=(k,l)=>`<div class="opts" data-k="${k}">`+l.map(([v,t])=>`<button type="button" data-v="${v}" aria-pressed="${S[k]===v}">${esc(t)}</button>`).join('')+'</div>';
 const q=(a,t,b)=>`<div class="q"><span class="ql">${a}</span><div><b>${t}</b>${b}</div></div>`;
@@ -58,14 +60,14 @@ function draw0(){const f=S.fam,qd=norm(S.qd.trim());
  let L=REF.filter(d=>(f==='all'||FAMC[d.tab]===f)&&(!qd||norm(NAME(d)+' '+(HINT[d.tab]||'')).includes(qd)));
  const cut=f==='all'&&!qd&&!S.more;if(cut){L=TOP.map(t=>REF.find(d=>d.tab===t));if(!TOP.includes(S.def))L.push(DEF());}
  $('defs').innerHTML=(L.length?L.map(d=>`<button type="button" class="dt ${FAMC[d.tab]}" data-def="${d.tab}" aria-pressed="${S.def===d.tab}"><b>${esc(NAME(d))}</b>${HINT[d.tab]?`<small>${HINT[d.tab]}</small>`:''}</button>`).join(''):'<p class="sl">Aucun défaut trouvé. Essayez un autre mot.</p>')+(cut?`<button type="button" class="dt more" id="more"><b>Voir les 16 défauts</b><small>${16-L.length} autres</small></button>`:'');}
-const SIT=[['sans','Pas de mesures','Le défaut est vu par une personne. Tous les leviers sont à vérifier.'],['conforme','Mesures conformes','Pression, températures pot, BCR, moule et temps de vulcanisation dans leur plage.'],['derive','Une mesure dérive','On cherche l’origine de la dérive, dans l’ordre de contrôle de notre expert caoutchouc.']];
+const SIT=[['sans','Relevé à la main','Le défaut est vu par une personne. Les mesures de la presse se relèvent à la main à l’étape 4.'],['conforme','Mesures VP Predict, sans alerte','Pression, températures pot, BCR, moule et temps de vulcanisation suivis : détail mesure par mesure à l’étape 4.'],['derive','Une mesure dérive','On cherche l’origine de la dérive, dans l’ordre de contrôle de notre expert caoutchouc.']];
 function draw1(){const nM=nMesOf(),NT=cands().length;
  $('sit').innerHTML=SIT.map(([v,t,d])=>`<button type="button" class="sc" data-b="${v}" aria-pressed="${S.br===v}"><em class="stag ${v==='sans'?'ex':'pr'}">${v==='sans'?'VP Expert seul':'Avec VP Predict'}</em><b>${t}</b><span>${d}</span></button>`).join('');
  $('drv').innerHTML=S.br==='derive'?'<p class="ml">Quelle mesure dérive ?</p>'+pills('param',CFG.params.map(p=>[p.id,p.n]))+'<p class="ml">Dans quel sens ?</p>'+pills('dir',[['up','En hausse'],['down','En baisse']]):'';
  const P=CFG.params.find(p=>p.id===S.param);
  $('msg').className='emsg'+(S.br==='conforme'?' win':'');
- $('msg').innerHTML=S.br==='sans'?`<b>Détection humaine :</b> l’enquête passe en revue les ${NT} leviers de ce défaut, y compris les ${nM} liés aux mesures, à relever à la main.`
-  :S.br==='conforme'?`<b>Mesures conformes :</b> ${nM} levier${nM>1?'s':''} lié${nM>1?'s':''} aux mesures ${nM>1?'passent':'passe'} en fin de liste. Une mesure conforme les rend moins probables sans les exclure : capteur ou étalonnage restent à vérifier.`
+ $('msg').innerHTML=S.br==='sans'?`<b>Détection humaine :</b> l’enquête passe en revue les ${NT} leviers de ce défaut, y compris les ${nM} liés aux mesures, à relever à la main à l’étape 4.`
+  :S.br==='conforme'?`<b>Mesures VP Predict, sans alerte :</b> le détail mesure par mesure (consigne, valeur actuelle, moyenne des OF précédents, tendance) est à l’étape 4. Une mesure conforme mais limite, ou en tendance défavorable, fait remonter ses leviers.`
   :`<b>${esc(P.n)} ${S.dir==='up'?'en hausse':'en baisse'} :</b> le défaut en est probablement la conséquence. On cherche l’origine de la dérive.`;}
 function draw2(){const d=S.br==='derive';
  $('t2').textContent=d?'Enquête QQOQCP sur la dérive':'Enquête QQOQCP : '+NAME(DEF()).toLowerCase();
@@ -85,12 +87,12 @@ function card(c,i,st,nx){const cf=CONF[c.id]||0;
  if(st==='nc')act=`<div class="cst nc nv"><b>Écart observé :</b> hypothèse à vérifier, cause non démontrée. Aucun apprentissage à partir de ce clic. <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
  else if(st==='ok')act=`<div class="cst ok nv"><b>Contrôle conforme :</b> hypothèse non étayée par ce contrôle. <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
  else act=`<div class="acts nv"><button type="button" class="btn sm bnc" data-nc="${c.id}">Non conforme après contrôle</button><button type="button" class="btn ghost sm bok" data-ok="${c.id}">Conforme après contrôle</button></div>`;
- return `<div class="cc${i===0?' best':''}${st==='ok'?' done':''}${st==='lock'?' lock':''}${st==='nc'?' found':''}${nx?' next':''}" data-id="${c.id}"><div class="ch"><span class="rk">${i+1}</span><b>${nx?'<span class="tg nxt nv">Contrôle suivant</span>':''}${esc(TOCONF(c.n))}${c.t?'<span class="tg mes">Donnée de mesure</span>':''}</b><span class="ind" title="Score de pertinence, pas une probabilité">${c.pct}<small> pts</small></span></div><div class="bar"><i style="width:${c.pct}%"></i></div><p><span class="fam">${esc(c.b)}</span> <b>Contrôle :</b> ${esc(c.ctl)}</p><p class="why">${c.lo?'<b>Mesure conforme : moins probable</b>, vérifier le capteur · ':''}${c.rank?`Rang ${c.rank} dans l’ordre de notre expert caoutchouc · ${esc(DIRT[c.dir]||c.dir)}`:esc(c.x||'')}${c.w&&c.w.length?' · vos réponses « '+esc(c.w.join(' », « '))+' » vont dans le sens de ce levier':' · aucune de vos réponses ne pointe vers ce levier, il reste possible'}${cf?` · <b>Écart observé dans cette démonstration, cause non démontrée</b>`:''}</p>${act}</div>`;}
+ return `<div class="cc${i===0?' best':''}${st==='ok'?' done':''}${st==='lock'?' lock':''}${st==='nc'?' found':''}${nx?' next':''}" data-id="${c.id}"><div class="ch"><span class="rk">${i+1}</span><b>${nx?'<span class="tg nxt nv">Contrôle suivant</span>':''}${esc(TOCONF(c.n))}${c.t?'<span class="tg mes">Donnée de mesure</span>':''}</b><span class="ind" title="Score de pertinence, pas une probabilité">${c.pct}<small> pts</small></span></div><div class="bar"><i style="width:${c.pct}%"></i></div><p><span class="fam">${esc(c.b)}</span> <b>Contrôle :</b> ${esc(c.ctl)}</p><p class="why">${c.ms&&M.why(c,c.ms)?M.why(c,c.ms)+' · ':''}${c.rank?`Rang ${c.rank} dans l’ordre de notre expert caoutchouc · ${esc(DIRT[c.dir]||c.dir)}`:esc(c.x||'')}${c.w&&c.w.length?' · vos réponses « '+esc(c.w.join(' », « '))+' » vont dans le sens de ce levier':' · aucune de vos réponses ne pointe vers ce levier, il reste possible'}${cf?` · <b>Écart observé dans cette démonstration, cause non démontrée</b>`:''}</p>${act}</div>`;}
 let LAST=[];
-function draw3(){const d=S.br==='derive';let h='<p class="vpx">VP Expert · guide les contrôles</p>',list;
+function draw3(){const d=S.br==='derive';let h=(d?'':M.table())+'<p class="vpx">VP Expert · guide les contrôles</p>',list;
  $('t3').textContent=d?'Origines à contrôler, dans l’ordre':'Leviers à contrôler, dans l’ordre';
  if(d){list=((CFG.kb[S.param]||{})[S.dir]||[]).map((c,k)=>({id:'d'+S.param+S.dir+k,n:c.l,b:'Expertise',ctl:(c.a&&c.a[0]?c.a[0].l:''),x:'Pondération illustrative du référentiel, sans fréquence terrain vérifiée',s:c.n}));}
- else{list=cands().map(c=>{const w=why(c.ind),lo=S.br==='conforme'&&!!c.t;return {...c,w,lo,s:c.prior*Math.pow(2.2,w.length)*(lo?.2:1)}});}
+ else{list=cands().map(c=>{const w=why(c.ind),ms=M.of(c),lo=M.isLo(ms),rx=window.VPREX?.count('CA',S.def,c.id)||0;return {...c,w,ms,lo,rx,s:c.prior*Math.pow(2.2,w.length)*M.factor(ms)*Math.pow(1.8,Math.min(rx,3))}});}
  const tot=list.reduce((a,c)=>a+c.s,0)||1;list.forEach(c=>c.pct=Math.max(1,Math.round(c.s/tot*100)));
  list.sort((a,b)=>b.s-a.s);LAST=list;
  const K=KEY(),Rc=REC[K]||{},O=OK[K]||{};
@@ -107,15 +109,15 @@ function draw3(){const d=S.br==='derive';let h='<p class="vpx">VP Expert · guid
  if(!d){if(S.qui==='qual')out.push('<span class="nvm"></span><b>Détecté par le service qualité :</b> bloquer le lot concerné et retrouver par la traçabilité (heure, ordre de fabrication) les pièces touchées.');
   if(S.qui==='client')out.push('<b>Détecté chez le client :</b> lancer le confinement (tri des stocks et en-cours) et informer la qualité.');
   if(S.combien==='toutes')out.push('<b>Toutes les pièces :</b> arrêt ou tri à 100 % le temps du contrôle.');
-  if(S.br==='sans'&&nMesOf())out.push(`<span class="vpx vpp">VP Predict</span> <b>Avec VP Predict</b>, les ${nMesOf()} leviers liés aux mesures passeraient en fin de liste si les mesures sont conformes. <button type="button" class="lk" data-go="conforme">Voir avec les mesures</button>`);
+  if(S.br==='sans'&&nMesOf())out.push(`<span class="vpx vpp">VP Predict</span> <b>Avec VP Predict</b>, les ${nMesOf()} leviers liés aux mesures seraient reclassés d’après la lecture des mesures : conforme, conforme mais limite, tendance défavorable. <button type="button" class="lk" data-go="conforme">Voir avec les mesures</button>`);
   out.push('<b>Règle de notre expert caoutchouc :</b> une seule variable d’essai à la fois, et retour au réglage d’origine si elle ne corrige pas le défaut.');}
  else out.push('Une fois l’origine corrigée, vérifiez que le défaut disparaît. S’il persiste avec une mesure revenue dans sa plage : <button type="button" class="lk" data-go="conforme">enquête sur le défaut, mesures conformes</button>.');
  h+=out.map(o=>`<div class="emsg${o.startsWith('<span class="nvm">')?' nv':''}">${o}</div>`).join('');
- if(S.br==='conforme'&&!d&&nMesOf())h+=`<p class="sl"><b>Moins probables, mesures conformes :</b> ${cands().filter(c=>c.t).map(c=>c.n.toLowerCase()).join(', ')}.</p>`;
+ if(!d&&list.some(c=>c.lo))h+=`<p class="sl"><b>Moins probables, mesures conformes et stables :</b> ${list.filter(c=>c.lo).map(c=>c.n.toLowerCase()).join(', ')}.</p>`;
  h+='<p class="pr"><button type="button" class="btn ghost sm" id="print">Imprimer la fiche d’enquête</button></p>';
  $('res').innerHTML=h;$('s4').hidden=d;
- if(!d){$('ititle').textContent='Diagramme d’Ishikawa · '+NAME(DEF()).toLowerCase();$('ihint').textContent=S.br==='conforme'?'Les leviers grisés sont rendus moins probables par les mesures, sans être exclus. Les autres sont colorés selon le nombre d’indices.':'Sans mesures, tous les leviers restent possibles.';
-  const C=cands();$('ishi').innerHTML=BR.map(B=>`<section><h3>${B}</h3><ul>`+C.filter(c=>c.b===B).map(c=>{const n=why(c.ind).length,x=S.br==='conforme'&&c.t;return `<li class="${x?'x':n>=3?'s3':n===2?'s2':n===1?'s1':''}">${esc(c.n)}</li>`}).join('')+'</ul></section>').join('');}}
+ if(!d){$('ititle').textContent='Diagramme d’Ishikawa · '+NAME(DEF()).toLowerCase();$('ihint').textContent='Les leviers grisés sont rendus moins probables par une mesure conforme et stable, sans être exclus. Les autres sont colorés selon le nombre de vos réponses qui y renvoient.';
+  const C=cands();$('ishi').innerHTML=BR.map(B=>`<section><h3>${B}</h3><ul>`+C.filter(c=>c.b===B).map(c=>{const n=why(c.ind).length,x=M.isLo(M.of(c));return `<li class="${x?'x':n>=3?'s3':n===2?'s2':n===1?'s1':''}">${esc(c.n)}</li>`}).join('')+'</ul></section>').join('');}}
 function drawH(){$('hist').hidden=!HIST.length;$('hb').innerHTML=HIST.map((r,ix)=>`<tr class="${r.r}"><td>${r.t}</td><td>${esc(r.d)}</td><td>${esc(r.c)}</td><td><span class="res ${r.r}">${r.r==='nc'?'Écart observé : cause non démontrée':'Contrôle conforme : hypothèse non étayée'}</span></td><td><button type="button" class="lk" data-hfix="${ix}">Corriger</button></td></tr>`).join('');}
 function undo(ix){const r=HIST[ix];if(!r)return;HIST.splice(ix,1);
  if(r.r==='nc'){if(REC[r.key])delete REC[r.key][r.id];}
@@ -142,5 +144,5 @@ $('dq').addEventListener('input',e=>{S.qd=e.target.value;draw0()});
 document.body.classList.add('rc');
 if(/[?&]revue\b/.test(location.search))document.body.classList.add('revue');
 render();
-window.VPConsolidation?.bind({sector:'CA',S,REC,OK,NUM,HIST,render,cands,KEY,choices:{def:REF.map(d=>d.tab),fam:['all',...FAM.map(x=>x[0])],qd:'text',more:'boolean',br:SIT.map(x=>x[0]),param:CFG.params.map(p=>p.id),dir:['up','down'],...Object.fromEntries(Object.entries({ou:OU,quand:QUAND,freq:FREQ,terme:TERME,qui:QUI,combien:COMBIEN}).map(([k,v])=>[k,v.map(x=>x[0])]))}});
+window.VPConsolidation?.bind({sector:'CA',S,REC,OK,NUM,HIST,render,cands,KEY,measures:M.measures,mesTitle:'Mesures de la presse',choices:{mes:'object',def:REF.map(d=>d.tab),fam:['all',...FAM.map(x=>x[0])],qd:'text',more:'boolean',br:SIT.map(x=>x[0]),param:CFG.params.map(p=>p.id),dir:['up','down'],...Object.fromEntries(Object.entries({ou:OU,quand:QUAND,freq:FREQ,terme:TERME,qui:QUI,combien:COMBIEN}).map(([k,v])=>[k,v.map(x=>x[0])]))}});
 })();
