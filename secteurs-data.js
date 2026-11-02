@@ -48,7 +48,7 @@ window.VP_SECTEURS = {
     expert: {
       statut: 'ok', statutL: 'Référentiel expert',
       question: 'Que contrôler face à ce défaut, et dans quel ordre ?',
-      fait: ['16 défauts, leviers classés', 'Ordre de contrôle de notre expert caoutchouc', 'Enquête QQOQC et diagramme d’Ishikawa'],
+      fait: ['16 défauts, leviers classés', 'Ordre de contrôle de notre expert caoutchouc', 'Enquête QQOQCP et diagramme d’Ishikawa'],
       base: 'Référentiel construit avec notre expert caoutchouc',
       demo: 'enquete-caoutchouc.html', demoL: 'Diagnostiquer un défaut'
     },

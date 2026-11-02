@@ -135,3 +135,24 @@ body.revue #hist th.nv{border-left:0}
 .tfam.f-vul{background:#6d4f8f}.fams button.f-vul{border-left:4px solid #6d4f8f}
 body.revue.rc .emain::before{content:"Mode revue : le formalisme QQOQC repris du simulateur plastique est en bleu"}
 .dt.vul{border-left-color:#6d4f8f}
+/* v11 (retours Henry) : mesures intégrées à l'étape des causes */
+.mesh{margin:0 0 10px}
+#sit.sit{grid-template-columns:repeat(2,1fr)}
+#sit button.sc{padding:10px 14px}
+.mest{margin-top:12px}.mest table{width:100%;border-collapse:collapse;font-size:13.5px}
+.tw.mest th{background:var(--night);color:#fff;text-align:left;padding:8px 10px;font-weight:600!important;font-size:12.5px;font-family:var(--font)!important;letter-spacing:0!important;text-transform:none}
+.mest thead th small{display:block;font-weight:400;opacity:.75;font-size:11px}
+.mest thead th:first-child{width:26%}.mest td{white-space:nowrap}.mest td:last-child{white-space:normal}
+.mst{white-space:nowrap}
+.mest td,.mest tbody th{padding:8px 10px;border-top:1px solid var(--line);vertical-align:middle}
+.tw.mest tbody th{background:#fff;color:var(--ink);font-weight:600!important;font-size:13.5px;font-family:var(--font)!important;text-transform:none;letter-spacing:0!important}
+.mest tbody th small{display:block;font-weight:400;color:var(--muted);font-size:11.5px;margin-top:2px}
+.mest tr.lim td,.mest tr.lim th{background:#fff8ec}.mest tr.hors td,.mest tr.hors th{background:#fbecec}.mest tr.ok td,.mest tr.ok th{background:#f3faf6}
+.mest .mesin{width:92px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:14px}
+.mst{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;background:#eef0ea;color:var(--muted)}
+.mst.ok,.mst.okl{background:var(--goodbg);color:var(--good)}.mst.lim{background:#fde9c8;color:#7a4e0e}.mst.hors{background:#f6d4d4;color:#9b2c2c}
+.emsg.warnm{border-color:#b7791f;background:#fff8ec}
+#mes{margin:0 0 18px;padding:0 0 16px;border-bottom:1px solid var(--line)}
+#mes .emsg{margin-top:10px}
+.q.qp{border-top:1px solid var(--line)}
+@media(max-width:760px){#sit.sit{grid-template-columns:1fr}}
