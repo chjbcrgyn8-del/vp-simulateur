@@ -95,7 +95,7 @@
       ]
     }
   };
-  const SCEN = { prudent: [.5, 'Prudent'], central: [.75, 'Central'], cible: [1, 'Cible'] };
+  const SCEN = { prudent: [.5, 'Prudent'], central: [.75, 'Modéré'], cible: [1, 'Cible'] };
   const ON = { expert: 'VP Expert', predict: 'VP Predict' };
 
   const key = document.body.dataset.scan, C = CFG[key], root = document.getElementById('scan');
@@ -143,7 +143,7 @@
   </section>
   <section class="sc-hyp"><details><summary>Détail du calcul et hypothèses</summary>
     <table><thead><tr><th>Poste</th><th>Calcul</th><th>Perte</th><th>Objectif</th><th>Offre</th></tr></thead><tbody id="sc-hyp"></tbody></table>
-    <p class="sc-h">Gain = perte × objectif de réduction × facteur de scénario (prudent 50 %, central 75 %, cible 100 %). Fourchette affichée : ± 35 % tant que les chiffres n’ont pas été vérifiés sur site. Pour les postes « outils » et « chimie », la perte retenue est la part évitable du budget, égale à l’objectif.</p></details></section>
+    <p class="sc-h">Gain = perte × objectif de réduction × facteur de scénario (prudent 50 %, modéré 75 %, cible 100 %). Fourchette affichée : ± 35 % tant que les chiffres n’ont pas été vérifiés sur site. Pour les postes « outils » et « chimie », la perte retenue est la part évitable du budget, égale à l’objectif.</p></details></section>
   <section class="sc-cta"><div><p class="eyebrow">Et ensuite</p><h2>Le VP Scan sur site vérifie ces chiffres</h2>
     <p>Une intervention courte : vos arrêts, rebuts et retouches relevés sur vos ${C.unites}, la qualité de vos données évaluée, les ${C.unites} critiques désignées. Vos priorités chiffrées vous restent acquises, même sans suite.</p></div>
     <div class="sc-btns"><a class="btn primary" href="pilote.html#rdv">Préparer un VP Scan sur site</a><a class="btn ghost" href="${C.expert}">VP Expert · résoudre un défaut</a><a class="btn ghost" href="${C.predict}">VP Predict · voir une dérive</a></div></section>`;

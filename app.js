@@ -1,7 +1,7 @@
 (function(){
 const C=window.VellaCalc;
 const RUB=document.body.dataset.secteur==='caoutchouc';const S=JSON.parse(JSON.stringify(RUB?C.defaultsC:C.defaults));
-S.profile='type';S.sector=null;const KNOWN=new Set();const DEF0=JSON.parse(JSON.stringify(RUB?C.defaultsC:C.defaults));
+S.profile='custom';S.sector=null;const KNOWN=new Set(),ACC=new Set();let EXAMPLE=false;const DEF0=JSON.parse(JSON.stringify(RUB?C.defaultsC:C.defaults));
 const CORE=RUB?['changes','changeDuration','tech','org','proc','performance','reject','scrapCost','cureTime','contribution']:['changes','changeDuration','tech','org','proc','performance','reject','scrapCost','caHour','margin'];
 const SECTORS=['Automobile','Emballage','Médical','Biens de consommation','Électrique et électronique','Autre'];
 /* D : la fourchette reste à ± 35 % tant que les valeurs n'ont pas été vérifiées avec le client. Saisir des valeurs ne les valide pas. */
@@ -15,11 +15,11 @@ const PROFILES={
   grand:{label:'Grand site',n:30,d:'30 presses et plus, plusieurs équipes',dist:[9,12,6,3]}
 };
 if(RUB){PROFILES.petit={label:'Petit site',n:8,d:'Jusqu’à 8 presses caoutchouc',dist:[3,3,2,0]};PROFILES.type={label:'Site type',n:16,d:'16 presses, mouleur caoutchouc courant',dist:[5,6,4,1]};PROFILES.grand={label:'Grand site',n:25,d:'Plus de 20 presses, plusieurs équipes',dist:[8,9,6,2]};}
-const SL={prudent:'prudent',central:'central',cible:'ambitieux'};
+const SL={prudent:'prudent',central:'modéré',cible:'ambitieux'};
 const eur=v=>v==null?'—':Math.round(v).toLocaleString('fr-FR')+' €';
 const num=(v,d=0)=>v==null?'—':Number(v).toLocaleString('fr-FR',{maximumFractionDigits:d,minimumFractionDigits:d});
 
-const LIM={c77:[0,500],c63:[0,500],c0:[0,500],changeDuration:[1,1440],targetChange:[0,1440],tech:[0,100],org:[0,100],proc:[0,100],performance:[1,100],reject:[0,100],avoidable:[0,100],margin:[0,100],monetization:[0,100],hours:[1,8760]};
+const LIM={nTotal:[1,500],c77:[0,500],c63:[0,500],c0:[0,500],changeDuration:[1,1440],targetChange:[0,1440],tech:[0,100],org:[0,100],proc:[0,100],performance:[1,100],reject:[0,100],avoidable:[0,100],margin:[0,100],monetization:[0,100],hours:[1,8760]};
 const TIPS={
  changeDuration:'Du dernier bon produit de la série précédente au premier bon produit de la suivante, réglages et purges compris.',
  tech:'Pannes de presse, de moule ou de périphérique, en part des heures où la presse devait produire.',
@@ -38,8 +38,8 @@ const parse=t=>{t=String(t).replace(/[\s\u202f\u00a0]/g,'').replace(',','.');ret
 function check(k,v){if(v===null)return k==='caHour'?'':'Valeur requise.';if(!Number.isFinite(v))return 'Saisissez un nombre fini.';if(v<0)return 'La valeur doit être positive.';if(k==='reject'&&v>=100)return 'Le taux de rebuts doit être inférieur à 100 %.';if((k==='cureTime'||k==='cureTarget')&&v<=0)return 'Le temps de vulcanisation doit être strictement positif.';const l=LIM[k]||(k.startsWith('presses.')?[0,500]:null);if(l&&(v<l[0]||v>l[1]))return `Entre ${fmt(l[0])} et ${fmt(l[1])}.`;return '';}
 const steps=[
  {id:'intro'},
- {id:'parc',eyebrow:'Votre atelier',title:'Quelle est la taille de votre parc de presses ?',lead:'Choisissez le profil le plus proche. Vous pourrez détailler par classe de tonnage.',
-  choices:Object.entries(PROFILES).map(([k,p])=>({value:k,label:p.label,big:p.n+' presses',d:p.d})),choiceKey:'profile',
+ {id:'parc',eyebrow:'Votre atelier',title:'Combien de presses compte votre atelier ?',lead:'Saisissez votre nombre de presses. Vous pourrez ensuite détailler par classe de tonnage.',
+  fields:[F('nTotal','Nombre de presses','presses','Toutes les presses de l’atelier concerné, quelle que soit leur taille.')],
   more:'Détailler par classe de tonnage',
   moreFields:()=>S.presses.map((p,i)=>F('presses.'+i+'.n',p.label,'presses','Nombre de presses de cette classe.'))
     .concat([F('hours','Heures requises par presse','h/an','5 000 h correspond à deux équipes. Appliqué à toutes les classes.')])},
@@ -47,12 +47,12 @@ const steps=[
   choices:[{value:'none',label:'VP Expert seul',big:'Sans connexion',d:'Toutes les presses, aucun matériel'},{value:'critical',label:'Avec VP Predict',big:'3 presses critiques',d:'Là où les pertes se concentrent. Recommandé pour démarrer'},{value:'ready',label:'Avec VP Predict',big:'Presses connectables',d:'Euromap 77 et Euromap 63 seulement'},{value:'all',label:'Avec VP Predict',big:'Tout le parc',d:'Y compris les presses à mettre à niveau'}],choiceKey:'connMode',
   fields:[F('c77','Prêtes à connecter','presses','Sortie de données moderne : 0 € de matériel.',{tip:'<b>Euromap 77 (OPC UA)</b><br>Presses récentes, en général depuis 2016 à 2018 : écran tactile, prise réseau, option « OPC UA » ou « Euromap 77 » dans la commande. Exemples : Engel CC300, Arburg Gestica, KraussMaffei MC6.'}),
           F('c63','Connectables avec un adaptateur','presses','Environ 890 € par presse.',{tip:'<b>Euromap 63</b><br>Presses des années 2000 à 2015 : la commande sait exporter des fichiers de données, mais pas en OPC UA. Un boîtier adaptateur suffit. Exemples : Engel CC100 à CC200, Arburg Selogica récentes.'}),
-          F('c0','Sans sortie de données','presses','Mise à niveau de 3 000 à 6 000 € par presse.',{tip:'<b>Sans interface</b><br>Presses anciennes ou commandes sans port réseau : il faut ajouter des capteurs et un boîtier. Si vous ne savez pas, gardez les valeurs proposées, nous vérifierons avec vous.'})],cols:true},
+          F('c0','Sans sortie de données','presses','Mise à niveau de 3 000 à 6 000 € par presse.',{tip:'<b>Sans interface</b><br>Presses anciennes ou commandes sans port réseau : il faut ajouter des capteurs et un boîtier. Si vous ne savez pas, choisissez « Je ne sais pas » : nous vérifierons avec vous.'})],cols:true},
  {id:'changes',eyebrow:'Changements de série',title:'Combien de temps perdez-vous en changements de série ?',lead:'C’est souvent le premier gisement de capacité dans un atelier d’injection.',
   fields:[F('changes','Changements de série par an','par an','Total sur le parc. Exemple : 900 par an pour 20 presses.'),
           F('changeDuration','Durée moyenne d’un changement','min','Du dernier bon produit au premier bon produit suivant.'),
           F('targetChange','Durée visée après accompagnement','min','Objectif réaliste avec des réglages standardisés.')],cols:true},
- {id:'arrets',eyebrow:'Arrêts',title:'Quels autres arrêts pèsent sur vos presses ?',lead:'En pourcentage des heures requises. Si vous ne savez pas, gardez les valeurs proposées.',
+ {id:'arrets',eyebrow:'Arrêts',title:'Quels autres arrêts pèsent sur vos presses ?',lead:'En pourcentage des heures requises. Si vous ne savez pas, choisissez « Je ne sais pas ».',
   fields:[F('preventive','Maintenance préventive','h/an','Heures planifiées sur l’ensemble du parc.'),
           F('tech','Aléas techniques','%','Pannes, moules, périphériques.'),
           F('org','Aléas organisationnels','%','Attente matière, opérateur, planning.'),
@@ -68,35 +68,40 @@ const steps=[
           F('margin','Marge sur coûts variables','%','45 % est l’hypothèse prudente retenue, à valider avec vos chiffres.'),
           F('monetization','Part de la capacité gagnée réellement vendue','%','Si vos carnets sont pleins, montez vers 100 %.')],cols:false},
  {id:'scenario',eyebrow:'Ambition',title:'Quel scénario voulez-vous afficher ?',lead:'Le scénario prudent ne retient que la moitié des objectifs. C’est celui que nous recommandons pour une première discussion.',
-  choices:[{value:'prudent',label:'Prudent',big:'50 %',d:'des objectifs retenus. Recommandé'},{value:'central',label:'Central',big:'75 %',d:'des objectifs retenus'},{value:'cible',label:'Ambitieux',big:'100 %',d:'des objectifs atteints'}],choiceKey:'scenario'},
+  choices:[{value:'prudent',label:'Prudent',big:'50 %',d:'des objectifs retenus. Recommandé'},{value:'central',label:'Modéré',big:'75 %',d:'des objectifs retenus'},{value:'cible',label:'Ambitieux',big:'100 %',d:'des objectifs atteints'}],choiceKey:'scenario'},
  {id:'result'}
 ];
 
 if(RUB){const g=id=>steps.find(x=>x.id===id);
  Object.assign(g('changes'),{lead:'En moulage caoutchouc, un changement de moule demande aussi la remise en température : c’est un gros gisement.',fields:[F('changes','Changements de moule par an','par an','Total sur le parc. Exemple : 200 par an pour 16 presses.'),F('changeDuration','Durée moyenne d’un changement','min','Remise en température comprise, jusqu’à la première bonne pièce.'),F('targetChange','Durée visée après accompagnement','min','Objectif réaliste avec préchauffage et réglages standardisés.')]});
  Object.assign(g('qualite'),{fields:[F('performance','Performance (cadence réelle ÷ nominale)','%','88 % est un niveau courant en caoutchouc.'),F('reject','Rebuts en nombre de pièces','%','Pièces rebutées, hors ébavurage.'),F('scrapCost','Coût annuel des rebuts','€/an','Au coût variable : mélange, énergie, reprise. Sans les frais fixes.'),F('avoidable','Part de ce coût évitable par le réglage','%','Hors défauts du mélange ou du moule.')]});
- steps.splice(steps.findIndex(x=>x.id==='valeur'),0,{id:'cuisson',eyebrow:'Cuisson, mélange, ébavurage',title:'Où partent les minutes propres au caoutchouc ?',lead:'Trois postes que la plasturgie n’a pas. Si vous ne savez pas, gardez les valeurs proposées.',
+ steps.splice(steps.findIndex(x=>x.id==='valeur'),0,{id:'cuisson',eyebrow:'Cuisson, mélange, ébavurage',title:'Où partent les minutes propres au caoutchouc ?',lead:'Trois postes que la plasturgie n’a pas. Si vous ne savez pas, choisissez « Je ne sais pas ».',
   fields:[F('cureTime','Temps de vulcanisation actuel','min','Temps de cuisson dans le moule, par cycle.'),F('cureTarget','Temps de vulcanisation visé','min','À valider au rhéomètre (T90) et sur pièces.'),F('handling','Manutention par cycle','min','Ouverture, démoulage, chargement.'),F('mixIssues','Lots de mélange non conformes','par an','Lots qui bloquent ou font dériver la presse.'),F('mixHours','Heures perdues par lot','h','Arrêt, purge, réglages de reprise.'),F('deflashHours','Heures d’ébavurage','h/an','Main-d’œuvre de reprise des bavures.'),F('deflashCost','Coût horaire de l’ébavurage','€/h','Chargé.')],cols:true});
  Object.assign(g('valeur'),{lead:'En caoutchouc, saisissez directement la marge dégagée par une heure de presse.',fields:()=>[F('contribution','Marge par heure de presse','€/h','40 €/h est une valeur d’exemple, pas un repère sectoriel : à remplacer par votre chiffre.'),F('monetization','Part de la capacité gagnée réellement vendue','%','Si vos carnets sont pleins, montez vers 100 %.')]});
 }
 const TOUCH=(navigator.maxTouchPoints||0)>0||matchMedia('(pointer:coarse)').matches;let i=0;const app=document.getElementById('app'),prev=document.getElementById('prev'),next=document.getElementById('next'),bar=document.getElementById('bar'),cnt=document.getElementById('stepcount'),nav=document.getElementById('nav');
 
-function get(k){if(k==='hours')return S.presses[0].h;if(k.startsWith('presses.')){const[,a,b]=k.split('.');return S.presses[a][b];}return S[k];}
-function set(k,v){if(k==='hours'){S.presses.forEach(p=>p.h=v);return;}if(k.startsWith('presses.')){const[,a,b]=k.split('.');S.presses[a][b]=v;S.profile='custom';return;}S[k]=v;}
+function get(k){if(k==='nTotal')return S.presses.reduce((a,p)=>a+(+p.n||0),0);if(k==='hours')return S.presses[0].h;if(k.startsWith('presses.')){const[,a,b]=k.split('.');return S.presses[a][b];}return S[k];}
+function set(k,v){if(k==='nTotal'){const d=DEF0.presses.map(p=>p.n),T=d.reduce((a,b)=>a+b,0),n=Math.max(0,Math.round(v||0)),raw=d.map(x=>x/T*n),fl=raw.map(Math.floor);let r=n-fl.reduce((a,b)=>a+b,0);raw.map((x,k)=>[x-fl[k],k]).sort((a,b)=>b[0]-a[0]).forEach(([,k])=>{if(r>0){fl[k]++;r--;}});fl.forEach((x,k)=>S.presses[k].n=x);return;}if(k==='hours'){S.presses.forEach(p=>p.h=v);return;}if(k.startsWith('presses.')){const[,a,b]=k.split('.');S.presses[a][b]=v;S.profile='custom';return;}S[k]=v;}
 
-function fieldHTML(f){const v=get(f.key),kn=KNOWN.has(f.key);return `<div class="field"><div class="flab"><label for="f-${f.key}">${f.label}${(f.tip=f.tip||TIPS[f.key])?`<button type="button" class="tip" aria-label="Explication"><span class="tipbox" role="tooltip" data-t="${f.tip}"></span></button>`:''}</label><span class="fb ${kn?'mine':''}">${kn?'Votre valeur':'Valeur type'}</span></div>
- <div class="inputrow"><input id="f-${f.key}" data-k="${f.key}" type="text" inputmode="decimal" autocomplete="off" value="${fmt(v)}" placeholder="${f.placeholder||''}"><span class="unit">${f.unit}</span></div>
- <p class="hint">${f.hint}  <button type="button" class="idk" data-idk="${f.key}"${kn?'':' hidden'}>Je ne sais pas, revenir à la valeur type</button></p><p class="ferr" role="alert"></p></div>`;}
+const MOREK=()=>steps.flatMap(st=>st.moreFields?st.moreFields().map(f=>f.key):[]).filter(k=>k!=='hours'&&!k.startsWith('presses.'));
+const OPT=k=>k==='caHour'||k==='hours'||k.startsWith('presses.');
+function typeVal(k){if(k==='nTotal')return DEF0.presses.reduce((a,p)=>a+p.n,0);if(k==='hours')return DEF0.presses[0].h;if(k.startsWith('presses.')){const[,a,b]=k.split('.');return DEF0.presses[a][b];}if(['c77','c63','c0'].includes(k))return S[k];return DEF0[k];}
+const shown=k=>KNOWN.has(k)||ACC.has(k)||(k==='hours'||k.startsWith('presses.'))&&(KNOWN.has('nTotal')||ACC.has('nTotal'))||EXAMPLE;
+function fieldHTML(f){const v=shown(f.key)?get(f.key):null,kn=KNOWN.has(f.key),ac=ACC.has(f.key)&&!kn,tv=typeVal(f.key),opt=OPT(f.key);return `<div class="field"><div class="flab"><label for="f-${f.key}">${f.label}${(f.tip=f.tip||TIPS[f.key])?`<button type="button" class="tip" aria-label="Explication"><span class="tipbox" role="tooltip" data-t="${f.tip}"></span></button>`:''}</label><span class="fb ${kn?'mine':ac?'':'todo'}">${kn?'Votre valeur':ac||opt||EXAMPLE?'Valeur type':MOREK().includes(f.key)?'Valeur type si vide':'À renseigner'}</span></div>
+ <div class="inputrow"><input id="f-${f.key}" data-k="${f.key}" type="text" inputmode="decimal" autocomplete="off" value="${fmt(v)}" placeholder="${f.placeholder||(tv!=null?'ex. '+fmt(tv):'')}"><span class="unit">${f.unit}</span></div>
+ <p class="hint">${f.hint}  ${opt?'':`<button type="button" class="idk" data-idk="${f.key}"${kn||ac?' hidden':''}>Je ne sais pas : prendre la valeur type${tv!=null?' ('+fmt(tv)+' '+f.unit+')':''}</button>`}</p><p class="ferr" role="alert"></p></div>`;}
 
+let LASTI=-1;
 function render(){
- const st=steps[i],total=steps.length-2;
+ const st=steps[i],total=steps.length-2,entering=LASTI!==i;LASTI=i;
  bar.style.width=(i/(steps.length-1)*100)+'%';
  cnt.textContent=i>0&&i<steps.length-1?`${i} / ${total}`:'';
  prev.style.visibility=i===0?'hidden':'visible';
  nav.style.display='flex';
  if(st.id==='intro')return renderIntro();
  if(st.id==='result')return renderResult();
- if(st.id==='connect'){const n=S.presses.reduce((a,p)=>a+(+p.n||0),0);if((+S.c77||0)+(+S.c63||0)+(+S.c0||0)!==n){S.c77=Math.round(n*.5);S.c63=Math.round(n*.3);S.c0=n-S.c77-S.c63;['c77','c63','c0'].forEach(k=>KNOWN.delete(k));}}
+ if(st.id==='connect'&&entering){const n=S.presses.reduce((a,p)=>a+(+p.n||0),0);if((+S.c77||0)+(+S.c63||0)+(+S.c0||0)!==n){S.c77=Math.round(n*.5);S.c63=Math.round(n*.3);S.c0=n-S.c77-S.c63;['c77','c63','c0'].forEach(k=>{KNOWN.delete(k);ACC.delete(k);});}}
  let h=`<section class="screen${st.id==='connect'?' connect':''}"><p class="eyebrow"><b>${i}</b>${st.eyebrow}</p><h2>${st.title}</h2><p class="lead">${st.lead}</p>`;
  if(st.id==='connect'){h+=connectHTML();}else if(st.choices){h+=`<div class="choices">${st.choices.map((c,j)=>`<button type="button" class="choice" data-v="${c.value}" aria-pressed="${S[st.choiceKey]===c.value}"><span class="key">${String.fromCharCode(65+j)}</span><strong>${c.big}</strong><span class="n">${c.label}</span><span class="d">${c.d}</span></button>`).join('')}</div>`;}
  if(st.id==='parc')h+=`<div class="sect"><span class="sl">Votre secteur <i>(facultatif)</i></span><div class="chips">${SECTORS.map(x=>`<button type="button" class="chip" data-sec="${x}" aria-pressed="${S.sector===x}">${x}</button>`).join('')}</div></div>`;
@@ -104,15 +109,15 @@ function render(){
  if(fs&&st.id!=='connect')h+=`<div class="fields ${st.id==='connect'?'three':st.cols?'two':''}">${fs.map(fieldHTML).join('')}</div>`;
  if(st.moreFields){h+=`<details class="more"${S.profile==='custom'?' open':''}><summary>${st.more}</summary><div class="fields two">${st.moreFields().map(fieldHTML).join('')}</div></details>`;
    const n=S.presses.reduce((a,p)=>a+(+p.n||0),0),t=C.priceTier(Math.max(n,1),S.activity);h+=`<p class="note">${n} presses au total · abonnement VP Expert : ${eur(t.price)} HT par an (${t.label}).</p>`;}
- h+=`<div id="err"></div></section>`;h+=`<aside class="live" id="live" aria-live="polite"></aside>`;
+ h+=`<div id="err"></div></section>`;
  app.innerHTML=h;next.textContent=i===steps.length-2?'Voir mes gains':'Continuer';
  app.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{if(st.id==='connect'){S.connMode=b.dataset.v;connUpd();return;}S[st.choiceKey]=b.dataset.v;if(st.choiceKey==='profile'){PROFILES[b.dataset.v].dist.forEach((n,k)=>S.presses[k].n=n);}render();if(!st.moreFields&&!st.fields)setTimeout(go,180);});
  app.querySelectorAll('[data-sec]').forEach(b=>b.onclick=()=>{S.sector=S.sector===b.dataset.sec?null:b.dataset.sec;app.querySelectorAll('[data-sec]').forEach(x=>x.setAttribute('aria-pressed',S.sector===x.dataset.sec));});
  app.querySelectorAll('.tip').forEach(t=>t.onclick=e=>{e.preventDefault();const o=t.classList.contains('open');app.querySelectorAll('.tip.open').forEach(x=>x.classList.remove('open'));if(!o)t.classList.add('open');});
  if(st.id==='connect')connUpd();
- app.querySelectorAll('[data-idk]').forEach(b=>b.onclick=()=>{const k=b.dataset.idk;KNOWN.delete(k);set(k,k==='hours'?DEF0.presses[0].h:DEF0[k]);render();});
+ app.querySelectorAll('[data-idk]').forEach(b=>b.onclick=()=>{const k=b.dataset.idk;KNOWN.delete(k);ACC.add(k);set(k,typeVal(k));render();});
  app.querySelectorAll('input:not([type=checkbox])').forEach(inp=>inp.onblur=()=>{const v=parse(inp.value);if(!Number.isNaN(v)&&v!==null)inp.value=fmt(v);});
- app.querySelectorAll('input:not([type=checkbox])').forEach(inp=>inp.oninput=()=>{const v=parse(inp.value),e=check(inp.dataset.k,v),box=inp.closest('.field');box.querySelector('.ferr').textContent=e;box.classList.toggle('bad',!!e);if(!e){const k=inp.dataset.k;set(k,v);const d=k==='hours'?DEF0.presses[0].h:k.startsWith('presses.')?undefined:DEF0[k],same=d!==undefined&&(v===d||(v===null&&d==null));if(same)KNOWN.delete(k);else KNOWN.add(k);const fb=box.querySelector('.fb');fb.textContent=same?'Valeur type':'Votre valeur';fb.classList.toggle('mine',!same);box.querySelector('.idk').hidden=same;}live();if(st.id==='connect')connUpd();if(st.moreFields){const n=S.presses.reduce((a,p)=>a+(+p.n||0),0),t=C.priceTier(Math.max(n,1),S.activity);app.querySelector('.note').textContent=`${n} presses au total · abonnement VP Expert : ${eur(t.price)} HT par an (${t.label}).`;}});
+ app.querySelectorAll('input:not([type=checkbox])').forEach(inp=>inp.oninput=()=>{const v=parse(inp.value),e=check(inp.dataset.k,v),box=inp.closest('.field');box.querySelector('.ferr').textContent=e;box.classList.toggle('bad',!!e);if(!e||v===null){const k=inp.dataset.k;if(v===null){if(!OPT(k)){box.querySelector('.ferr').textContent='';box.classList.remove('bad');}set(k,typeVal(k));KNOWN.delete(k);}else{set(k,v);KNOWN.add(k);ACC.delete(k);}const mine=v!==null;const fb=box.querySelector('.fb');fb.textContent=mine?'Votre valeur':OPT(k)?'Valeur type':'À renseigner';fb.classList.toggle('mine',mine);fb.classList.toggle('todo',!mine&&!OPT(k));const ib=box.querySelector('.idk');if(ib)ib.hidden=mine;}live();if(st.id==='connect')connUpd();if(st.moreFields){const n=S.presses.reduce((a,p)=>a+(+p.n||0),0),t=C.priceTier(Math.max(n,1),S.activity);app.querySelector('.note').textContent=`${n} presses au total · abonnement VP Expert : ${eur(t.price)} HT par an (${t.label}).`;}});
  live();const first=app.querySelector('.fields:not(details .fields) input');if(first&&window.innerWidth>640&&!TOUCH)first.focus({preventScroll:true});
 }
 
@@ -126,7 +131,7 @@ function connUpd(){const n=S.presses.reduce((a,p)=>a+(+p.n||0),0),a=+S.c77||0,b=
  box.querySelectorAll('.choice').forEach(x=>x.onclick=()=>{S.connMode=x.dataset.v;connUpd();});const oc=document.getElementById('offerchk');if(oc){oc.style.display=S.connMode==='none'?'none':'';oc.innerHTML=`<p style="margin:0 0 6px;font-weight:600">Tarif VP Predict</p><p class="note" style="margin-top:6px">Réservé aux clients VP Expert. Pilote connecté de 3 mois sur 1 à 3 presses : <b>dès 15 000 € HT</b>, sous réserve de faisabilité technique. Ensuite, option dès <b>150 € HT par presse et par mois</b>, en complément de l’abonnement VP Expert. L’option ne démarre que si le pilote mesure un gain d’au moins 2 fois son prix. Matériel, licences tierces et raccordements spécifiques chiffrés séparément si nécessaire.</p>${S.connMode==='critical'?`<div class="fields" style="margin-top:10px"><div class="field" style="max-width:320px"><div class="flab"><label for="f-predictK">Presses sous VP Predict</label><span class="fb ${S.predictK?'mine':''}">${S.predictK?'Votre valeur':'Valeur type'}</span></div><div class="inputrow"><input id="f-predictK" type="text" inputmode="numeric" autocomplete="off" value="${kc}"><span class="unit">presses</span></div><p class="hint">Vos presses les plus critiques, parmi les ${a+b} connectables. 1 à 3 au pilote.</p></div></div>`:''}`;const pk=document.getElementById('f-predictK');if(pk)pk.onchange=()=>{S.predictK=Math.max(1,Math.round(+pk.value||3));connUpd();};}const es=document.getElementById('entryScan');if(es)es.onchange=()=>{S.entry=es.checked?'scan':'direct';connUpd();};const ak=document.getElementById('aidPilot');if(ak)ak.onchange=()=>{S.aidPilot=ak.checked;connUpd();};
  const r=C.calculate(JSON.parse(JSON.stringify(S)));const sum=document.getElementById('csum');
  if(r.errors&&r.errors.length||r.net==null){sum.innerHTML='';return;}
- sum.innerHTML=r.conn?`<b>Avec ce choix :</b> gain net ${eur(r.net)} par an (dont ${eur(r.net-r.netRA)} apportés par VP Predict, soit ${num(r.conn.ratio,1)} × son abonnement) · démarrage ${eur(r.upfront)}, dont ${r.scan?`VP Scan ${eur(r.scan-r.aidScan)}, `:''}pilote VP Expert ${eur(r.setup)}, pilote VP Predict ${eur(r.conn.poc)}${r.conn.aid?' après aide':''} et connexion ${eur(r.conn.hw[1])} · rentabilisé en ${r.payback?r.payback+' mois':'plus de 36 mois'}.`:`<b>Avec ce choix :</b> gain net ${eur(r.net)} par an · démarrage ${eur(r.upfront)}${r.scan?` dont VP Scan ${eur(r.scan-r.aidScan)}`:''}, pilote VP Expert compris · rentabilisé en ${r.payback?r.payback+' mois':'plus de 36 mois'}. Aucune connexion ni matériel.`;
+ sum.innerHTML=r.conn?`<b>Avec ce choix :</b> démarrage ${eur(r.upfront)}, dont ${r.scan?`VP Scan ${eur(r.scan-r.aidScan)}, `:''}pilote VP Expert ${eur(r.setup)}, pilote VP Predict ${eur(r.conn.poc)}${r.conn.aid?' après aide':''} et connexion ${eur(r.conn.hw[1])}. Le gain s’affiche à la fin, calculé avec vos chiffres.`:`<b>Avec ce choix :</b> démarrage ${eur(r.upfront)}${r.scan?` dont VP Scan ${eur(r.scan-r.aidScan)}`:''}, pilote VP Expert compris. Aucune connexion ni matériel. Le gain s’affiche à la fin, calculé avec vos chiffres.`;
  live();}
 
 function live(){const el=document.getElementById('live');if(!el)return;const r=C.calculate(JSON.parse(JSON.stringify(S)));
@@ -144,16 +149,19 @@ function saveSum(r){const a=document.getElementById('topoc');if(!a)return;const 
 function renderIntro(){
  app.innerHTML=`<section class="screen"><p class="eyebrow">Simulateur · ${RUB?'Moulage caoutchouc':'Injection thermoplastique'}</p>
  <h1>Combien votre atelier peut‑il gagner avec VP Expert ?</h1>
- <p class="lead">${RUB?'Huit':'Sept'} questions sur votre parc, vos arrêts et vos rebuts. Tout est prérempli avec des valeurs types : corrigez seulement ce que vous connaissez. La fourchette reste large (± 35 %) tant que les chiffres n’ont pas été vérifiés avec vous.</p>
+ <p class="lead">${RUB?'Huit':'Sept'} questions sur votre parc, vos arrêts et vos rebuts. Saisissez vos chiffres. Si vous ne connaissez pas une valeur, choisissez « Je ne sais pas » : une valeur type la remplace, signalée comme telle. Le gain ne s’affiche qu’à la fin, calculé avec vos réponses.</p>
  <div class="intro-meta"><span>3 minutes</span><span>Calcul dans votre navigateur, rien n’est envoyé</span><span>Formules visibles</span></div>
 <ol class="gflow" aria-label="Déroulé de l’estimation"><li><span class="gi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18M5 20V9l4 3V9l4 3V9l4 3v8M17 6h2v3"/></svg></span><b>Votre parc</b><small>presses, équipes, cadence</small></li><li><span class="gi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18l5-6 4 3 7-9M15 6h5v5"/></svg></span><b>Vos pertes</b><small>arrêts, rebuts, changements</small></li><li><span class="gi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M17 7H9.5a3 3 0 000 6h5a3 3 0 010 6H6"/></svg></span><b>Votre gain net</b><small>fourchette et retour sur investissement</small></li></ol>
- <div class="btns" style="display:flex;flex-wrap:wrap;gap:10px"><button class="btn primary" id="start" type="button">Commencer l’estimation</button><button class="btn ghost" id="express" type="button">Estimation express : voir un cas type en 10 secondes</button></div>
+ <div class="btns" style="display:flex;flex-wrap:wrap;gap:10px"><button class="btn primary" id="start" type="button">Commencer l’estimation</button><button class="btn ghost" id="express" type="button">Voir un exemple chiffré (atelier fictif)</button></div>
  <div class="shortcut"><span>Vous avez un défaut sur une presse en ce moment ?</span><a class="btn ghost" href="${RUB?'enquete-caoutchouc.html':'enquete.html'}">J’ai un défaut : trouver la cause</a></div></section>`;
- nav.style.display='none';document.getElementById('start').onclick=go;document.getElementById('express').onclick=()=>{i=steps.length-1;render();window.scrollTo(0,0);};
+ nav.style.display='none';document.getElementById('start').onclick=()=>{EXAMPLE=false;go();};document.getElementById('express').onclick=()=>{EXAMPLE=true;i=steps.length-1;render();window.scrollTo(0,0);};
 }
 
 function validateStep(){
- const st=steps[i];if(app.querySelector('.field.bad')){app.querySelector('.field.bad input').focus();return false;}if(!st.fields&&!st.moreFields)return true;
+ const st=steps[i];
+ const fs0=(typeof st.fields==='function'?st.fields():st.fields)||[];const miss=fs0.filter(f=>!OPT(f.key)&&!KNOWN.has(f.key)&&!ACC.has(f.key));
+ if(!EXAMPLE&&miss.length){miss.forEach(f=>{const b=document.getElementById('f-'+f.key)?.closest('.field');if(b){b.classList.add('bad');b.querySelector('.ferr').textContent='Saisissez votre valeur, ou choisissez « Je ne sais pas ».';}});document.getElementById('f-'+miss[0].key)?.focus();return false;}
+ if(app.querySelector('.field.bad')){app.querySelector('.field.bad input').focus();return false;}if(!st.fields&&!st.moreFields)return true;
  const r=C.calculate(JSON.parse(JSON.stringify(S)));
  if(r.errors&&r.errors.length&&i>=steps.length-3){document.getElementById('err').innerHTML=`<div class="err">${r.errors[0]}</div>`;return false;}
  return true;
@@ -261,7 +269,7 @@ function renderResult(){
   return {eco,op,cap,capH,lv};})();
  app.innerHTML=`<section class="screen wide">
  <p class="note">Modèle ${C.MODEL_VERSION} · Hypothèses illustratives : réduction qualité 20 %, part adressable 60 % par défaut. Les valeurs utilisées figurent dans le détail du calcul. Aucun gain garanti ; hypothèses à vérifier sur votre site.</p>
- <p class="printhead">Vella Partners · Estimation VP Expert · ${new Date().toLocaleDateString("fr-FR")}</p><p class="eyebrow">Votre estimation · scénario ${SL[s.scenario]}</p>
+ ${EXAMPLE?'<div class="err" style="background:#fff4e0;border-color:#e0a64a;color:#7a4b00"><b>Exemple fictif :</b> atelier type de '+r.n+' presses, aucune de vos valeurs. Pour votre propre estimation, revenez à l’accueil et commencez l’estimation.</div>':(ACC.size||MOREK().some(k=>!KNOWN.has(k))?'<p class="note"><b>Valeurs types utilisées</b> (« Je ne sais pas » ou champ laissé vide) : '+[...new Set([...ACC,...MOREK().filter(k=>!KNOWN.has(k))])].map(k=>{for(const st of steps){const fs=[...((typeof st.fields==='function'?st.fields():st.fields)||[]),...(st.moreFields?st.moreFields():[])];const x=fs.find(y=>y.key===k);if(x)return x.label.toLowerCase();}return k;}).join(', ')+'.</p>':'')}<p class="printhead">Vella Partners · Estimation VP Expert · ${new Date().toLocaleDateString("fr-FR")}</p><p class="eyebrow">Votre estimation · scénario ${SL[s.scenario]}</p>
  <div class="scen" role="group" aria-label="Scénario affiché en détail">${['prudent','central','cible'].map(k=>`<button type="button" data-s="${k}" aria-pressed="${s.scenario===k}">${SL[k][0].toUpperCase()+SL[k].slice(1)}</button>`).join('')}</div>
  <div class="hero h3">
   <div><p class="lbl">Gain net annuel, en année pleine</p><p class="big">${eur(r.net)}</p>
