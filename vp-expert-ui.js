@@ -48,7 +48,7 @@
  let step=1,lastFocus=null,lastSans=null;
  function focusHeading(){const target=groups[step-1].querySelector('h2');if(target){target.tabIndex=-1;target.focus({preventScroll:true})}}
  function go(next,focus=true){
-  step=Math.max(1,Math.min(4,next));groups.forEach((g,i)=>g.hidden=i!==step-1);
+  step=Math.max(1,Math.min(4,next));groups.forEach((g,i)=>g.hidden=i!==step-1);document.body.dataset.vpStage=String(step);
   nav.querySelectorAll('[data-vp-step]').forEach((b,i)=>{if(i===step-1)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current')});
   $('vp-prev').disabled=step===1;
   $('vp-next').hidden=step===4;

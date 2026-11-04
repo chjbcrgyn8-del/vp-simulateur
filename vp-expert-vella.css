@@ -306,3 +306,7 @@ body.vp-ui .tg.rex{background:#e8f3ee!important;color:#1f5e46!important;border:1
  body.vp-ui .ehero .vp-hero-meta,body.vp-ui .ehero .vp-eyebrow{display:none}
  body.vp-ui .vp-focus-toggle{margin-top:8px;min-height:44px}
 }
+/* tablette tactile : après le choix du défaut, le bandeau cède la place au travail (étapes 2 à 4) */
+@media (pointer:coarse){
+ body.vp-ui[data-vp-stage="2"] .ehero,body.vp-ui[data-vp-stage="3"] .ehero,body.vp-ui[data-vp-stage="4"] .ehero{display:none}
+}
