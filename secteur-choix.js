@@ -63,6 +63,21 @@
       var l = document.getElementById('pick-l'); if (l) l.textContent = 'Votre métier';
       var p = document.createElement('p'); p.className = 'pick-ch'; p.style.margin = '10px 0 0'; p.appendChild(mk('Changer de secteur')); pg.parentNode.insertBefore(p, pg.nextSibling);
     }
+    /* Accueil : chiffres et sources du seul secteur choisi */
+    if (name === 'index') {
+      var keep = function (e) { return (e.getAttribute('data-s') || '').split(' ').indexOf(K[sec]) > -1; };
+      var pr = document.querySelector('.proof');
+      if (pr) {
+        var shown = 0;
+        pr.querySelectorAll(':scope>div[data-s]').forEach(function (d) { if (keep(d)) shown++; else d.style.setProperty('display', 'none', 'important'); });
+        if (!shown) pr.style.setProperty('display', 'none', 'important');
+      }
+      var src = document.querySelector('.kpsrc');
+      if (src) {
+        var links = [].slice.call(src.querySelectorAll('a[data-s]')).filter(keep);
+        if (links.length) { src.innerHTML = 'Sources publiques : '; links.forEach(function (a, i) { if (i) src.appendChild(document.createTextNode(' · ')); src.appendChild(a); }); }
+      }
+    }
     /* Savoir technique : on ouvre directement le savoir du secteur choisi */
     if (name === 'savoir') {
       if (sec === 1) { var c = document.querySelector('[data-sec="c"]'); if (c) c.click(); }
