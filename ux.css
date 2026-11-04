@@ -4,7 +4,7 @@
 
 /* ---------- Accès rapide au contenu (clavier, lecteurs d'écran) ---------- */
 .skip{position:absolute;left:12px;top:-64px;z-index:100;padding:12px 18px;border-radius:8px;
- background:#0a1320;color:#fff;border:1px solid #e3b47c;font:600 14px/1 inherit;text-decoration:none;transition:top .15s}
+ background:#0a1320;color:#fff;border:1px solid #e3b47c;font:600 14px/1.2 var(--font,system-ui),sans-serif;text-decoration:none;transition:top .15s}
 .skip:focus{top:12px;outline:2px solid #e8841f;outline-offset:2px}
 body a.skip{color:#fff}
 main:focus{outline:none}
