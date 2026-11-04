@@ -1,7 +1,7 @@
 Polices hébergées sur le site (aucune requête vers un service tiers pour ces deux familles)
 
 - IBM Plex Mono — © IBM Corp., licence SIL Open Font License 1.1 (https://openfontlicense.org)
-- Instrument Serif — © Instrument, licence SIL Open Font License 1.1 (https://openfontlicense.org)
+- Geist — © The Geist Project Authors (Vercel), licence SIL Open Font License 1.1
 
 Sous-ensembles latin et latin étendu au format WOFF2, obtenus depuis Google Fonts le 4 novembre 2026. Le texte de la licence OFL 1.1 est joint (OFL.txt, identique pour toutes les polices sous cette licence).
 

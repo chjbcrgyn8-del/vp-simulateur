@@ -1,6 +1,6 @@
 /* vp-expert-vella.css : structure de vp-expert-ui.css (livraison du 4 novembre 2026) avec l'identité Vella Partners :
-   crème, graphite, cuivre, Instrument Serif. Dérivé de la feuille violette, qui n'est plus chargée par les 4 enquêtes. */
-body.vp-ui{--bg:#f5f2eb;--panel:#fffdf9;--ink:#0b111c;--muted:#566273;--line:#e4ded2;--line2:#cfc6b6;--navy:#14243b;--accent:#9a5f28;--soft:#f4e9db;--night:#0a0f19;--night2:#111a29;--copper:#b47a3e;--orange:#c98a4b;--champ1:#e3b47c;--champ2:#b77a3d;--font:Switzer,'Helvetica Neue',system-ui,Arial,sans-serif;--serif:'Instrument Serif','Cormorant Garamond',Georgia,serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;--r:6px;--r-lg:8px;background:#f5f2eb;color:#0b111c;font:15px/1.65 var(--font);margin:0}
+   crème, graphite, cuivre, Geist pour les titres. Dérivé de la feuille violette, qui n'est plus chargée par les 4 enquêtes. */
+body.vp-ui{--bg:#f5f2eb;--panel:#fffdf9;--ink:#0b111c;--muted:#566273;--line:#e4ded2;--line2:#cfc6b6;--navy:#14243b;--accent:#9a5f28;--soft:#f4e9db;--night:#0a0f19;--night2:#111a29;--copper:#b47a3e;--orange:#c98a4b;--champ1:#e3b47c;--champ2:#b77a3d;--font:Switzer,'Helvetica Neue',system-ui,Arial,sans-serif;--serif:'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;--r:6px;--r-lg:8px;background:#f5f2eb;color:#0b111c;font:15px/1.65 var(--font);margin:0}
 body.vp-ui *{box-sizing:border-box}
 body.vp-ui [hidden]{display:none!important}
 body.vp-ui .top{position:relative!important;top:auto!important;transform:none!important;background:#090a10!important;border-bottom:1px solid #131d2b!important;padding:20px 4vw!important;gap:24px;max-width:none;flex-wrap:wrap}
@@ -185,7 +185,7 @@ body.vp-ui .skip:focus{transform:none}
 
 /* ===== Identité Vella Partners =====
    Mêmes jetons que signature.css et industrie.css : crème #f5f2eb, papier #fffdf9, encre #0b111c, nuit #0a0f19,
-   cuivre #9a5f28, champagne #e3b47c ; titres en Instrument Serif. Surfaces claires pour travailler, graphite pour
+   cuivre #9a5f28, champagne #e3b47c ; titres en Geist. Surfaces claires pour travailler, graphite pour
    le bandeau, le dossier et les blocs d'accent, comme sur l'accueil. */
 
 /* fond : crème et quadrillage fin, comme le reste du site */
