@@ -297,3 +297,12 @@ body.vp-ui .vp-rex-btn{display:inline-flex;align-items:center;min-height:44px;ma
 body.vp-ui .vp-rex-btn:hover{background:#1a2638}
 body.vp-ui .vp-rex-note{display:block;color:#566273;font-size:13px;line-height:1.5;max-width:60ch}
 body.vp-ui .tg.rex{background:#e8f3ee!important;color:#1f5e46!important;border:1px solid #bfdccc}
+
+/* iPad et tablettes tactiles : le premier défaut doit apparaître sans défiler */
+@media (pointer:coarse){
+ body.vp-ui .emain{padding-top:12px!important}
+ body.vp-ui .ehero{margin-bottom:12px!important;padding:16px clamp(20px,4vw,40px) 20px!important}
+ body.vp-ui h1{font-size:clamp(30px,3.6vw,42px)!important;line-height:1.05!important}
+ body.vp-ui .ehero .vp-hero-meta,body.vp-ui .ehero .vp-eyebrow{display:none}
+ body.vp-ui .vp-focus-toggle{margin-top:8px;min-height:44px}
+}
