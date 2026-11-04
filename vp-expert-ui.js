@@ -48,7 +48,7 @@
  let step=1,lastFocus=null,lastSans=null;
  function focusHeading(){const target=groups[step-1].querySelector('h2');if(target){target.tabIndex=-1;target.focus({preventScroll:true})}}
  function go(next,focus=true){
-  step=Math.max(1,Math.min(4,next));groups.forEach((g,i)=>g.hidden=i!==step-1);
+  step=Math.max(1,Math.min(4,next));groups.forEach((g,i)=>g.hidden=i!==step-1);document.body.dataset.vpStage=String(step);
   nav.querySelectorAll('[data-vp-step]').forEach((b,i)=>{if(i===step-1)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current')});
   $('vp-prev').disabled=step===1;
   $('vp-next').hidden=step===4;
@@ -68,8 +68,24 @@
     mesures et le tableau de saisie suivent. Les deux autres modes (avec les mesures, une dérive) commencent par une saisie
     nécessaire et gardent leur ordre. On déplace les nœuds eux-mêmes, pas seulement leur affichage : l'ordre de tabulation
     suit l'ordre visuel. Rien ici ne touche aux règles ni aux classements des moteurs. */
+
+ /* Plastique : même principe, mais les cartes de situation et le tableau des mesures sont dans #mes, à l'intérieur de #s3.
+    En relevé à la main, #mes passe après la liste des leviers (#res). Avec VP Predict ou en dérive, il reste en tête. */
+ function arrangePlastic(s3,res){
+  const mes=$('mes'),sit=$('sit');
+  const sans=!!sit.querySelector('[data-b="sans"][aria-pressed="true"]');
+  const mesFirst=!!(mes.compareDocumentPosition(res)&Node.DOCUMENT_POSITION_FOLLOWING);
+  if(sans&&mesFirst)res.after(mes);
+  if(!sans&&!mesFirst)s3.insertBefore(mes,res);
+  if(lastSans!==null&&lastSans!==sans&&!groups[2].hidden){
+   (sans?res:mes).scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+   sit.querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});
+  }
+  lastSans=sans;
+ }
  function arrangeControls(){
   const s1=$('s1'),s3=$('s3'),res=$('res');
+  if(!s1&&s3&&res&&$('mes')&&$('sit')){arrangePlastic(s3,res);return}
   if(!s1||!s3||!res)return;
   const sans=!!s1.querySelector('[data-b="sans"][aria-pressed="true"]');
   const stage=groups[2],table=res.querySelector(':scope > .vpmes');
