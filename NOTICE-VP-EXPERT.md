@@ -110,3 +110,7 @@ Les fichiers de cette livraison ont été appliqués tels quels sur `main` (comm
 Contrôles refaits après intégration : `tests/regression.py` (937 combinaisons rendues, 34 imports invalides refusés, 4 parcours PASS) et `tests/responsive.py` (12 vues, sans erreur ni débordement) ; contraste, textes sous 12 px et débordements mesurés sur les 4 étapes de chaque parcours, en 1 440 et 390 px.
 
 La mention « aucune publication » ci-dessus décrit l'état de la livraison, avant cette intégration.
+
+## Export PDF (4 novembre 2026)
+
+Les synthèses et dossiers se téléchargent aussi en PDF, en plus du `.md` et du JSON : « Synthèse (PDF) » et « Dossier complet (PDF) » dans la section Synthèse, « Dossier complet (PDF) » dans la barre « Dossier VP Expert ». Le contenu est celui du téléchargement `.md` ; le PDF est généré dans le navigateur par `vp-expert-pdf.js`, sans bibliothèque ni service externe (A4, polices standard, adresses des sources cliquables, en-tête et pagination). Aucune donnée ne quitte la page.
