@@ -9,7 +9,7 @@ const CONF={},HIST=[];
 /* Révision retours Henry (2026-11-02) : les mesures sont intégrées à l'étape des causes (consigne, valeur, moyenne des OF précédents, tendance) ;
    la cause peut être ajoutée par l'atelier ; un retour d'expérience mémorisé localement remonte la cause lors des enquêtes suivantes.
    Constats multiples, corrigeables ; aucune causalité déduite d'un simple clic. */
-const REC={},OK={},NUM={};
+const REC={},OK={},NV={},NUM={};
 const base=()=>S.br==='derive'?'d|'+S.param:'p|'+S.def;
 const KEY=()=>base()+'#'+(NUM[base()]||0);
 const isPF=()=>POSTFAB.includes(S.qui);
@@ -130,8 +130,9 @@ function card(c,i,st,nx){const cf=CONF[c.id]||0;
  let act;
  if(st==='nc')act=`<div class="cst nc nv"><b>Écart observé :</b> hypothèse à vérifier, cause non démontrée ; résultat après action et validation qualité nécessaires. Aucun apprentissage à partir de ce clic. <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
  else if(st==='ok')act=`<div class="cst ok nv"><b>Contrôle conforme :</b> hypothèse non étayée par ce contrôle. <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
- else act=`<div class="acts nv"><button type="button" class="btn sm bnc" data-nc="${c.id}">Non conforme après contrôle</button><button type="button" class="btn ghost sm bok" data-ok="${c.id}">Conforme après contrôle</button></div>`;
- return `<div class="cc${i===0?' best':''}${st==='ok'?' done':''}${st==='lock'?' lock':''}${st==='nc'?' found':''}${nx?' next':''}${c.rx?' rex':''}" data-id="${c.id}" data-name="${esc(c.n)}"><div class="ch"><span class="rk">${i+1}</span><b>${nx?'<span class="tg nxt nv">Contrôle suivant</span>':''}${esc(c.n)}${TAG[c.t]||''}${c.src==='add'?'<span class="tg add" title="Cause issue des tableaux de dépannage publiés, recoupée par Vella Partners. Relecture par l’expert plasturgie partenaire en cours.">Guide de dépannage</span>':''}${c.rx?'<span class="tg rex" title="Retour déclaré dans ce navigateur ; aucune validation experte et aucun bonus de classement">Retour d’expérience</span>':''}</b><span class="ind" title="Score de pertinence, pas une probabilité">${c.pct}<small> pts</small></span></div><div class="bar"><i style="width:${c.pct}%"></i></div><p><span class="fam">${esc(c.z)}</span> <b>Contrôle :</b> ${esc(c.ctl)}</p><p class="why">${whyText(c)}${cf?` · <b>Écart observé dans cette démonstration, cause non démontrée</b>`:''}</p>${act}</div>`;}
+ else if(st==='nv')act=`<div class="cst unv nv"><b>Non vérifié :</b> contrôle impossible, non réalisé ou non concluant. Aucune conclusion tirée : l’hypothèse reste à examiner. <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
+ else act=`<div class="acts nv"><button type="button" class="btn sm bnc" data-nc="${c.id}">Non conforme après contrôle</button><button type="button" class="btn ghost sm bok" data-ok="${c.id}">Conforme après contrôle</button><button type="button" class="btn ghost sm bnv" data-nv="${c.id}" title="Contrôle impossible, non réalisé ou non concluant : aucune conclusion n’est tirée">Non vérifié</button></div>`;
+ return `<div class="cc${i===0?' best':''}${st==='ok'?' done':''}${st==='lock'?' lock':''}${st==='nc'?' found':''}${st==='nv'?' unver':''}${nx?' next':''}${c.rx?' rex':''}" data-id="${c.id}" data-name="${esc(c.n)}"><div class="ch"><span class="rk">${i+1}</span><b>${nx?'<span class="tg nxt nv">Contrôle suivant</span>':''}${esc(c.n)}${TAG[c.t]||''}${c.src==='add'?'<span class="tg add" title="Cause issue des tableaux de dépannage publiés, recoupée par Vella Partners. Relecture par l’expert plasturgie partenaire en cours.">Guide de dépannage</span>':''}${c.rx?'<span class="tg rex" title="Retour déclaré dans ce navigateur ; aucune validation experte et aucun bonus de classement">Retour d’expérience</span>':''}</b><span class="ind" title="Score de pertinence, pas une probabilité">${c.pct}<small> pts</small></span></div><div class="bar"><i style="width:${c.pct}%"></i></div><p><span class="fam">${esc(c.z)}</span> <b>Contrôle :</b> ${esc(c.ctl)}</p><p class="why">${whyText(c)}${cf?` · <b>Écart observé dans cette démonstration, cause non démontrée</b>`:''}</p>${act}</div>`;}
 function draw3(){
  const d=S.br==='derive';let h='',list;
  $('t3').textContent=d?'Origines à contrôler, dans l’ordre':'Mesures et causes à contrôler';
@@ -147,7 +148,7 @@ function draw3(){
  list.sort((a,b)=>b.s-a.s||(CONF[b.id]||0)-(CONF[a.id]||0));
  const ans=['ou','quand','freq','terme','vis','etendue'].filter(k=>S[k]).length;
  const K=KEY(),R=REC[K]||{},O=OK[K]||{};
- const stOf=c=>R[c.id]?'nc':O[c.id]?'ok':'open';
+ const stOf=c=>R[c.id]?'nc':O[c.id]?'ok':((NV[K]||{})[c.id]?'nv':'open');
  const nxi=list.findIndex(c=>stOf(c)==='open');
  const nShow=Math.max(5,nxi+1,...list.map((c,i)=>R[c.id]?i+1:0));
  const nOk=Object.keys(O).length;
@@ -157,6 +158,7 @@ function draw3(){
    :nOk?`<div class="emsg nv">${nOk} contrôle${nOk>1?'s':''} conforme${nOk>1?'s':''}. ${nxi>=0?'Passez au contrôle suivant, n° '+(nxi+1)+'.':'Aucune hypothèse étayée : solliciter une revue métier, sans conclure à une cause.'}</div>`
    :'<p class="sl nv">Contrôlez dans l’ordre proposé et indiquez chaque constat. Plusieurs écarts peuvent être relevés ; la disparition du défaut doit être suivie et la conclusion validée par la qualité.</p>';
  }
+ if(ans>=2&&list.length&&Object.keys(NV[K]||{}).length)head+=`<p class="sl nv unvn"><b>${Object.keys(NV[K]||{}).length} contrôle${Object.keys(NV[K]||{}).length>1?'s':''} non vérifié${Object.keys(NV[K]||{}).length>1?'s':''}</b> : à reprendre. Aucune conclusion n’est tirée d’un contrôle non réalisé.</p>`;
  const shown=S.showall?list:list.filter((c,i)=>i<nShow||c.src==='atelier');
  h+=ans<2?'<p class="sl">Répondez à au moins deux questions de l’enquête pour classer les causes.</p>':list.length?head+'<div class="cl">'+shown.map(c=>{const i=list.indexOf(c);return card(c,i,stOf(c),i===nxi)}).join('')+'</div>':'<p class="sl">Aucune cause ne correspond encore à ces réponses : ajoutez-la ci-dessous, elle sera proposée à l’expert.</p>';
  if(ans>=2&&list.length>shown.length)h+=`<p class="sl">${list.length-shown.length} autre${list.length-shown.length>1?'s':''} cause${list.length-shown.length>1?'s':''} possible${list.length-shown.length>1?'s':''}, voir le diagramme en bas de page. <button type="button" class="lk" id="showall">Afficher toutes les causes</button></p>`;
@@ -174,13 +176,14 @@ function draw3(){
  if(!d){$('ihint').textContent=S.br==='conforme'||Object.keys(S.mes).length?'Les causes grisées sont rendues moins probables par des mesures conformes et stables, sans être exclues. Les autres sont colorées selon le nombre d’indices.':'Sans mesures, toutes les causes restent possibles.';
   const C=cands();$('ititle').textContent='Diagramme d’Ishikawa · '+S.def.toLowerCase();$('ishi').innerHTML=['Matière','Outillage','Moyen','Paramètres'].map(B=>`<section><h3>${B}</h3><ul>`+C.filter(c=>c.b===B).map(c=>{const n=why(c.ind).length,ms=c.t==='mes'&&c.p&&MES[c.p]?mstat(c.p,dirOf(c.n)):null,x=ms&&ms.st==='ok'&&ms.trend!=='defav';return `<li class="${x?'x':n>=3?'s3':n===2?'s2':n===1?'s1':''}">${esc(c.n)}</li>`}).join('')+'</ul></section>').join('');}
 }
-function drawH(){$('hist').hidden=!HIST.length;$('hb').innerHTML=HIST.map((r,ix)=>`<tr class="${r.r}"><td>${r.t}</td><td>${esc(r.d)}</td><td>${esc(r.c)}</td><td><span class="res ${r.r}">${r.r==='nc'?'Écart observé : cause non démontrée':'Contrôle conforme : hypothèse non étayée'}</span></td><td><button type="button" class="lk" data-hfix="${ix}">Corriger</button></td></tr>`).join('');}
+function drawH(){$('hist').hidden=!HIST.length;$('hb').innerHTML=HIST.map((r,ix)=>`<tr class="${r.r==='nv'?'unv':r.r}"><td>${r.t}</td><td>${esc(r.d)}</td><td>${esc(r.c)}</td><td><span class="res ${r.r==='nv'?'unv':r.r}">${r.r==='nc'?'Écart observé : cause non démontrée':r.r==='nv'?'Non vérifié : aucune conclusion':'Contrôle conforme : hypothèse non étayée'}</span></td><td><button type="button" class="lk" data-hfix="${ix}">Corriger</button></td></tr>`).join('');}
 function undo(ix){const r=HIST[ix];if(!r)return;HIST.splice(ix,1);
  if(r.r==='nc'){if(REC[r.key])delete REC[r.key][r.id];}
+ else if(r.r==='nv'){if(NV[r.key])delete NV[r.key][r.id];}
  else if(OK[r.key])delete OK[r.key][r.id];}
-function record(id,res){const K=KEY();REC[K]=REC[K]||{};OK[K]=OK[K]||{};if(REC[K][id]||OK[K][id])return;
+function record(id,res){const K=KEY();REC[K]=REC[K]||{};OK[K]=OK[K]||{};NV[K]=NV[K]||{};if(REC[K][id]||OK[K][id]||NV[K][id])return;
  const c=/^d\d/.test(id)?DRV[+id.slice(1)]:cands().find(x=>x.id===id);if(!c)return;
- if(res==='nc')REC[K][id]=1;else OK[K][id]=1;
+ if(res==='nc')REC[K][id]=1;else if(res==='nv')NV[K][id]=1;else OK[K][id]=1;
  HIST.unshift({key:K,id,r:res,t:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),d:S.br==='derive'?lab(PROC,S.param)+' dérive':S.def,c:c.n});}
 function render(){draw0();draw1();draw2();draw3();drawH();window.dispatchEvent(new Event('vp:enquete-render'));}
 document.addEventListener('click',e=>{
@@ -193,6 +196,7 @@ document.addEventListener('click',e=>{
  if(b.dataset.drift){S.br='derive';S.param=b.dataset.drift;render();$('s3').scrollIntoView({behavior:'smooth'});return}
  if(b.dataset.go){S.br=b.dataset.go;render();$('s3').scrollIntoView({behavior:'smooth'});return}
  if(b.dataset.nc){record(b.dataset.nc,'nc');render();return}
+ if(b.dataset.nv){record(b.dataset.nv,'nv');render();const n=document.querySelector('.cc.next');if(n)n.scrollIntoView({behavior:'smooth',block:'center'});return}
  if(b.dataset.ok){record(b.dataset.ok,'ok');render();const n=document.querySelector('.cc.next');if(n)n.scrollIntoView({behavior:'smooth',block:'center'});return}
  if(b.dataset.fix){const K=KEY(),ix=HIST.findIndex(r=>r.key===K&&r.id===b.dataset.fix);undo(ix);render();return}
  if(b.dataset.hfix){undo(+b.dataset.hfix);render();return}
@@ -210,7 +214,7 @@ document.addEventListener('change',e=>{if(e.target.matches('.mesin')){clearTimeo
 $('dq').addEventListener('input',e=>{S.qd=e.target.value;draw0()});
 if(/[?&]revue\b/.test(location.search))document.body.classList.add('revue');
 render();
-window.VPConsolidation?.bind({sector:'TP',S,REC,OK,NUM,HIST,render,cands,KEY,
+window.VPConsolidation?.bind({sector:'TP',S,REC,OK,NV,NUM,HIST,render,cands,KEY,
  /* Lecture des mesures pour la synthèse */
  measures:()=>S.br==='derive'?[]:mesCauses().map(({p,dir,n})=>{const s=mstat(p,dir),m=MES[p];return {name:lab(PROC,p),unit:m.u,set:fmt(p,m.c)+' ± '+fmt(p,m.t),cur:s.cur===undefined?null:fmt(p,s.cur),avg:s.avg===undefined?null:fmt(p,s.avg),status:s.st,trend:s.trend,adverse:!!s.adverse,txt:s.st==='none'?s.txt:s.txt+(s.trend==='defav'?', tendance défavorable':'')}}),
  defectLabel:()=>S.br==='derive'?lab(PROC,S.param)+' (dérive)':S.def,

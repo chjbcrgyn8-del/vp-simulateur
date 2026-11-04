@@ -310,3 +310,10 @@ body.vp-ui .tg.rex{background:#e8f3ee!important;color:#1f5e46!important;border:1
 @media (pointer:coarse){
  body.vp-ui[data-vp-stage="2"] .ehero,body.vp-ui[data-vp-stage="3"] .ehero,body.vp-ui[data-vp-stage="4"] .ehero{display:none}
 }
+
+/* contrôle « non vérifié » : ni conforme ni non conforme, aucune conclusion */
+body.vp-ui .acts .bnv{background:#fffdf9!important;color:#3d4756!important;border:1px dashed #7f8a9a!important}
+body.vp-ui .cst.unv{background:#eef0f3;border-left:3px solid #7f8a9a;color:#2c3645;font-size:14px}
+body.vp-ui .cc.unver{border-left:3px solid #7f8a9a}
+body.vp-ui .res.unv{background:#eef0f3;color:#2c3645}
+body.vp-ui .unvn{color:#3d4756}
