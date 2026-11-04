@@ -53,3 +53,6 @@ body.vp-ui .expert-muted{color:#4a5468!important}
  body.vp-ui .vp-case button,body.vp-ui .vp-case button span,
  body.vp-ui .vp-reference-note{font-size:12px!important}
 }
+
+/* téléphone étroit : le fil des secteurs montre les trois offres sans défilement (le nom du secteur est déjà dans le titre) */
+@media(max-width:430px){body.vp-ui .sx-bs,body.vp-ui .sx-sep{display:none}}
