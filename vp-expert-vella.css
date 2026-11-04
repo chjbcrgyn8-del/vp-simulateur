@@ -329,3 +329,12 @@ body.vp-ui .vp-demo-b .vp-demo-p{background:linear-gradient(180deg,#e3b47c,#b77a
 body.vp-ui .vp-demo-hl{outline:3px solid #e8841f!important;outline-offset:6px;border-radius:8px;transition:outline-color .2s}
 @media(max-width:560px){body.vp-ui .vp-demo{padding:12px 14px 14px}body.vp-ui .vp-demo-t{font-size:19px}body.vp-ui .vp-demo-x{font-size:14px}body.vp-ui.vp-demo-on{padding-bottom:300px}}
 @media print{body.vp-ui .vp-demo,body.vp-ui .vp-demo-launch{display:none!important}}
+
+/* schémas illustratifs des défauts (pas des photos) */
+body.vp-ui .dt.has-sch{position:relative;padding-right:92px!important}
+body.vp-ui .dt-sch{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:70px;pointer-events:none}
+body.vp-ui .dt-sch svg{display:block;width:100%;height:auto}
+body.vp-ui .vp-schema{margin:14px 0 4px;padding:10px 12px 8px;background:#fffdf9;border-radius:8px}
+body.vp-ui .vp-schema svg{display:block;width:100%;max-width:170px;height:auto;margin:0 auto}
+body.vp-ui .vp-schema figcaption{margin:6px 0 0;text-align:center;font-size:12px;line-height:1.4;color:#566273}
+@media print{body.vp-ui .dt-sch,body.vp-ui .vp-schema{display:none}}
