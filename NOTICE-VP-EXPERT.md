@@ -122,3 +122,9 @@ Les synthèses et dossiers se téléchargent aussi en PDF, en plus du `.md` et d
 ## Contrôle « non vérifié » (5 novembre 2026)
 
 Chaque contrôle peut maintenant être marqué « Non vérifié » (contrôle impossible, non réalisé ou non concluant), en plus de « Conforme » et « Non conforme ». Ce troisième état ne change ni le classement, ni les causes retenues ; il apparaît dans le journal, la synthèse (« Reprendre le contrôle non vérifié ») et l'export JSON (champ `native.unverified`, facultatif : les anciens exports restent lisibles). « Corriger la saisie » l'annule. Pour le contrôle de moyen de mesure (décolletage, traitement de surface), « non vérifié » laisse les corrections verrouillées.
+
+## Démonstration guidée de 90 secondes (5 novembre 2026)
+
+Le bouton « Démonstration guidée · 90 s » (sous les étapes de chaque enquête, ou lien `?demo=1` depuis les pages secteur) rejoue, sur un cas fictif et avec les vrais boutons, le parcours complet : défaut, contexte, contrôles (conforme, non conforme, non vérifié), essai et résultat, mémoire d'atelier, synthèse. Avance automatique (environ 80 secondes), pause, étape suivante, Échap pour quitter ; sans animation pour les personnes qui demandent moins de mouvement. Rien n'est enregistré dans la mémoire d'atelier. Script : `vp-expert-demo.js` ; aucun moteur modifié.
+
+Retours d'Henry (introduction trop lourde) : le bandeau d'introduction est compact à l'étape 1 et réduit au titre (lisible par les lecteurs d'écran) aux étapes 2 à 4 ; la note « Démonstration : consignes et tolérances d'exemple » passe en pied d'étape.

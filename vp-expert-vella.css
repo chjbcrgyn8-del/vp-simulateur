@@ -298,22 +298,34 @@ body.vp-ui .vp-rex-btn:hover{background:#1a2638}
 body.vp-ui .vp-rex-note{display:block;color:#566273;font-size:13px;line-height:1.5;max-width:60ch}
 body.vp-ui .tg.rex{background:#e8f3ee!important;color:#1f5e46!important;border:1px solid #bfdccc}
 
-/* iPad et tablettes tactiles : le premier défaut doit apparaître sans défiler */
-@media (pointer:coarse){
- body.vp-ui .emain{padding-top:12px!important}
- body.vp-ui .ehero{margin-bottom:12px!important;padding:16px clamp(20px,4vw,40px) 20px!important}
- body.vp-ui h1{font-size:clamp(30px,3.6vw,42px)!important;line-height:1.05!important}
- body.vp-ui .ehero .vp-hero-meta,body.vp-ui .ehero .vp-eyebrow{display:none}
- body.vp-ui .vp-focus-toggle{margin-top:8px;min-height:44px}
-}
-/* tablette tactile : après le choix du défaut, le bandeau cède la place au travail (étapes 2 à 4) */
-@media (pointer:coarse){
- body.vp-ui[data-vp-stage="2"] .ehero,body.vp-ui[data-vp-stage="3"] .ehero,body.vp-ui[data-vp-stage="4"] .ehero{display:none}
-}
+/* Bandeau compact partout (étape 1) et réduit au titre lisible par les lecteurs d'écran aux étapes 2 à 4 :
+   le travail passe avant l'introduction. */
+body.vp-ui .emain{padding-top:12px!important}
+body.vp-ui .ehero{margin-bottom:12px!important;padding:18px clamp(20px,4vw,40px) 20px!important;text-align:center}
+body.vp-ui .ehero h1{font-size:clamp(28px,3.2vw,40px)!important;line-height:1.08!important;margin:4px 0 0!important}
+body.vp-ui .ehero .lead,body.vp-ui .ehero .vp-hero-meta,body.vp-ui .ehero .vp-eyebrow{display:none!important}
+body.vp-ui .vp-focus-toggle{margin-top:8px;min-height:44px}
+body.vp-ui[data-vp-stage="2"] .ehero,body.vp-ui[data-vp-stage="3"] .ehero,body.vp-ui[data-vp-stage="4"] .ehero{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;border:0!important}
+/* note de démonstration : en pied d'étape, discrète */
+body.vp-ui .vp-reference-note{background:none!important;border:0!important;border-top:1px solid #e4ded2!important;border-radius:0!important;color:#566273!important;font-size:13px!important;line-height:1.55;padding:12px 0 0!important;margin:22px 0 0!important}
 
-/* contrôle « non vérifié » : ni conforme ni non conforme, aucune conclusion */
-body.vp-ui .acts .bnv{background:#fffdf9!important;color:#3d4756!important;border:1px dashed #7f8a9a!important}
-body.vp-ui .cst.unv{background:#eef0f3;border-left:3px solid #7f8a9a;color:#2c3645;font-size:14px}
-body.vp-ui .cc.unver{border-left:3px solid #7f8a9a}
-body.vp-ui .res.unv{background:#eef0f3;color:#2c3645}
-body.vp-ui .unvn{color:#3d4756}
+/* démonstration guidée de 90 secondes */
+body.vp-ui .vp-modes{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin:8px 0 0}
+body.vp-ui .vp-modes .vp-focus-toggle{margin:0}
+body.vp-ui .vp-demo-launch{min-height:44px;padding:0 20px;border-radius:999px;border:1px solid #0a0f19;background:#0a0f19;color:#fff;font:600 15px/1 var(--font);cursor:pointer}
+body.vp-ui .vp-demo-launch:hover{background:#1a2638}
+body.vp-ui.vp-demo-on{padding-bottom:230px}
+body.vp-ui.vp-demo-on .vp-stage-footer{visibility:hidden}
+body.vp-ui .vp-demo{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:200;width:min(720px,calc(100vw - 24px));background:#0a0f19;color:#f3efe7;border:1px solid #26334a;border-top:3px solid #e3b47c;border-radius:12px;padding:14px 20px 16px;box-shadow:0 18px 48px -12px rgba(0,0,0,.55)}
+body.vp-ui .vp-demo[hidden]{display:none}
+body.vp-ui .vp-demo-bar{height:3px;background:#1f2b3d;border-radius:2px;margin:0 0 10px;overflow:hidden}
+body.vp-ui .vp-demo-bar i{display:block;height:100%;width:0;background:#e3b47c;transition:width .25s linear}
+body.vp-ui .vp-demo-k{margin:0 0 4px;font:500 12px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#e3b47c}
+body.vp-ui .vp-demo-t{margin:0 0 6px;font-size:22px;line-height:1.2;color:#f3efe7!important;font-family:var(--serif)!important;font-weight:500!important}
+body.vp-ui .vp-demo-x{margin:0 0 12px;font-size:15px;line-height:1.55;color:#d7deea}
+body.vp-ui .vp-demo-b{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+body.vp-ui .vp-demo-b button{min-height:44px;padding:0 18px;border-radius:999px;border:1px solid #3a4a66;background:transparent;color:#f3efe7;font:600 14px/1 var(--font);cursor:pointer}
+body.vp-ui .vp-demo-b .vp-demo-p{background:linear-gradient(180deg,#e3b47c,#b77a3d);border-color:transparent;color:#160d04}
+body.vp-ui .vp-demo-hl{outline:3px solid #e8841f!important;outline-offset:6px;border-radius:8px;transition:outline-color .2s}
+@media(max-width:560px){body.vp-ui .vp-demo{padding:12px 14px 14px}body.vp-ui .vp-demo-t{font-size:19px}body.vp-ui .vp-demo-x{font-size:14px}body.vp-ui.vp-demo-on{padding-bottom:300px}}
+@media print{body.vp-ui .vp-demo,body.vp-ui .vp-demo-launch{display:none!important}}

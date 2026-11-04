@@ -52,8 +52,9 @@
            <p class="sx-lbl">Ce qui est suivi</p><div class="sx-chips">${c.mesures.map(m => `<span>${esc(m)}</span>`).join('')}</div>
            <p class="sx-lbl">Connexion</p><p class="sx-cx">${esc(c.connexion)}</p>`
         : `<ul class="sx-ul">${c.fait.map(f => `<li>${nb(f)}</li>`).join('')}</ul>`;
+      const guide = o.k === 'expert' && c.demo ? `<a class="btn ghost sx-btn" href="${c.demo}${c.demo.indexOf('?') > -1 ? '&' : '?'}demo=1">Démonstration guidée · 90 s</a>` : '';
       const btn = c.demo
-        ? `<a class="btn ${pr ? 'primary' : 'ghost'} sx-btn" href="${c.demo}">${esc(c.demoL)}</a>`
+        ? `<a class="btn ${pr ? 'primary' : 'ghost'} sx-btn" href="${c.demo}">${esc(c.demoL)}</a>${guide}`
         : `<a class="btn ghost sx-btn" href="pilote.html#rdv">${esc(c.demoL)}</a>`;
       return `<article class="sx-col${pr ? ' pr' : ''}" id="${o.k}">
         <div class="sx-hd"><span class="sx-nm">${n + 1} · ${o.nom}</span>${badge(c.statut, c.statutL)}</div>
