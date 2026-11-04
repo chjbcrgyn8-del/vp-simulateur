@@ -37,7 +37,7 @@
  const intro=document.createElement('p');intro.className='vp-context-intro';intro.textContent='Renseignez ce que vous savez. Une réponse inconnue reste vide : elle ne sera pas interprétée comme un fait.';
  $('s2').querySelector('h2').after(intro);
  const note=document.createElement('p');note.className='vp-reference-note';note.textContent='Démonstration : consignes et tolérances d’exemple. La fiche validée de votre machine, de votre matière et de votre outillage prime. Aucune valeur de réglage à recopier.';
- $('s3').querySelector('h2').after(note);
+ $('s3').append(note); /* en pied d'étape : une note de bas de page, pas une introduction */
  const initialCopy=document.createElement('div');initialCopy.className='vp-panel-topline';initialCopy.innerHTML='<span>OBSERVATION TERRAIN</span><span id="vp-defect-total"></span>';$('s0').prepend(initialCopy);
  const num=($('s0').querySelector('h2 .num'));if(num)num.textContent='01';
  const qsnum=$('s2').querySelector('h2 .num');if(qsnum)qsnum.textContent='02';
