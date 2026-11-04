@@ -90,3 +90,13 @@ a,button,summary,.btn,.choice{-webkit-tap-highlight-color:transparent}
 @media(max-width:640px){.top .tabs.sector{display:grid!important;grid-template-columns:1fr 1fr;gap:2px;width:100%!important;max-width:100%!important;border-radius:16px!important;overflow:hidden}.top .tabs.sector .seclab{display:none!important}.top .tabs.sector a{text-align:center!important;white-space:nowrap;padding:7px 6px!important;font-size:12px!important}}
 @media(min-width:641px) and (max-width:1500px){.top .tabs.sector .seclab{display:none!important}.top .tabs.sector a{padding:6px 10px!important;font-size:12.5px!important}}
 @media(min-width:641px) and (max-width:1320px){.top{flex-wrap:wrap!important;row-gap:8px}.top::after{content:"";order:4;flex-basis:100%;height:0}.top .tabs.sector{order:5!important;margin:0 auto 4px!important;flex-basis:auto}}
+
+/* ---------- Contraste, pages récentes ----------
+   Leurs feuilles (secteurs.css, scan.css, banc-essai.css…) se chargent après ux.css : le préfixe body garde la main. */
+/* noms de secteurs : liens bleu marine sur la colonne noire du tableau comparatif de l'accueil */
+body .sx-mxt tbody th a{color:#f3efe7}
+body .sx-sep{color:#5f6673}
+body .sx-lk{color:#8f5a22}
+body .sc-cta .eyebrow{color:#8f5a22!important}
+body .ishi .x{color:#5a6472}
+body .bx-mode button small{color:#4a5566}
