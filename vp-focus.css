@@ -1,0 +1,75 @@
+/* VP Expert — mode Focus et ajustements atelier iPad (v1). À charger après vp-expert-ui.css.
+ * Présentation seule : aucune règle métier. Reprend la charte existante (design.md). */
+:root{
+  --vf-bg:#090a10; --vf-panel:#f8f9fc; --vf-ink:#192032; --vf-accent:#7450df;
+  --vf-ok:#1f7a4d; --vf-nc:#b4541a; --vf-line:#2d2e3d; --vf-touch:56px;
+}
+
+/* ---- Bascule ---- */
+.vp-focus-toggle{display:block;margin:12px auto 0;min-height:48px;padding:0 22px;border-radius:999px;
+  border:1px solid var(--vf-accent);background:transparent;color:#fff;font:600 16px/1 Arial,Helvetica,sans-serif;cursor:pointer}
+.vp-focus-toggle[aria-pressed="true"]{background:var(--vf-accent)}
+
+/* ---- Mode Focus : masquer tout ce qui n'aide pas au pied de la presse ---- */
+body.vp-focus-on .ehero,
+body.vp-focus-on .vp-workbench,
+body.vp-focus-on footer,
+body.vp-focus-on .vpduo,
+body.vp-focus-on .duo,
+body.vp-focus-on main > p.sl{display:none!important}
+
+#vp-focus .vf-big{min-height:var(--vf-touch)}
+#vp-focus{max-width:1100px;margin:16px auto 32px;padding:0 16px;display:grid;gap:16px;
+  grid-template-columns:1fr 1fr;font-family:Arial,Helvetica,sans-serif}
+#vp-focus[hidden],#vp-focus [hidden]{display:none!important}
+#vp-focus{scroll-margin-top:120px}
+.vf-card{background:var(--vf-panel);color:var(--vf-ink);border-radius:16px;padding:20px 22px;min-height:150px;
+  display:flex;flex-direction:column;gap:8px}
+.vf-k{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#5a6178;font-weight:700}
+.vf-card b{font-size:22px;line-height:1.25}
+.vf-card p{margin:0;font-size:17px;line-height:1.5}
+.vf-ctl{grid-row:span 2;border-left:6px solid var(--vf-accent)}
+.vf-ctl #vf-ctl-name{font-size:26px}
+.vf-meta{color:#5a6178;font-size:15px!important}
+.vf-meta small{display:block;font-size:13px}
+.vf-acts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:auto}
+.vf-big{min-height:var(--vf-touch);border-radius:12px;border:0;font:700 18px/1.2 Arial,Helvetica,sans-serif;
+  color:#fff;cursor:pointer;padding:0 16px;touch-action:manipulation}
+.vf-big:disabled{opacity:.4;cursor:not-allowed}
+.vf-ok{background:var(--vf-ok)} .vf-nc{background:var(--vf-nc)} .vf-go{background:var(--vf-accent);margin-top:auto}
+.vf-note{font-size:14px!important;color:#5a6178}
+.vf-link{background:none;border:0;color:var(--vf-accent);font:600 15px Arial,sans-serif;text-decoration:underline;
+  min-height:44px;padding:0;align-self:flex-start;cursor:pointer}
+.vf-guard{grid-column:1/-1;color:#c9cbe0;font-size:14px;margin:0}
+.vf-guard .vf-link{color:#c9b8ff;display:inline;min-height:0;margin-left:6px}
+.vf-big:focus-visible,.vf-link:focus-visible,.vp-focus-toggle:focus-visible{outline:3px solid #c9b8ff;outline-offset:3px}
+
+/* iPad portrait et téléphone : une colonne, contrôle prioritaire en premier */
+@media (max-width:900px){
+  #vp-focus{grid-template-columns:1fr}
+  .vf-ctl{grid-row:auto;order:-1}
+  .vf-def{order:-2;min-height:0}
+}
+
+/* ---- Ajustements atelier hors Focus (iPad) ---- */
+@media (pointer:coarse){
+  .vp-ui button,.vp-ui .btn,.vp-ui select,.vp-ui input{min-height:48px}
+  .vp-ui .cc .acts .btn{min-height:52px;font-size:16px;flex:1}
+  .vp-ui .ehero{padding-block:24px!important}           /* l'accroche ne repousse plus le 1er défaut sous la ligne de flottaison */
+  .vp-ui .ehero .lead,.vp-ui .ehero ul{display:none}
+  .vp-ui .vp-stage-footer{position:sticky;bottom:0;z-index:5;background:var(--vf-bg);padding:10px 0;border-top:1px solid var(--vf-line)}
+}
+
+/* ---- Paramètres machine : bande de tolérance lisible (presse*.html) ---- */
+.vf-param{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:12px 14px;border-radius:12px;background:#fff;color:var(--vf-ink)}
+.vf-param .vf-band{grid-column:1/-1;position:relative;height:10px;border-radius:5px;
+  background:linear-gradient(90deg,#f1d9c9 0 15%,#d9efe2 15% 85%,#f1d9c9 85% 100%)}
+.vf-param .vf-band i{position:absolute;top:-4px;width:4px;height:18px;border-radius:2px;background:var(--vf-ink);
+  left:var(--pos,50%)}
+.vf-param[data-etat="limite"] .vf-band i{background:var(--vf-nc)}
+.vf-param .vf-etat{font-size:14px;font-weight:700}
+
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Défaut présélectionné signalé comme exemple */
+.vf-exemple{display:inline-block;align-self:flex-start;margin:6px 0;padding:4px 10px;border-radius:999px;background:#fff1d6;color:#7a5200;font:700 13px/1.3 Arial,Helvetica,sans-serif}
