@@ -2,7 +2,7 @@
 /* Enquête défaut caoutchouc · ordre des leviers de notre expert caoutchouc, 16 défauts.
    Indices de contexte (Où, Quand, Comment) : premier jet Vella Partners, à valider avec notre expert caoutchouc. */
 const $=id=>document.getElementById(id);
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc=s=>String(s).replace(/(\p{L})'(\p{L})/gu,'$1’$2').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const REF=window.VELLA_REF_DEFAUTS,CFG=window.SIM_CFG;
 const NAME=d=>d.defect.replace(/\s*\(.*\)$/,'').replace(' + Brûlures',' et brûlures');
 const FAMC={'01-MR':'rem','06-Ligne soudure':'rem','16-Retassures':'rem','03-bulles':'asp','02-MG':'asp','12-Surface poreuse':'asp','15-Différence surface':'asp','09-Encrassement moule':'asp','10-Contamination':'asp','04-Sous-vulcanisation':'vul','05-Déformation':'dim','07-Bavure':'dim','08-Infiltration inserts':'dim','11-Adhérisation':'vul','13-Pièces grandes':'dim','14-Pièces collantes':'dim'};
@@ -100,11 +100,11 @@ function draw3(){const d=S.br==='derive';let h=(d?'':M.table())+'<p class="vpx">
  const nxi=list.findIndex(c=>stOf(c)==='open');
  const nShow=Math.max(5,nxi+1,...list.map((c,i)=>Rc[c.id]?i+1:0));
  const nOk=Object.keys(O).length;
- if(list.length)h+=Object.keys(Rc).length?`<div class="emsg win nv"><b>${Object.keys(Rc).length} écart(s) observé(s).</b> Cause non déterminée. Plusieurs écarts peuvent coexister : poursuivre les contrôles pertinents, puis faire valider la causalité et l’action dans le contexte machine et matière. <button type="button" class="lk" data-new="1">Nouvelle enquête sur ce défaut</button></div>`
-  :nOk?`<div class="emsg nv">${nOk} contrôle(s) conforme(s). ${nxi>=0?'Passez au contrôle suivant, n° '+(nxi+1)+'.':'Aucune hypothèse étayée : solliciter une revue métier, sans conclure à une cause.'}</div>`
+ if(list.length)h+=Object.keys(Rc).length?`<div class="emsg win nv"><b>${Object.keys(Rc).length} écart${Object.keys(Rc).length>1?'s':''} observé${Object.keys(Rc).length>1?'s':''}.</b> Cause non déterminée. Plusieurs écarts peuvent coexister : poursuivre les contrôles pertinents, puis faire valider la causalité et l’action dans le contexte machine et matière. <button type="button" class="lk" data-new="1">Nouvelle enquête sur ce défaut</button></div>`
+  :nOk?`<div class="emsg nv">${nOk} contrôle${nOk>1?'s':''} conforme${nOk>1?'s':''}. ${nxi>=0?'Passez au contrôle suivant, n° '+(nxi+1)+'.':'Aucune hypothèse étayée : solliciter une revue métier, sans conclure à une cause.'}</div>`
   :'<p class="sl nv">Après chaque contrôle, indiquez le constat. Plusieurs écarts peuvent être relevés ; aucun ne démontre seul la cause. Une erreur de saisie se corrige.</p>';
  h+=list.length?'<div class="cl">'+list.slice(0,S.showall?list.length:nShow).map((c,i)=>card(c,i,stOf(c),i===nxi)).join('')+'</div>':'<p class="sl">Aucune cause ne correspond : c’est un cas à ajouter à la base du site.</p>';
- if(!S.showall&&list.length>nShow)h+=`<p class="sl">${list.length-nShow} autre(s) levier(s) possible(s). <button type="button" class="lk" id="showall">Afficher tous les contrôles</button> Score illustratif calculé à partir du référentiel et des indices : ce n’est ni une probabilité, ni une fréquence terrain. Les clics de cette démonstration ne modifient pas le classement.</p>`;
+ if(!S.showall&&list.length>nShow)h+=`<p class="sl">${list.length-nShow} autre${list.length-nShow>1?'s':''} levier${list.length-nShow>1?'s':''} possible${list.length-nShow>1?'s':''}. <button type="button" class="lk" id="showall">Afficher tous les contrôles</button> Score illustratif calculé à partir du référentiel et des indices : ce n’est ni une probabilité, ni une fréquence terrain. Les clics de cette démonstration ne modifient pas le classement.</p>`;
  const out=[];
  if(!d){if(S.qui==='qual')out.push('<span class="nvm"></span><b>Détecté par le service qualité :</b> bloquer le lot concerné et retrouver par la traçabilité (heure, ordre de fabrication) les pièces touchées.');
   if(S.qui==='client')out.push('<b>Détecté chez le client :</b> lancer le confinement (tri des stocks et en-cours) et informer la qualité.');

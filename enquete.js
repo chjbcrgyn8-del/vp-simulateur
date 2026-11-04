@@ -82,8 +82,8 @@ function draw1(){
  $('drv').innerHTML=`<div class="tw mest"><table><thead><tr><th>Mesure</th><th>Consigne<small>fiche de réglage</small></th><th>Valeur actuelle</th><th>Moyenne<small>7 OF précédents</small></th><th>Tendance</th><th>Lecture</th></tr></thead><tbody>${rows}</tbody></table></div>`;
  const st=MC.map(x=>mstat(x.p,x.dir)),nOk=st.filter(s=>s.st==='ok'&&s.trend!=='defav').length,nLim=st.filter(s=>s.adverse&&s.st==='limite'||s.trend==='defav').length,nHors=st.filter(s=>s.st==='hors').length,nNone=st.filter(s=>s.st==='none').length;
  $('msg').innerHTML=S.br==='sans'?(nNone===MC.length?`<b>Relevé à la main :</b> saisissez les valeurs que vous relevez sur la presse. Sans valeur, les ${nMesOf()} causes liées aux mesures restent à vérifier comme les autres. Consignes : fiche de réglage d’exemple.`
-   :`<b>${MC.length-nNone} mesure(s) relevée(s) :</b> ${nOk} conforme(s), ${nLim} en limite ou tendance défavorable, ${nHors} hors tolérance. Une mesure conforme rend ses causes moins probables sans les exclure ; une mesure en limite ou hors tolérance les fait remonter.`)
-  :`<b>Lecture VP Predict (démonstration) :</b> ${nOk} mesure(s) conforme(s) et stable(s), ${nLim} conforme(s) mais limite ou en tendance défavorable, ${nHors} hors tolérance. On peut être dans la plage et pourtant favoriser le défaut : les causes concernées remontent dans la liste.`;
+   :`<b>${MC.length-nNone} mesure${(MC.length-nNone)>1?'s':''} relevée${(MC.length-nNone)>1?'s':''} :</b> ${nOk} conforme${nOk>1?'s':''}, ${nLim} en limite ou tendance défavorable, ${nHors} hors tolérance. Une mesure conforme rend ses causes moins probables sans les exclure ; une mesure en limite ou hors tolérance les fait remonter.`)
+  :`<b>Lecture VP Predict (démonstration) :</b> ${nOk} mesure${nOk>1?'s':''} conforme${nOk>1?'s':''} et stable${nOk>1?'s':''}, ${nLim} conforme${nLim>1?'s':''} mais limite ou en tendance défavorable, ${nHors} hors tolérance. On peut être dans la plage et pourtant favoriser le défaut : les causes concernées remontent dans la liste.`;
  $('msg').className='emsg'+(nLim||nHors?' warnm':' win');
 }
 function draw2(){
@@ -122,7 +122,7 @@ function whyText(c){const parts=[];
   else if(c.ms.adverse&&c.ms.st==='limite')parts.push(`<b>mesure conforme mais limite ${c.ms.side==='haut'?'haute':'basse'}</b>${c.ms.trend==='defav'?', tendance défavorable sur les OF précédents':''}`);
   else if(c.ms.trend==='defav')parts.push('<b>mesure conforme, mais tendance défavorable</b> sur les OF précédents');
   else if(c.lo)parts.push('<b>mesure conforme et stable : moins probable</b>, vérifier tout de même capteur et étalonnage');}
- if(c.rx)parts.push(`<b>retour d’expérience atelier :</b> ${c.rx} retour(s) déclaré(s), non validé(s) sur ce défaut`);
+ if(c.rx)parts.push(`<b>retour d’expérience atelier :</b> ${c.rx} retour${c.rx>1?'s':''} déclaré${c.rx>1?'s':''}, non validé${c.rx>1?'s':''} sur ce défaut`);
  if(c.src==='atelier')parts.push('cause proposée par l’atelier'+(c.date?' le '+c.date:'')+', à valider par l’expert');
  if(!parts.length)return 'Aucune de vos réponses ne pointe vers cette cause : elle reste possible, à contrôler après les autres.';
  return 'Pourquoi ici : '+parts.join(' · ')+'.';}
@@ -153,13 +153,13 @@ function draw3(){
  const nOk=Object.keys(O).length;
  let head='<p class="vpx">VP Expert · guide les contrôles</p>';
  if(ans>=2&&list.length){
-  head+=Object.keys(R).length?`<div class="emsg win nv"><b>${Object.keys(R).length} écart(s) observé(s).</b> Plusieurs écarts peuvent coexister : poursuivre les contrôles pertinents, corriger, puis indiquer le résultat dans Essai & synthèse (étape 4). La synthèse se met à jour. <button type="button" class="lk" data-new="1">Nouvelle enquête sur ce défaut</button></div>`
-   :nOk?`<div class="emsg nv">${nOk} contrôle(s) conforme(s). ${nxi>=0?'Passez au contrôle suivant, n° '+(nxi+1)+'.':'Aucune hypothèse étayée : solliciter une revue métier, sans conclure à une cause.'}</div>`
+  head+=Object.keys(R).length?`<div class="emsg win nv"><b>${Object.keys(R).length} écart${Object.keys(R).length>1?'s':''} observé${Object.keys(R).length>1?'s':''}.</b> Plusieurs écarts peuvent coexister : poursuivre les contrôles pertinents, corriger, puis indiquer le résultat dans Essai & synthèse (étape 4). La synthèse se met à jour. <button type="button" class="lk" data-new="1">Nouvelle enquête sur ce défaut</button></div>`
+   :nOk?`<div class="emsg nv">${nOk} contrôle${nOk>1?'s':''} conforme${nOk>1?'s':''}. ${nxi>=0?'Passez au contrôle suivant, n° '+(nxi+1)+'.':'Aucune hypothèse étayée : solliciter une revue métier, sans conclure à une cause.'}</div>`
    :'<p class="sl nv">Contrôlez dans l’ordre proposé et indiquez chaque constat. Plusieurs écarts peuvent être relevés ; la disparition du défaut doit être suivie et la conclusion validée par la qualité.</p>';
  }
  const shown=S.showall?list:list.filter((c,i)=>i<nShow||c.src==='atelier');
  h+=ans<2?'<p class="sl">Répondez à au moins deux questions de l’enquête pour classer les causes.</p>':list.length?head+'<div class="cl">'+shown.map(c=>{const i=list.indexOf(c);return card(c,i,stOf(c),i===nxi)}).join('')+'</div>':'<p class="sl">Aucune cause ne correspond encore à ces réponses : ajoutez-la ci-dessous, elle sera proposée à l’expert.</p>';
- if(ans>=2&&list.length>shown.length)h+=`<p class="sl">${list.length-shown.length} autre(s) cause(s) possible(s), voir le diagramme en bas de page. <button type="button" class="lk" id="showall">Afficher toutes les causes</button></p>`;
+ if(ans>=2&&list.length>shown.length)h+=`<p class="sl">${list.length-shown.length} autre${list.length-shown.length>1?'s':''} cause${list.length-shown.length>1?'s':''} possible${list.length-shown.length>1?'s':''}, voir le diagramme en bas de page. <button type="button" class="lk" id="showall">Afficher toutes les causes</button></p>`;
  const out=[];
  if(!d){if(S.qui==='qual')out.push('<span class="nvm"></span><b>Détecté par le service qualité après fabrication :</b> bloquer le lot concerné'+(S.etendue==='partie'?', retrouver par la traçabilité (heure, ordre de fabrication) la partie de série touchée':S.etendue==='tot'?' et trier la totalité de la série':'')+'.');
   if(S.qui==='client')out.push('<b>Détecté chez le client :</b> lancer le confinement (tri des stocks et en-cours) et informer la qualité.');
