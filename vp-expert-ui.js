@@ -45,7 +45,7 @@
  const resnum=$('s3').querySelector('h2 .num');if(resnum)resnum.textContent='03';
  const follnum=$('expert-followup').querySelector('h2 .num');if(follnum)follnum.textContent='04';
  $('expert-synthese').querySelector('h2 .num')?.remove();
- let step=1,lastFocus=null;
+ let step=1,lastFocus=null,lastSans=null;
  function focusHeading(){const target=groups[step-1].querySelector('h2');if(target){target.tabIndex=-1;target.focus({preventScroll:true})}}
  function go(next,focus=true){
   step=Math.max(1,Math.min(4,next));groups.forEach((g,i)=>g.hidden=i!==step-1);
@@ -64,7 +64,28 @@
   });
   document.querySelectorAll('.mesin,.vpmesin').forEach(el=>{const invalid=String(el.value).trim()!==''&&window.VPNumber.parse(el.value)===null;el.setAttribute('aria-invalid',String(invalid));});
  }
+ /* Étape « Les contrôles ». Par défaut (relevé à la main) la liste des leviers passe en premier : la question sur les
+    mesures et le tableau de saisie suivent. Les deux autres modes (avec les mesures, une dérive) commencent par une saisie
+    nécessaire et gardent leur ordre. On déplace les nœuds eux-mêmes, pas seulement leur affichage : l'ordre de tabulation
+    suit l'ordre visuel. Rien ici ne touche aux règles ni aux classements des moteurs. */
+ function arrangeControls(){
+  const s1=$('s1'),s3=$('s3'),res=$('res');
+  if(!s1||!s3||!res)return;
+  const sans=!!s1.querySelector('[data-b="sans"][aria-pressed="true"]');
+  const stage=groups[2],table=res.querySelector(':scope > .vpmes');
+  const s3First=!!(s3.compareDocumentPosition(s1)&Node.DOCUMENT_POSITION_FOLLOWING);
+  if(sans&&!s3First)stage.insertBefore(s3,s1);
+  if(!sans&&s3First)stage.insertBefore(s1,s3);
+  if(table){if(sans&&res.lastElementChild!==table)res.append(table);if(!sans&&res.firstElementChild!==table)res.prepend(table)}
+  /* Changement de mode après coup : on amène à l'écran le bloc qui vient de changer de place, focus sur le choix fait. */
+  if(lastSans!==null&&lastSans!==sans&&!stage.hidden){
+   (sans?s3:s1).scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+   s1.querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});
+  }
+  lastSans=sans;
+ }
  function update(){
+  arrangeControls();
   const fiche=[...document.querySelectorAll('#fiche span')].find(s=>s.querySelector('i')?.textContent==='Quoi');
   $('vp-case-defect').textContent=fiche?fiche.textContent.replace(/^Quoi\s*/,'').trim():api.S.def;
   const questions=['qui','ou','quand','freq','terme','combien','pourquoi'];const n=questions.filter(k=>api.S[k]).length;
