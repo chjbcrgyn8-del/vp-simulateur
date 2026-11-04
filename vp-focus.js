@@ -34,24 +34,33 @@
   panel.id = 'vp-focus'; panel.hidden = true; panel.setAttribute('aria-live', 'polite');
   panel.setAttribute('aria-label', 'Mode Focus');
   panel.innerHTML =
-    '<div class="vf-card vf-def"><span class="vf-k">1 · Défaut</span><b id="vf-def"></b>' +
-      '<span class="vf-exemple" id="vf-exemple">Exemple présélectionné</span>' +
-      '<button type="button" class="vf-link" data-vf-step="1">Changer</button></div>' +
-    '<div class="vf-card vf-ctl"><span class="vf-k">2 · Contrôle prioritaire</span>' +
+    '<div class="vf-card vf-def"><div class="vf-defh"><span class="vf-k">Défaut</span>' +
+      '<button type="button" class="vf-link" data-vf-step="1">Changer</button></div><b id="vf-def"></b>' +
+      '<span class="vf-exemple" id="vf-exemple">Exemple présélectionné</span></div>' +
+    '<div class="vf-card vf-ctl"><span class="vf-k">Contrôle prioritaire</span>' +
       '<b id="vf-ctl-name"></b><p id="vf-ctl-what"></p>' +
+      '<div class="vf-prog" id="vf-prog"><span id="vf-prog-t"></span><i><u id="vf-prog-b"></u></i></div>' +
       '<p class="vf-meta"><span id="vf-rank"></span> · <span id="vf-score"></span>' +
       ' <small>Classement d’ordre, pas une probabilité de cause</small></p>' +
       '<button type="button" class="vf-big vf-go" id="vf-src" hidden>Relevé à la main (VP Expert seul)</button>' +
       '<button type="button" class="vf-big vf-go" id="vf-ctx" hidden>Compléter le contexte</button></div>' +
-    '<div class="vf-card vf-res"><span class="vf-k">3 · Résultat du contrôle</span>' +
-      '<div class="vf-acts"><button type="button" class="vf-big vf-ok" id="vf-ok">Conforme</button>' +
-      '<button type="button" class="vf-big vf-nc" id="vf-nc">Non conforme</button></div>' +
+    '<div class="vf-card vf-res"><span class="vf-k">Résultat du contrôle</span>' +
+      '<div class="vf-acts"><button type="button" class="vf-big vf-ok" id="vf-ok"><svg class="vf-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Conforme</span></button>' +
+      '<button type="button" class="vf-big vf-nc" id="vf-nc"><svg class="vf-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg><span>Non conforme</span></button>' +
+      '<button type="button" class="vf-big vf-nv" id="vf-nv"><svg class="vf-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 12h12"/></svg><span>Non vérifié</span></button></div>' +
       '<p class="vf-note" id="vf-state">Un constat ne prouve pas une cause.</p></div>' +
-    '<div class="vf-card vf-next"><span class="vf-k">4 · Action suivante</span>' +
+    '<div class="vf-card vf-next"><span class="vf-k">Ensuite</span>' +
       '<p id="vf-next-text"></p><button type="button" class="vf-big vf-go" id="vf-go"></button></div>' +
     '<p class="vf-guard">Démonstration · contrôles et actions à valider pour votre machine, matière et outillage. ' +
       '<button type="button" class="vf-link" data-vf-step="3">Voir tous les contrôles</button></p>';
   toggle.before(panel); panel.after(toggle);
+  const phoneBtn = document.createElement('button');
+  phoneBtn.type = 'button'; phoneBtn.id = 'vf-phone'; phoneBtn.className = 'vp-focus-toggle vf-phone-btn'; phoneBtn.hidden = true; phoneBtn.setAttribute('aria-pressed', 'false');
+  phoneBtn.textContent = 'Aperçu téléphone';
+  toggle.after(phoneBtn);
+  const setPhone = on => { document.body.classList.toggle('vp-phone', on); phoneBtn.setAttribute('aria-pressed', String(on)); phoneBtn.textContent = on ? 'Quitter l’aperçu' : 'Aperçu téléphone'; };
+  phoneBtn.addEventListener('click', () => setPhone(!document.body.classList.contains('vp-phone')));
+  window.VPFocus = { setPhone, setFocus: on => setFocus(on), isOn: () => !panel.hidden };
 
   const card = () => $('#s3 .cc.next') || $('#s3 .cc:not(.done):not(.found):not(.lock)');
   function render() {
@@ -83,7 +92,11 @@
       $('#vf-ctl-what').textContent = 'Tous les contrôles affichés ont un constat, ou un contrôle préalable est requis.';
       $('#vf-rank').textContent = ''; $('#vf-score').textContent = '';
     }
-    $('#vf-ok').disabled = !ok; $('#vf-nc').disabled = !nc;
+    const nv = c && $('[data-nv]', c);
+    $('#vf-ok').disabled = !ok; $('#vf-nc').disabled = !nc; $('#vf-nv').disabled = !nv;
+    const all = [...document.querySelectorAll('#res .cc')], fin = all.filter(x => /\b(done|found|unver)\b/.test(x.className)).length;
+    $('#vf-prog').hidden = !c || !all.length;
+    if (c && all.length) { $('#vf-prog-t').textContent = 'Contrôle ' + Math.min(all.length, fin + 1) + ' sur ' + all.length; $('#vf-prog-b').style.width = Math.round(fin / all.length * 100) + '%'; }
     const lock = $('#s3 .cc.lock');
     $('#vf-next-text').textContent = c ? 'Notez le constat, VP Expert affiche le contrôle suivant.'
       : 'Passez à l’essai : une seule variable à la fois, résultat tracé.';
@@ -100,6 +113,8 @@
     toggle.setAttribute('aria-pressed', String(on));
     toggle.textContent = on ? 'Quitter le mode Focus' : 'Mode Focus';
     panel.hidden = !on;
+    phoneBtn.hidden = !on;
+    if (!on) setPhone(false);
     if (on && history.replaceState) history.replaceState(null, '', '#focus');
     else if (location.hash === '#focus') history.replaceState(null, '', location.pathname + location.search);
     if (on) { goStep(3); render(); panel.scrollIntoView({ block: 'start' }); $('#vf-ok').focus({ preventScroll: true }); }
@@ -114,6 +129,7 @@
     if (b.id === 'vf-src') { const x = $('#sit [data-b="sans"]'); if (x) x.click(); }
     if (b.id === 'vf-ok' && c) $('[data-ok]', c).click();          // bouton du moteur
     if (b.id === 'vf-nc' && c) $('[data-nc]', c).click();          // bouton du moteur
+    if (b.id === 'vf-nv' && c) $('[data-nv]', c).click();          // bouton du moteur
     if (b.id === 'vf-go') {
       if (b.dataset.mode === 'essai') { setFocus(false); goStep(4); }
       else { setFocus(false); goStep(3); c && c.scrollIntoView({ block: 'center' }); }
