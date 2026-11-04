@@ -4,7 +4,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const lab=(l,v)=>(l.find(x=>x[0]===v)||[,''])[1];
 const LBL={};[QUI,OU,QUAND,ETENDUE,FREQ,VIS,TERME,COMBIEN,PROC].forEach(l=>l.forEach(([v,t])=>LBL[v]=LBL[v]||t));
 const TOP=['Bavure','Incomplet','Retassure','Givrage','Brûlure','Pièces déformées','Cotes pièces non conformes','Points noirs','Ligne de soudure'];
-const S={more:false,def:'Bavure',fam:'all',qd:'',br:'sans',param:'to',ou:'meme',quand:'serie',freq:'chaque',terme:'moyen',vis:'demoul',qui:'op',etendue:undefined,combien:undefined,mes:{}};
+const S={more:false,def:'Bavure',fam:'all',qd:'',br:'sans',param:'to',ou:undefined,quand:undefined,freq:undefined,terme:undefined,vis:undefined,qui:undefined,etendue:undefined,combien:undefined,mes:{}};
 const CONF={},HIST=[];
 /* Révision retours Henry (2026-11-02) : les mesures sont intégrées à l'étape des causes (consigne, valeur, moyenne des OF précédents, tendance) ;
    la cause peut être ajoutée par l'atelier ; un retour d'expérience mémorisé localement remonte la cause lors des enquêtes suivantes.
@@ -33,10 +33,10 @@ function demo(p,dir,rank){const m=MES[p],h=hash(S.def+p),j=(h%7-3)/10;
 function mesCauses(){return cands().filter(c=>c.t==='mes'&&c.p&&MES[c.p]).reduce((a,c)=>{if(!a.find(x=>x.p===c.p))a.push({p:c.p,dir:dirOf(c.n),n:c.n});return a},[]);}
 /* Statut d'une mesure : none (pas de valeur) · ok · limite · hors ; tendance : stable · defav · fav */
 function mstat(p,dir){const m=MES[p];let cur,avg;
- if(S.br==='conforme'){const r=mesCauses().findIndex(x=>x.p===p),d=demo(p,dir,r<0?9:r);cur=d.cur;avg=d.avg}
- else{const v=S.mes[p];if(v===undefined||v===''||isNaN(+v))return {st:'none',trend:'none',cur:undefined,avg:undefined,txt:'Pas de valeur relevée'};cur=+v;avg=undefined}
+ if(S.br==='conforme'){const r=mesCauses().findIndex(x=>x.p===p),d=demo(p,mesCauses()[r]?.dir||dir,r<0?9:r);cur=d.cur;avg=d.avg}
+ else{const v=S.mes[p];cur=window.VPNumber.parse(v);if(cur===null)return {st:'none',trend:'none',invalid:v!==undefined&&String(v).trim()!=='',txt:v!==undefined&&String(v).trim()!==''?'Saisie invalide : nombre décimal attendu':'Pas de valeur relevée'};avg=undefined}
  const dev=(cur-m.c)/m.t,ad=Math.abs(dev);
- const st=ad>1?'hors':ad>0.8?'limite':'ok';
+ const st=ad>1+1e-9?'hors':ad>0.8+1e-9?'limite':'ok';
  const side=dev>0?'haut':'bas';
  let trend='none';if(avg!==undefined){const tr=(cur-avg)/m.t;trend=Math.abs(tr)<0.3?'stable':(dir==='var'||(tr>0?'haut':'bas')===dir)?'defav':'fav'}
  /* adverse : l'écart va dans le sens de la cause (ou cause de type variation) */
@@ -74,9 +74,9 @@ function draw1(){
  const rows=MC.map(({p,dir,n})=>{const m=MES[p],s=mstat(p,dir);
   const cls=s.st==='none'?'':s.st==='hors'?'hors':(s.adverse||s.trend==='defav')?'lim':s.st==='ok'?'ok':'okl';
   const trend=s.trend==='none'?(S.br==='conforme'?'—':'<span class="sl">avec VP Predict</span>'):s.trend==='stable'?'Stable':s.trend==='defav'?'<b>Défavorable</b> '+(s.cur>s.avg?'↗':'↘'):'Favorable';
-  const val=S.br==='conforme'?`<b>${fmt(p,s.cur)}</b> ${m.u}`:`<input type="number" step="any" inputmode="decimal" class="mesin" data-mes="${p}" value="${S.mes[p]??''}" aria-label="Valeur relevée, ${esc(lab(PROC,p))}" placeholder="relevé"> ${m.u}`;
+  const val=S.br==='conforme'?`<b>${fmt(p,s.cur)}</b> ${m.u}`:`<input type="text" inputmode="decimal" maxlength="30" class="mesin" data-mes="${p}" value="${esc(S.mes[p]??'')}" aria-label="Valeur relevée, ${esc(lab(PROC,p))}" placeholder="relevé"> ${m.u}`;
   const avg=S.br==='conforme'?fmt(p,s.avg)+' '+m.u:'<span class="sl">avec VP Predict</span>';
-  const stat=s.st==='none'?'<span class="mst">À relever</span>':`<span class="mst ${cls}">${s.txt}${s.trend==='defav'?' · tendance défavorable':''}</span>`;
+  const stat=s.st==='none'?`<span class="mst">${s.invalid?'Saisie invalide':'À relever'}</span>`:`<span class="mst ${cls}">${s.txt}${s.trend==='defav'?' · tendance défavorable':''}</span>`;
   const link=(s.st==='hors'||(s.st==='limite'&&s.trend==='defav'))?` <button type="button" class="lk" data-drift="${p}">Chercher l’origine</button>`:'';
   return `<tr class="${cls}"><th scope="row">${esc(lab(PROC,p))}<small>${dir==='haut'?'défavorable si trop haute':dir==='bas'?'défavorable si trop basse':'défavorable si instable'}</small></th><td>${fmt(p,m.c)} ± ${fmt(p,m.t)} ${m.u}</td><td>${val}</td><td>${avg}</td><td>${trend}</td><td>${stat}${link}</td></tr>`}).join('');
  $('drv').innerHTML=`<div class="tw mest"><table><thead><tr><th>Mesure</th><th>Consigne<small>fiche de réglage</small></th><th>Valeur actuelle</th><th>Moyenne<small>7 OF précédents</small></th><th>Tendance</th><th>Lecture</th></tr></thead><tbody>${rows}</tbody></table></div>`;
@@ -122,16 +122,16 @@ function whyText(c){const parts=[];
   else if(c.ms.adverse&&c.ms.st==='limite')parts.push(`<b>mesure conforme mais limite ${c.ms.side==='haut'?'haute':'basse'}</b>${c.ms.trend==='defav'?', tendance défavorable sur les OF précédents':''}`);
   else if(c.ms.trend==='defav')parts.push('<b>mesure conforme, mais tendance défavorable</b> sur les OF précédents');
   else if(c.lo)parts.push('<b>mesure conforme et stable : moins probable</b>, vérifier tout de même capteur et étalonnage');}
- if(c.rx)parts.push(`<b>retour d’expérience atelier :</b> cause confirmée ${c.rx} fois sur ce défaut`);
+ if(c.rx)parts.push(`<b>retour d’expérience atelier :</b> ${c.rx} retour(s) déclaré(s), non validé(s) sur ce défaut`);
  if(c.src==='atelier')parts.push('cause proposée par l’atelier'+(c.date?' le '+c.date:'')+', à valider par l’expert');
  if(!parts.length)return 'Aucune de vos réponses ne pointe vers cette cause : elle reste possible, à contrôler après les autres.';
  return 'Pourquoi ici : '+parts.join(' · ')+'.';}
 function card(c,i,st,nx){const cf=CONF[c.id]||0;
  let act;
- if(st==='nc')act=`<div class="cst nc nv"><b>Écart observé :</b> hypothèse à vérifier, cause non démontrée tant que l’action corrective n’a pas fait disparaître le défaut. Aucun apprentissage à partir de ce clic. <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
+ if(st==='nc')act=`<div class="cst nc nv"><b>Écart observé :</b> hypothèse à vérifier, cause non démontrée ; résultat après action et validation qualité nécessaires. Aucun apprentissage à partir de ce clic. <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
  else if(st==='ok')act=`<div class="cst ok nv"><b>Contrôle conforme :</b> hypothèse non étayée par ce contrôle. <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
  else act=`<div class="acts nv"><button type="button" class="btn sm bnc" data-nc="${c.id}">Non conforme après contrôle</button><button type="button" class="btn ghost sm bok" data-ok="${c.id}">Conforme après contrôle</button></div>`;
- return `<div class="cc${i===0?' best':''}${st==='ok'?' done':''}${st==='lock'?' lock':''}${st==='nc'?' found':''}${nx?' next':''}${c.rx?' rex':''}" data-id="${c.id}" data-name="${esc(c.n)}"><div class="ch"><span class="rk">${i+1}</span><b>${nx?'<span class="tg nxt nv">Contrôle suivant</span>':''}${esc(c.n)}${TAG[c.t]||''}${c.src==='add'?'<span class="tg add" title="Cause issue des tableaux de dépannage publiés, recoupée par Vella Partners. Relecture par l’expert plasturgie partenaire en cours.">Guide de dépannage</span>':''}${c.rx?'<span class="tg rex" title="Cause confirmée lors d’enquêtes précédentes sur ce défaut, dans la mémoire atelier de ce navigateur">Retour d’expérience</span>':''}</b><span class="ind" title="Score de pertinence, pas une probabilité">${c.pct}<small> pts</small></span></div><div class="bar"><i style="width:${c.pct}%"></i></div><p><span class="fam">${esc(c.z)}</span> <b>Contrôle :</b> ${esc(c.ctl)}</p><p class="why">${whyText(c)}${cf?` · <b>Écart observé dans cette démonstration, cause non démontrée</b>`:''}</p>${act}</div>`;}
+ return `<div class="cc${i===0?' best':''}${st==='ok'?' done':''}${st==='lock'?' lock':''}${st==='nc'?' found':''}${nx?' next':''}${c.rx?' rex':''}" data-id="${c.id}" data-name="${esc(c.n)}"><div class="ch"><span class="rk">${i+1}</span><b>${nx?'<span class="tg nxt nv">Contrôle suivant</span>':''}${esc(c.n)}${TAG[c.t]||''}${c.src==='add'?'<span class="tg add" title="Cause issue des tableaux de dépannage publiés, recoupée par Vella Partners. Relecture par l’expert plasturgie partenaire en cours.">Guide de dépannage</span>':''}${c.rx?'<span class="tg rex" title="Retour déclaré dans ce navigateur ; aucune validation experte et aucun bonus de classement">Retour d’expérience</span>':''}</b><span class="ind" title="Score de pertinence, pas une probabilité">${c.pct}<small> pts</small></span></div><div class="bar"><i style="width:${c.pct}%"></i></div><p><span class="fam">${esc(c.z)}</span> <b>Contrôle :</b> ${esc(c.ctl)}</p><p class="why">${whyText(c)}${cf?` · <b>Écart observé dans cette démonstration, cause non démontrée</b>`:''}</p>${act}</div>`;}
 function draw3(){
  const d=S.br==='derive';let h='',list;
  $('t3').textContent=d?'Origines à contrôler, dans l’ordre':'Mesures et causes à contrôler';
@@ -141,7 +141,7 @@ function draw3(){
   let s=Math.pow(2.2,c.src==='atelier'?2:c.w.length);
   if(c.lo)s*=.2;
   if(c.ms){if(c.ms.st==='hors'&&c.ms.adverse)s*=2.2*2.2;else if(c.ms.adverse||c.ms.trend==='defav')s*=2.2;else if(c.ms.st==='limite'&&!c.ms.adverse)s*=.5}
-  s*=Math.pow(1.8,Math.min(c.rx,3));
+  /* Les retours déclarés ne changent pas le classement. */
   c.s=s});
  const tot=list.reduce((a,c)=>a+c.s,0)||1;list.forEach(c=>c.pct=Math.max(1,Math.round(c.s/tot*100)));
  list.sort((a,b)=>b.s-a.s||(CONF[b.id]||0)-(CONF[a.id]||0));
@@ -153,9 +153,9 @@ function draw3(){
  const nOk=Object.keys(O).length;
  let head='<p class="vpx">VP Expert · guide les contrôles</p>';
  if(ans>=2&&list.length){
-  head+=Object.keys(R).length?`<div class="emsg win nv"><b>${Object.keys(R).length} écart(s) observé(s).</b> Plusieurs écarts peuvent coexister : poursuivre les contrôles pertinents, corriger, puis indiquer le résultat à l’étape 4. La synthèse (étape 5) se met à jour. <button type="button" class="lk" data-new="1">Nouvelle enquête sur ce défaut</button></div>`
+  head+=Object.keys(R).length?`<div class="emsg win nv"><b>${Object.keys(R).length} écart(s) observé(s).</b> Plusieurs écarts peuvent coexister : poursuivre les contrôles pertinents, corriger, puis indiquer le résultat dans Essai & synthèse (étape 4). La synthèse se met à jour. <button type="button" class="lk" data-new="1">Nouvelle enquête sur ce défaut</button></div>`
    :nOk?`<div class="emsg nv">${nOk} contrôle(s) conforme(s). ${nxi>=0?'Passez au contrôle suivant, n° '+(nxi+1)+'.':'Aucune hypothèse étayée : solliciter une revue métier, sans conclure à une cause.'}</div>`
-   :'<p class="sl nv">Contrôlez dans l’ordre proposé et indiquez chaque constat. Plusieurs écarts peuvent être relevés ; la cause se confirme quand l’action corrective fait disparaître le défaut (étape 4).</p>';
+   :'<p class="sl nv">Contrôlez dans l’ordre proposé et indiquez chaque constat. Plusieurs écarts peuvent être relevés ; la disparition du défaut doit être suivie et la conclusion validée par la qualité.</p>';
  }
  const shown=S.showall?list:list.filter((c,i)=>i<nShow||c.src==='atelier');
  h+=ans<2?'<p class="sl">Répondez à au moins deux questions de l’enquête pour classer les causes.</p>':list.length?head+'<div class="cl">'+shown.map(c=>{const i=list.indexOf(c);return card(c,i,stOf(c),i===nxi)}).join('')+'</div>':'<p class="sl">Aucune cause ne correspond encore à ces réponses : ajoutez-la ci-dessous, elle sera proposée à l’expert.</p>';
@@ -185,7 +185,7 @@ function record(id,res){const K=KEY();REC[K]=REC[K]||{};OK[K]=OK[K]||{};if(REC[K
 function render(){draw0();draw1();draw2();draw3();drawH();window.dispatchEvent(new Event('vp:enquete-render'));}
 document.addEventListener('click',e=>{
  const b=e.target.closest('button');if(!b)return;
- if(b.dataset.def){S.def=b.dataset.def;S.showall=false;if(LATE.includes(S.def)&&S.vis==='demoul')S.vis=undefined;render();if(innerWidth<760)$('s2').scrollIntoView({behavior:'smooth'});return}
+ if(b.dataset.def){S.def=b.dataset.def;S.showall=false;if(LATE.includes(S.def)&&S.vis==='demoul')S.vis=undefined;render();if(innerWidth<760&&!document.body.classList.contains('vp-ui'))$('s2').scrollIntoView({behavior:'smooth'});return}
  if(b.id==='more'){S.more=true;draw0();return}
  if(b.id==='showall'){S.showall=true;draw3();window.dispatchEvent(new Event('vp:enquete-render'));return}
  if(b.dataset.fam){S.fam=b.dataset.fam;draw0();return}
@@ -200,19 +200,20 @@ document.addEventListener('click',e=>{
  if(b.id==='print'){window.print();return}
  const o=b.closest('.opts');if(o){const k=o.dataset.k,v=b.dataset.v;S[k]=(S[k]===v&&k!=='param')?undefined:v;render();}
 });
+let measureTimer;
 /* Saisie manuelle d'une valeur relevée : le classement se met à jour sans perdre le focus */
 document.addEventListener('input',e=>{const el=e.target;if(!el.matches('.mesin'))return;const p=el.dataset.mes;if(el.value==='')delete S.mes[p];else S.mes[p]=el.value;
- draw3();const row=el.closest('tr'),dir=mesCauses().find(x=>x.p===p)?.dir||'var',s=mstat(p,dir);
- if(row){row.className=s.st==='none'?'':s.st==='hors'?'hors':(s.adverse||s.trend==='defav')?'lim':s.st==='ok'?'ok':'okl';const cell=row.querySelector('.mst');if(cell){cell.textContent=s.st==='none'?'À relever':s.txt;cell.className='mst '+row.className}}
- window.dispatchEvent(new Event('vp:enquete-render'))});
-document.addEventListener('change',e=>{if(e.target.matches('.mesin'))draw1()});
+ clearTimeout(measureTimer);measureTimer=setTimeout(()=>{draw3();window.dispatchEvent(new Event('vp:enquete-render'))},160);const row=el.closest('tr'),dir=mesCauses().find(x=>x.p===p)?.dir||'var',s=mstat(p,dir);
+ if(row){row.className=s.st==='none'?'':s.st==='hors'?'hors':(s.adverse||s.trend==='defav')?'lim':s.st==='ok'?'ok':'okl';el.setAttribute('aria-invalid',String(!!s.invalid));const cell=row.querySelector('.mst');if(cell){cell.textContent=s.st==='none'?(s.invalid?'Saisie invalide':'À relever'):s.txt;cell.className='mst '+row.className}}
+});
+document.addEventListener('change',e=>{if(e.target.matches('.mesin')){clearTimeout(measureTimer);draw1();draw3();window.dispatchEvent(new Event('vp:enquete-render'))}});
 $('dq').addEventListener('input',e=>{S.qd=e.target.value;draw0()});
 if(/[?&]revue\b/.test(location.search))document.body.classList.add('revue');
 render();
 window.VPConsolidation?.bind({sector:'TP',S,REC,OK,NUM,HIST,render,cands,KEY,
  /* Lecture des mesures pour la synthèse */
- measures:()=>S.br==='derive'?[]:mesCauses().map(({p,dir,n})=>{const s=mstat(p,dir),m=MES[p];return {name:lab(PROC,p),unit:m.u,set:fmt(p,m.c)+' ± '+fmt(p,m.t),cur:s.cur===undefined?null:fmt(p,s.cur),avg:s.avg===undefined?null:fmt(p,s.avg),status:s.st,trend:s.trend,adverse:!!s.adverse,txt:s.st==='none'?'Pas de valeur relevée':s.txt+(s.trend==='defav'?', tendance défavorable':'')}}),
+ measures:()=>S.br==='derive'?[]:mesCauses().map(({p,dir,n})=>{const s=mstat(p,dir),m=MES[p];return {name:lab(PROC,p),unit:m.u,set:fmt(p,m.c)+' ± '+fmt(p,m.t),cur:s.cur===undefined?null:fmt(p,s.cur),avg:s.avg===undefined?null:fmt(p,s.avg),status:s.st,trend:s.trend,adverse:!!s.adverse,txt:s.st==='none'?s.txt:s.txt+(s.trend==='defav'?', tendance défavorable':'')}}),
  defectLabel:()=>S.br==='derive'?lab(PROC,S.param)+' (dérive)':S.def,
  families:['Matière','Outillage','Moyen','Paramètres'],
- choices:{def:DEFS.map(d=>d[0]),fam:['all',...FAM.map(x=>x[0])],qd:'text',more:'boolean',showall:'boolean',mes:'object',br:SIT.map(x=>x[0]),param:PROC.map(p=>p[0]),...Object.fromEntries(Object.entries({ou:OU,quand:QUAND,freq:FREQ,terme:TERME,qui:QUI,combien:COMBIEN,vis:VIS,etendue:ETENDUE}).map(([k,v])=>[k,v.map(x=>x[0])]))}});
+ nativeSpec(state){state={...state};const old={...S};try{Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,state);return {base:base(),params:Object.keys(MES),candidates:S.br==='derive'?DRV.map((c,k)=>({...c,id:'d'+k})).filter(c=>c.p.includes(S.param)):cands().filter(c=>c.src!=='atelier')};}finally{Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,old)}},choices:{def:DEFS.map(d=>d[0]),fam:['all',...FAM.map(x=>x[0])],qd:'text',more:'boolean',showall:'boolean',mes:'object',br:SIT.map(x=>x[0]),param:PROC.map(p=>p[0]),...Object.fromEntries(Object.entries({ou:OU,quand:QUAND,freq:FREQ,terme:TERME,qui:QUI,combien:COMBIEN,vis:VIS,etendue:ETENDUE}).map(([k,v])=>[k,v.map(x=>x[0])]))}});
 })();

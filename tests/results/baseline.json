@@ -1,0 +1,134 @@
+[
+  {
+    "page": "enquete.html",
+    "width": 1440,
+    "errors": [],
+    "scrollWidth": 1440,
+    "steps": 5,
+    "cards": 5,
+    "preselected": 6,
+    "transfer": 396583,
+    "domNodes": 809
+  },
+  {
+    "page": "enquete.html",
+    "width": 768,
+    "errors": [],
+    "scrollWidth": 768,
+    "steps": 5,
+    "cards": 5,
+    "preselected": 6,
+    "transfer": 396583,
+    "domNodes": 809
+  },
+  {
+    "page": "enquete.html",
+    "width": 390,
+    "errors": [],
+    "scrollWidth": 390,
+    "steps": 5,
+    "cards": 5,
+    "preselected": 6,
+    "transfer": 396583,
+    "domNodes": 809
+  },
+  {
+    "page": "enquete-caoutchouc.html",
+    "width": 1440,
+    "errors": [],
+    "scrollWidth": 1440,
+    "steps": 6,
+    "cards": 5,
+    "preselected": 5,
+    "transfer": 375514,
+    "domNodes": 764
+  },
+  {
+    "page": "enquete-caoutchouc.html",
+    "width": 768,
+    "errors": [],
+    "scrollWidth": 768,
+    "steps": 6,
+    "cards": 5,
+    "preselected": 5,
+    "transfer": 375514,
+    "domNodes": 764
+  },
+  {
+    "page": "enquete-caoutchouc.html",
+    "width": 390,
+    "errors": [],
+    "scrollWidth": 390,
+    "steps": 6,
+    "cards": 5,
+    "preselected": 5,
+    "transfer": 375514,
+    "domNodes": 764
+  },
+  {
+    "page": "enquete-decolletage.html",
+    "width": 1440,
+    "errors": [],
+    "scrollWidth": 1440,
+    "steps": 6,
+    "cards": 5,
+    "preselected": 5,
+    "transfer": 357648,
+    "domNodes": 752
+  },
+  {
+    "page": "enquete-decolletage.html",
+    "width": 768,
+    "errors": [],
+    "scrollWidth": 768,
+    "steps": 6,
+    "cards": 5,
+    "preselected": 5,
+    "transfer": 357648,
+    "domNodes": 752
+  },
+  {
+    "page": "enquete-decolletage.html",
+    "width": 390,
+    "errors": [],
+    "scrollWidth": 390,
+    "steps": 6,
+    "cards": 5,
+    "preselected": 5,
+    "transfer": 357648,
+    "domNodes": 752
+  },
+  {
+    "page": "enquete-traitement-surface.html",
+    "width": 1440,
+    "errors": [],
+    "scrollWidth": 1440,
+    "steps": 6,
+    "cards": 5,
+    "preselected": 5,
+    "transfer": 416857,
+    "domNodes": 910
+  },
+  {
+    "page": "enquete-traitement-surface.html",
+    "width": 768,
+    "errors": [],
+    "scrollWidth": 768,
+    "steps": 6,
+    "cards": 5,
+    "preselected": 5,
+    "transfer": 416857,
+    "domNodes": 910
+  },
+  {
+    "page": "enquete-traitement-surface.html",
+    "width": 390,
+    "errors": [],
+    "scrollWidth": 390,
+    "steps": 6,
+    "cards": 5,
+    "preselected": 5,
+    "transfer": 416857,
+    "domNodes": 910
+  }
+]
