@@ -1,4 +1,4 @@
-/* VP Expert · démonstration guidée de 90 secondes.
+/* VP Expert · démonstration guidée de 2 minutes.
    Rejoue, sur un cas fictif et avec les vrais boutons de la page, le parcours complet : défaut, contexte, contrôles dans
    l'ordre (conforme, non conforme, non vérifié), essai et résultat, synthèse. Aucun moteur n'est modifié : le script clique
    comme le ferait l'utilisateur. Rien n'est enregistré dans la mémoire d'atelier. */
@@ -27,7 +27,7 @@
 
   /* Chaque étape : titre, texte, durée en secondes, action (lance les vrais clics), élément mis en valeur */
   const STEPS = [
-    { t: 'Un défaut qui revient', d: 7, x: 'Cas fictif, en 90 secondes : voici ce que VP Expert apporte au régleur et à la direction. Rien n’est enregistré.',
+    { t: 'Un défaut qui revient', d: 7, x: 'Cas fictif, en deux minutes : voici ce que VP Expert apporte au régleur et à la direction. Rien n’est enregistré.',
       run: () => { go(1); }, el: () => $('#defs') || $('#vp-step-1') },
     { t: '1 · Le défaut', d: 8, x: 'Le régleur choisit le défaut qu’il voit, dans la liste du métier : ici le premier de la liste, à titre d’exemple.',
       run: () => { go(1); click($('#defs button')); }, el: () => $('#defs button') },
@@ -43,6 +43,16 @@
         later(4500, () => { const c = next(); click($(isGate(c) ? '#vf-ok' : '#vf-nc')); });
         later(9500, () => click($('#vf-nv')));
       }, el: () => $('#vp-focus') },
+    { t: 'Le parcours téléphone, écran par écran', d: 14, x: 'La même enquête dans une application : un défaut, trois questions, un contrôle à la fois, puis l’historique. Les boutons sont ceux de l’enquête ; rien n’est mémorisé.',
+      run: () => {
+        go(3);
+        const A = window.VPApp; if (!A) return;
+        A.open();
+        later(2500, () => { const t = $('#vp-app .va-tile'); if (t) t.click(); });
+        later(5000, () => { const s = $('#vp-app .va-skip'); for (let i = 0; i < 3; i++) { const o = $('#vp-app .va-opt'); if (o) o.click(); } if ($('#vp-app .va-skip')) $('#vp-app .va-skip').click(); });
+        later(9000, () => { const b = $('#vp-app .va-nc'); if (b) b.click(); });
+        later(11500, () => { if (A.isOpen()) A.go('hist'); });
+      }, el: () => null },
     { t: 'Constater, sans conclure', d: 12, x: 'Chaque contrôle reçoit un constat : conforme, non conforme, ou non vérifié quand il est impossible ou non concluant. Un constat n’est jamais une cause démontrée.',
       run: () => {
         const F = window.VPFocus; if (F && F.isOn()) F.setFocus(false);
@@ -98,6 +108,7 @@
   function to(i) {
     if (i < 0 || i >= STEPS.length) return;
     idx = i; ticks = 0; clearLaters();
+    if (window.VPApp && VPApp.isOpen()) VPApp.close();
     const s = STEPS[i];
     try { s.run(); } catch (e) { /* un clic raté ne doit jamais bloquer la démonstration */ }
     card.querySelector('.vp-demo-k').textContent = 'Démonstration guidée · étape ' + (i + 1) + ' sur ' + STEPS.length + ' · cas fictif';
@@ -130,6 +141,7 @@
   function stop() {
     active = false; playing = false; clearInterval(timer); clearLaters();
     const F = window.VPFocus; if (F && F.isOn()) F.setFocus(false);
+    if (window.VPApp && VPApp.isOpen()) VPApp.close();
     if (card) card.hidden = true;
     show(null);
     document.body.classList.remove('vp-demo-on');
@@ -139,7 +151,7 @@
     const toggle = document.getElementById('vp-focus-toggle');
     const btn = document.createElement('button');
     btn.type = 'button'; btn.className = 'vp-demo-launch'; btn.id = 'vp-demo-launch';
-    btn.textContent = 'Démonstration guidée · 90 s';
+    btn.textContent = 'Démonstration guidée · 2 min';
     btn.addEventListener('click', start);
     if (toggle && toggle.parentNode) {
       const wrap = document.createElement('div'); wrap.className = 'vp-modes';

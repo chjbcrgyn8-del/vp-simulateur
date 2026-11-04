@@ -52,7 +52,7 @@
            <p class="sx-lbl">Ce qui est suivi</p><div class="sx-chips">${c.mesures.map(m => `<span>${esc(m)}</span>`).join('')}</div>
            <p class="sx-lbl">Connexion</p><p class="sx-cx">${esc(c.connexion)}</p>`
         : `<ul class="sx-ul">${c.fait.map(f => `<li>${nb(f)}</li>`).join('')}</ul>`;
-      const guide = o.k === 'expert' && c.demo ? `<a class="btn ghost sx-btn" href="${c.demo}${c.demo.indexOf('?') > -1 ? '&' : '?'}demo=1">Démonstration guidée · 90 s</a>` : '';
+      const guide = o.k === 'expert' && c.demo ? `<a class="btn ghost sx-btn" href="${c.demo}${c.demo.indexOf('?') > -1 ? '&' : '?'}demo=1">Démonstration guidée · 2 min</a><a class="btn ghost sx-btn" href="${c.demo}${c.demo.indexOf('?') > -1 ? '&' : '?'}app=1">Parcours téléphone</a>` : '';
       const btn = c.demo
         ? `<a class="btn ${pr ? 'primary' : 'ghost'} sx-btn" href="${c.demo}">${esc(c.demoL)}</a>${guide}`
         : `<a class="btn ghost sx-btn" href="pilote.html#rdv">${esc(c.demoL)}</a>`;
