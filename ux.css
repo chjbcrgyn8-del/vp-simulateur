@@ -6,6 +6,7 @@
 .skip{position:absolute;left:12px;top:-64px;z-index:100;padding:12px 18px;border-radius:8px;
  background:#0a1320;color:#fff;border:1px solid #e3b47c;font:600 14px/1 inherit;text-decoration:none;transition:top .15s}
 .skip:focus{top:12px;outline:2px solid #e8841f;outline-offset:2px}
+body a.skip{color:#fff}
 main:focus{outline:none}
 
 /* ---------- En-tête réellement collant ----------
@@ -100,3 +101,11 @@ body .sx-lk{color:#8f5a22}
 body .sc-cta .eyebrow{color:#8f5a22!important}
 body .ishi .x{color:#5a6472}
 body .bx-mode button small{color:#4a5566}
+
+/* ---------- Pages documentaires (body.doc-app : lot2bis.css, lot3.css, decolletage.css) ----------
+   Habillage à part, sans le en-tête .top : seules les règles utiles leur sont appliquées. */
+body.doc-app .eyebrow,body.doc-app .version,body.doc-app .dc-rule-id,body.doc-app .status-chip,body.doc-app small{font-size:12px}
+@media(max-width:640px){
+ body.doc-app .doc-top a,body.doc-app .dc-steps a{display:inline-flex;align-items:center;min-height:44px}
+ body.doc-app .ref-links a,body.doc-app .source>a{display:inline-flex;align-items:center;min-height:44px}
+}
