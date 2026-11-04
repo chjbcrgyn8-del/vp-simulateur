@@ -1,0 +1,55 @@
+/* vp-expert-a11y.css : lisibilité et zones tactiles des 4 enquêtes VP Expert (body.vp-ui).
+   Chargée après vp-expert-ui.css, dont elle ne modifie aucune règle : une nouvelle livraison de
+   cette feuille ne l'écrase pas. Elle ne change que des tailles de texte, des couleurs de texte
+   et des zones de clic ; aucun contenu ni aucune logique. */
+
+/* ---------- Pastilles « VP Expert » / « VP Predict » ----------
+   vp-expert-ui.css les écrit en violet #6240c9 sur fond violet (1,2:1) et en gris-lilas sur orange (1,3:1). */
+body.vp-ui .vpx{color:#fff!important}
+body.vp-ui .vpx.vpp{color:#1a1206!important}
+body.vp-ui .vpduo .vpx{color:#fff!important}
+body.vp-ui .vpduo .vpx.vpp{color:#1a1206!important}
+
+/* ---------- Texte : 12 px minimum (valeurs d'origine de 8 à 11,5 px, aucune taille réduite) ---------- */
+body.vp-ui .sx-bn,
+body.vp-ui .vp-eyebrow,body.vp-ui .vp-slash,body.vp-ui .vp-hero-meta,body.vp-ui .vp-hero-meta span,
+body.vp-ui .vp-panel-topline,body.vp-ui .vp-panel-topline span,
+body.vp-ui .fams button small,
+body.vp-ui #vp-footer-note,
+body.vp-ui .vp-case-top,body.vp-ui .vp-case-top span,body.vp-ui .vp-local,body.vp-ui .vp-proof-level,
+body.vp-ui .vp-case-notice,body.vp-ui #vp-status,body.vp-ui .vp-case-source,body.vp-ui .vp-case-source span,
+body.vp-ui .vpx,
+body.vp-ui main.emain>p.sl,body.vp-ui main.emain>p.duo,body.vp-ui main.emain>p.duo a,
+body.vp-ui .ql,body.vp-ui .fiche i,
+body.vp-ui .stag,body.vp-ui .sc span,
+body.vp-ui .mest thead th,body.vp-ui .mest th small,body.vp-ui .mst,
+body.vp-ui .syn-card h3,body.vp-ui .expert-links small,body.vp-ui .expert-muted small,
+body.vp-ui #lot3 summary span,body.vp-ui .l3t,body.vp-ui .ncl .nc b,body.vp-ui .ncl .cl b,
+body.vp-ui .l3s,body.vp-ui .l3s a,body.vp-ui .l3f,body.vp-ui .l3f a,
+body.vp-ui .rk,body.vp-ui .tg,body.vp-ui .tg.nxt,body.vp-ui .tg.mes,body.vp-ui .fam,body.vp-ui .rtag{font-size:12px!important}
+
+/* ---------- Contraste : tout texte atteint 4,5:1 ---------- */
+body.vp-ui .vp-slash{color:#a29fb8!important}
+body.vp-ui .ishi .x,body.vp-ui .ishi li.x{color:#5a6472!important}
+body.vp-ui .vp-panel-topline,body.vp-ui .vp-panel-topline span{color:#596176!important}
+body.vp-ui #defs button small{color:#4a5368!important}
+body.vp-ui .mest th small{color:#5e6a80!important}
+body.vp-ui .cc.lock .why{color:#4f5b70!important}
+body.vp-ui .sit .sc span{color:#54607a!important}
+body.vp-ui .expert-muted{color:#4a5468!important}
+
+/* ---------- Zones tactiles : 44 px sur écran étroit ---------- */
+@media(max-width:820px){
+ body.vp-ui summary{padding-top:12px;padding-bottom:12px}
+ body.vp-ui .sx-bs,body.vp-ui .sx-bo,body.vp-ui .vp-case-source{display:inline-flex;align-items:center;min-height:44px}
+}
+@media(pointer:coarse){body.vp-ui .tip::after{content:"";position:absolute;inset:-12px}}
+
+/* ---------- Mobile : leur feuille réduit encore les textes sous 600 px ---------- */
+@media(max-width:600px){
+ body.vp-ui .top .tabs.sector a,
+ body.vp-ui .vp-step-number,body.vp-ui [data-vp-step] span,
+ body.vp-ui #defs button small,
+ body.vp-ui .vp-case button,body.vp-ui .vp-case button span,
+ body.vp-ui .vp-reference-note{font-size:12px!important}
+}

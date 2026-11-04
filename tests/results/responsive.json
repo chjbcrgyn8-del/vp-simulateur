@@ -1,0 +1,114 @@
+{
+  "views": [
+    {
+      "page": "enquete.html",
+      "sector": "TP",
+      "width": 1440,
+      "steps": 4,
+      "errors": [],
+      "overflow": false,
+      "transfer_bytes": 349094
+    },
+    {
+      "page": "enquete.html",
+      "sector": "TP",
+      "width": 768,
+      "steps": 4,
+      "errors": [],
+      "overflow": false,
+      "transfer_bytes": 349094
+    },
+    {
+      "page": "enquete.html",
+      "sector": "TP",
+      "width": 390,
+      "steps": 4,
+      "errors": [],
+      "overflow": false,
+      "transfer_bytes": 349094
+    },
+    {
+      "page": "enquete-caoutchouc.html",
+      "sector": "CA",
+      "width": 1440,
+      "steps": 4,
+      "errors": [],
+      "overflow": false,
+      "transfer_bytes": 328032
+    },
+    {
+      "page": "enquete-caoutchouc.html",
+      "sector": "CA",
+      "width": 768,
+      "steps": 4,
+      "errors": [],
+      "overflow": false,
+      "transfer_bytes": 328032
+    },
+    {
+      "page": "enquete-caoutchouc.html",
+      "sector": "CA",
+      "width": 390,
+      "steps": 4,
+      "errors": [],
+      "overflow": false,
+      "transfer_bytes": 328032
+    },
+    {
+      "page": "enquete-decolletage.html",
+      "sector": "DC",
+      "width": 1440,
+      "steps": 4,
+      "errors": [],
+      "overflow": false,
+      "transfer_bytes": 318083
+    },
+    {
+      "page": "enquete-decolletage.html",
+      "sector": "DC",
+      "width": 768,
+      "steps": 4,
+      "errors": [],
+      "overflow": false,
+      "transfer_bytes": 318083
+    },
+    {
+      "page": "enquete-decolletage.html",
+      "sector": "DC",
+      "width": 390,
+      "steps": 4,
+      "errors": [],
+      "overflow": false,
+      "transfer_bytes": 318083
+    },
+    {
+      "page": "enquete-traitement-surface.html",
+      "sector": "TS",
+      "width": 1440,
+      "steps": 4,
+      "errors": [],
+      "overflow": false,
+      "transfer_bytes": 377432
+    },
+    {
+      "page": "enquete-traitement-surface.html",
+      "sector": "TS",
+      "width": 768,
+      "steps": 4,
+      "errors": [],
+      "overflow": false,
+      "transfer_bytes": 377432
+    },
+    {
+      "page": "enquete-traitement-surface.html",
+      "sector": "TS",
+      "width": 390,
+      "steps": 4,
+      "errors": [],
+      "overflow": false,
+      "transfer_bytes": 377432
+    }
+  ],
+  "shared_measure_boundaries": "PASS",
+  "plastic_drift_roundtrips": 8
+}

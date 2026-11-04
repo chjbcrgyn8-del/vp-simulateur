@@ -1,0 +1,34 @@
+[
+  {
+    "sector": "TP",
+    "page": "enquete.html",
+    "rendered_combinations": 48,
+    "invalid_imports_rejected": 8,
+    "errors": [],
+    "functional": "PASS"
+  },
+  {
+    "sector": "CA",
+    "page": "enquete-caoutchouc.html",
+    "rendered_combinations": 112,
+    "invalid_imports_rejected": 8,
+    "errors": [],
+    "functional": "PASS"
+  },
+  {
+    "sector": "DC",
+    "page": "enquete-decolletage.html",
+    "rendered_combinations": 399,
+    "invalid_imports_rejected": 9,
+    "errors": [],
+    "functional": "PASS"
+  },
+  {
+    "sector": "TS",
+    "page": "enquete-traitement-surface.html",
+    "rendered_combinations": 378,
+    "invalid_imports_rejected": 9,
+    "errors": [],
+    "functional": "PASS"
+  }
+]

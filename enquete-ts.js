@@ -21,7 +21,7 @@ const LCFG=m=>!SIMS.includes(m)?NOSIM:m==='anod'?CFGS.anod:m==='chim'?CFGS.chim:
 const LBL={};[OU,QUAND,FREQ,TERME,QUI,COMBIEN].forEach(l=>l.forEach(([v,t])=>LBL[v]=LBL[v]||t));
 const lab=(l,v)=>(l.find(x=>x[0]===v)||[,''])[1];
 const BR=['Mesure','Bain et chimie','Courant et montage','Préparation et substrat','Post-traitement'];
-const S={def:'E01',fam:'all',qd:'',br:'sans',mach:'tonneau',param:'e',dir:'down',ou:'lcd',quand:'serie',freq:'chaque',terme:'moyen',qui:'op',combien:undefined};
+const S={def:'E01',fam:'all',qd:'',br:'sans',mach:'tonneau',param:'e',dir:'down',ou:undefined,quand:undefined,freq:undefined,terme:undefined,qui:undefined,combien:undefined};
 function syncLine(){const d=REF.find(x=>x.tab===S.def);if(d&&!d.lines.includes(S.mach))S.mach=d.lines[0];CFG=LCFG(S.mach);if(!CFG.params.length){if(S.br==='derive')S.br='sans';return;}const P=CFG.params.find(p=>p.id===S.param)||CFG.params[0];S.param=P.id;const ds=P.dirs||['up','down'];if(!ds.includes(S.dir))S.dir=ds[0];}
 const HIST=[],REC={},OK={},NUM={};
 const base=()=>S.br==='derive'?'d|'+S.param+S.dir+'|'+S.mach:'p|'+S.def+'|'+S.mach;
@@ -46,16 +46,16 @@ function draw0(){const f=S.fam,qd=norm(S.qd.trim());
  const L=REF.filter(d=>(f==='all'||d.fam===f)&&(!qd||norm(d.defect+' '+d.hint).includes(qd)));
  $('defs').innerHTML=L.length?L.map(d=>`<button type="button" class="dt ${FC(d.fam)}" data-def="${d.tab}" aria-pressed="${S.def===d.tab}"><b>${esc(d.defect)}</b><small>${esc(d.hint)}</small></button>`).join(''):'<p class="sl">Aucun défaut trouvé. Essayez un autre mot.</p>';
  $('mach').innerHTML='<p class="ml">Type de ligne</p>'+pills('mach',MACH.filter(([v])=>DEF().lines.includes(v)))+(hiddenN()?`<p class="sl hidnote">${hiddenN()} levier${hiddenN()>1?'s':''} sans objet pour une ligne « ${esc(lab(MACH,S.mach).toLowerCase())} », masqué${hiddenN()>1?'s':''}.</p>`:'')+(SIMS.includes(S.mach)?'':'<p class="sl hidnote">Ligne non simulée : enquête sur le référentiel documentaire seul, sans le mode « une mesure dérive ».</p>');}
-const SIT=[['sans','Relevé à la main','Le défaut est vu par une personne : contrôle visuel, XRF ponctuel, essai client. Les analyses se relèvent à la main à l’étape 4.'],['conforme','Mesures VP Predict, sans alerte','Analyses de bain, température, courant et épaisseurs suivies : détail mesure par mesure à l’étape 4.'],['derive','Une mesure dérive','On cherche l’origine de la dérive, dans l’ordre de contrôle candidat.']];
+const SIT=[['sans','Relevé à la main','Le défaut est vu par une personne : contrôle visuel, XRF ponctuel, essai client. Les analyses se relèvent à la main dans la rubrique Contrôles.'],['conforme','Mesures VP Predict, sans alerte','Analyses de bain, température, courant et épaisseurs suivies : détail mesure par mesure dans la rubrique Contrôles.'],['derive','Une mesure dérive','On cherche l’origine de la dérive, dans l’ordre de contrôle candidat.']];
 function draw1(){const nM=nMesOf(),NT=cands().length;
  $('sit').innerHTML=SIT.filter(([v])=>v!=='derive'||CFG.params.length).map(([v,t,d])=>`<button type="button" class="sc" data-b="${v}" aria-pressed="${S.br===v}"><em class="stag ${v==='sans'?'ex':'pr'}">${v==='sans'?'VP Expert seul':'Avec VP Predict'}</em><b>${t}</b><span>${d}</span></button>`).join('');
  const PS=CFG.params.filter(p=>!p.opc||S.br!=='derive'||true);
  $('drv').innerHTML=S.br==='derive'?'<p class="ml">Quelle mesure dérive ?</p>'+pills('param',PS.map(p=>[p.id,p.sn]))+'<p class="ml">Dans quel sens ?</p>'+pills('dir',(CFG.params.find(p=>p.id===S.param).dirs||['up','down']).map(d=>[d,d==='up'?'En hausse':'En baisse'])):'';
  const P=CFG.params.find(p=>p.id===S.param);
  $('msg').className='emsg'+(S.br==='conforme'?' win':'');
- $('msg').innerHTML=S.br==='sans'?`<b>Détection humaine :</b> l’enquête passe en revue les ${NT} leviers de ce défaut${nM?`, y compris les ${nM} liés aux mesures, à relever à la main à l’étape 4`:''}.`
+ $('msg').innerHTML=S.br==='sans'?`<b>Détection humaine :</b> l’enquête passe en revue les ${NT} leviers de ce défaut${nM?`, y compris les ${nM} liés aux mesures, à relever dans la rubrique Contrôles`:''}.`
   :S.br==='conforme'&&!nM?`<b>Mesures VP Predict :</b> aucun levier de ce défaut n’est lié aux mesures exposées, le classement ne change pas. Une analyse que la ligne n’enregistre pas reste « absente », jamais « conforme ».`
-  :S.br==='conforme'?`<b>Mesures VP Predict, sans alerte :</b> le détail mesure par mesure (consigne, valeur actuelle, moyenne des OF précédents, tendance) est à l’étape 4. Une mesure conforme mais limite, ou en tendance défavorable, fait remonter ses leviers.`
+  :S.br==='conforme'?`<b>Mesures VP Predict, sans alerte :</b> le détail mesure par mesure (consigne, valeur actuelle, moyenne des OF précédents, tendance) est dans la rubrique Contrôles. Une mesure conforme mais limite, ou en tendance défavorable, fait remonter ses leviers.`
   :`<b>${esc(P.sn)} ${S.dir==='up'?'en hausse':'en baisse'} :</b> le défaut en est probablement la conséquence. On cherche l’origine de la dérive.`;}
 function draw2(){const d=S.br==='derive';
  $('t2').textContent=d?'Enquête QQOQCP sur la dérive':'Enquête QQOQCP : '+DEF().defect.toLowerCase();
@@ -82,7 +82,7 @@ let LAST=[];
 function draw3(){const d=S.br==='derive';let h=(d?'':M.table())+'<p class="vpx">VP Expert · guide les contrôles</p>',list;
  $('t3').textContent=d?'Origines à contrôler, dans l’ordre':'Leviers à contrôler, dans l’ordre';
  if(d){list=((CFG.kb[S.param]||{})[S.dir]||[]).map((c,k)=>({id:'d'+S.param+S.dir+k,n:c.l,b:'Expertise',r:c.r,ctl:(c.a&&c.a[0]?c.a[0].l:''),x:'Pondération illustrative, sans fréquence terrain vérifiée'+(c.r&&RU[c.r]?' · '+RU[c.r].t:''),s:c.n}));}
- else{list=cands().map(c=>{const w=why(c.ind),ms=M.of(c),lo=M.isLo(ms),rx=window.VPREX?.count('TS',S.def,c.id)||0;return {...c,w,ms,lo,rx,s:(c.gate&&isDim()?1e3:1)*c.prior*Math.pow(2.2,w.length)*M.factor(ms)*Math.pow(1.8,Math.min(rx,3))}});}
+ else{list=cands().map(c=>{const w=why(c.ind),ms=M.of(c),lo=M.isLo(ms),rx=window.VPREX?.count('TS',S.def,c.id)||0;return {...c,w,ms,lo,rx,s:(c.gate&&isDim()?1e3:1)*c.prior*Math.pow(2.2,w.length)*M.factor(ms)*1 /* Mémoire déclarative : aucun bonus de classement */}});}
  const tot=list.filter(c=>!c.gate).reduce((a,c)=>a+c.s,0)||1;list.forEach(c=>c.pct=c.gate&&isDim()?100:Math.max(1,Math.round(c.s/tot*100)));
  list.sort((a,b)=>b.s-a.s);LAST=list;
  const K=KEY(),Rc=REC[K]||{},O=OK[K]||{},gs=gateState();
@@ -96,8 +96,8 @@ function draw3(){const d=S.br==='derive';let h=(d?'':M.table())+'<p class="vpx">
  if(list.length&&gs!=='bad')h+=nNc?`<div class="emsg win nv"><b>${nNc} écart(s) observé(s).</b> Cause non déterminée. Plusieurs écarts peuvent coexister : poursuivre les contrôles pertinents, puis faire valider la causalité et l’action dans le contexte de la ligne, du bain et du substrat. <button type="button" class="lk" data-new="1">Nouvelle enquête sur ce défaut</button></div>`
   :nOk?`<div class="emsg nv">${nOk} contrôle(s) conforme(s). ${nxi>=0?'Passez au contrôle suivant, n° '+(nxi+1)+'.':'Aucune hypothèse étayée : solliciter une revue métier, sans conclure à une cause.'}</div>`
   :'<p class="sl nv">Après chaque contrôle, indiquez le constat. Plusieurs écarts peuvent être relevés ; aucun ne démontre seul la cause. Une erreur de saisie se corrige.</p>';
- h+=list.length?'<div class="cl">'+list.slice(0,nShow).map((c,i)=>card(c,i,stOf(c),i===nxi)).join('')+'</div>':'<p class="sl">Aucune cause ne correspond : c’est un cas à ajouter à la base du site.</p>';
- if(list.length>nShow)h+=`<p class="sl">${list.length-nShow} autre(s) levier(s) possible(s), voir le diagramme. Score illustratif calculé à partir de l’ordre candidat et des indices : ce n’est ni une probabilité, ni une fréquence terrain. Les clics ne modifient pas le classement.</p>`;
+ h+=list.length?'<div class="cl">'+list.slice(0,S.showall?list.length:nShow).map((c,i)=>card(c,i,stOf(c),i===nxi)).join('')+'</div>':'<p class="sl">Aucune cause ne correspond : c’est un cas à ajouter à la base du site.</p>';
+ if(!S.showall&&list.length>nShow)h+=`<p class="sl">${list.length-nShow} autre(s) levier(s) possible(s). <button type="button" class="lk" id="showall">Afficher tous les contrôles</button> Score illustratif calculé à partir de l’ordre candidat et des indices : ce n’est ni une probabilité, ni une fréquence terrain. Les clics ne modifient pas le classement.</p>`;
  if(hiddenN()&&!d)h+=`<p class="sl hidnote">${hiddenN()} levier${hiddenN()>1?'s':''} sans objet masqué${hiddenN()>1?'s':''} pour une ligne « ${esc(lab(MACH,S.mach).toLowerCase())} ».</p>`;
  const out=[];
  if(!d){if(S.qui==='qual')out.push('<span class="nvm"></span><b>Détecté par le service qualité :</b> bloquer le lot concerné et retrouver par la traçabilité (heure, ordre de fabrication, charge, lot de pièces) les pièces touchées.');
@@ -113,17 +113,18 @@ function draw3(){const d=S.br==='derive';let h=(d?'':M.table())+'<p class="vpx">
  if(!d){$('ititle').textContent='Diagramme d’Ishikawa · '+DEF().defect.toLowerCase();$('ihint').textContent='Les leviers grisés sont rendus moins probables par une mesure conforme et stable, sans être exclus. Les autres sont colorés selon le nombre de vos réponses qui y renvoient.';
   const C=cands();$('ishi').innerHTML=BR.map(B=>`<section><h3>${B}</h3><ul>`+(C.filter(c=>c.b===B).map(c=>{const n=why(c.ind).length,x=M.isLo(M.of(c));return `<li class="${x?'x':n>=3?'s3':n===2?'s2':n===1?'s1':''}">${esc(c.n)}</li>`}).join('')||'<li class="x">aucun levier pour ce défaut</li>')+'</ul></section>').join('');}}
 function drawH(){$('hist').hidden=!HIST.length;$('hb').innerHTML=HIST.map((r,ix)=>`<tr class="${r.r}"><td>${r.t}</td><td>${esc(r.d)}</td><td>${esc(r.c)}</td><td><span class="res ${r.r}">${r.g?(r.r==='nc'?'Moyen douteux ou écart non confirmé':'Écart confirmé, moyen fiable'):(r.r==='nc'?'Écart observé : cause non démontrée':'Contrôle conforme : hypothèse non étayée')}</span></td><td><button type="button" class="lk" data-hfix="${ix}">Corriger</button></td></tr>`).join('');}
-function undo(ix){const r=HIST[ix];if(!r)return;HIST.splice(ix,1);
+function undo(ix){const r=HIST[ix];if(!r)return;HIST.splice(ix,1);if(r.g){const deps=new Set(cands().filter(c=>c.adj).map(c=>c.id));for(let j=HIST.length-1;j>=0;j--){const h=HIST[j];if(h.key===r.key&&deps.has(h.id)){delete (REC[h.key]||{})[h.id];delete (OK[h.key]||{})[h.id];HIST.splice(j,1);}}}
  if(r.r==='nc'){if(REC[r.key])delete REC[r.key][r.id];}
  else if(OK[r.key])delete OK[r.key][r.id];}
 function record(id,res){const K=KEY();REC[K]=REC[K]||{};OK[K]=OK[K]||{};if(REC[K][id]||OK[K][id])return;
- const c=LAST.find(x=>x.id===id);if(!c)return;
+ const c=LAST.find(x=>x.id===id);if(!c||c.adj&&['open','bad'].includes(gateState()))return;
  if(res==='nc')REC[K][id]=1;else OK[K][id]=1;
  HIST.unshift({key:K,id,r:res,g:c.gate,t:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),d:S.br==='derive'?CFG.params.find(p=>p.id===S.param).sn+(S.dir==='up'?' en hausse':' en baisse'):DEF().defect,c:c.n});}
 function render(){syncLine();draw0();draw1();draw2();draw3();drawH();window.dispatchEvent(new Event('vp:enquete-render'));}
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.id==='showall'){S.showall=true;render();return}
  if(b.dataset.fam){S.fam=b.dataset.fam;draw0();return}
- if(b.dataset.def){S.def=b.dataset.def;render();if(innerWidth<760)$('s1').scrollIntoView({behavior:'smooth'});return}
+ if(b.dataset.def){S.def=b.dataset.def;S.showall=false;render();if(innerWidth<760&&!document.body.classList.contains('vp-ui'))$('s1').scrollIntoView({behavior:'smooth'});return}
  if(b.dataset.b){S.br=b.dataset.b;render();return}
  if(b.dataset.go){S.br=b.dataset.go;render();$('s1').scrollIntoView({behavior:'smooth'});return}
  if(b.dataset.nc){record(b.dataset.nc,'nc');render();return}
@@ -152,5 +153,5 @@ window.VP_SECTOR_ADAPTERS=window.VP_SECTOR_ADAPTERS||{};
   sourcesPage:'sources-traitement-surface.html',
   example:window.VPTS_COMPLETE?{spec:window.VPTS_COMPLETE.case,query:'rouille-rouge'}:null};
 }
-window.VPConsolidation?.bind({sector:'TS',S,REC,OK,NUM,HIST,render,cands,KEY,measures:M.measures,mesTitle:'Mesures de la ligne',choices:{mes:'object',def:REF.map(d=>d.tab),fam:['all',...FAM.map(x=>x[0])],qd:'text',br:SIT.map(x=>x[0]),mach:MACH.map(x=>x[0]),param:[...new Set(Object.values(CFGS).flatMap(c=>c.params.map(p=>p.id)))],dir:['up','down'],...Object.fromEntries(Object.entries({ou:OU,quand:QUAND,freq:FREQ,terme:TERME,qui:QUI,combien:COMBIEN}).map(([k,v])=>[k,v.map(x=>x[0])]))}});
+window.VPConsolidation?.bind({sector:'TS',S,REC,OK,NUM,HIST,render,cands,KEY,measures:M.measures,mesTitle:'Mesures de la ligne',nativeSpec(state){state={...state};const old={...S},oldCfg=CFG;try{Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,state);CFG=LCFG(S.mach);if(!DEF().lines.includes(S.mach)||(S.br==='derive'&&!CFG.params.length))throw Error('Ligne incompatible avec le défaut ou le mode');const p=CFG.params.find(p=>p.id===S.param);if(CFG.params.length&&(!p||!(p.dirs||['up','down']).includes(S.dir)))throw Error('Paramètre ou sens incompatible');return {base:base(),params:CFG.params.map(p=>p.id),gateActive:S.br!=='derive'&&isDim(),candidates:S.br==='derive'?((CFG.kb[S.param]||{})[S.dir]||[]).map((c,k)=>({id:'d'+S.param+S.dir+k})):cands()};}finally{Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,old);CFG=oldCfg;}},choices:{mes:'object',def:REF.map(d=>d.tab),fam:['all',...FAM.map(x=>x[0])],qd:'text',showall:'boolean',br:SIT.map(x=>x[0]),mach:MACH.map(x=>x[0]),param:[...new Set(Object.values(CFGS).flatMap(c=>c.params.map(p=>p.id)))],dir:['up','down'],...Object.fromEntries(Object.entries({ou:OU,quand:QUAND,freq:FREQ,terme:TERME,qui:QUI,combien:COMBIEN}).map(([k,v])=>[k,v.map(x=>x[0])]))}});
 })();

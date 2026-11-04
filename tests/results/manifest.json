@@ -1,0 +1,42 @@
+{
+  "base_commit": "f6786a6e6295974fe6779e8a604497aeccbaf322",
+  "changed_files": [
+    "enquete-c.js",
+    "enquete-caoutchouc.html",
+    "enquete-d.js",
+    "enquete-decolletage.html",
+    "enquete-traitement-surface.html",
+    "enquete-ts.js",
+    "enquete.html",
+    "enquete.js",
+    "vp-expert-consolide.js",
+    "vp-expert-number.js",
+    "vp-expert-ui.js",
+    "vp-expert-ui.css",
+    "design.md",
+    "NOTICE-VP-EXPERT.md",
+    "tests/.gitignore",
+    "tests/regression.py",
+    "tests/responsive.py"
+  ],
+  "patch_applies_to_base": true,
+  "sha256": {
+    "enquete-c.js": "4cb2c790eecd29d0d1e0ad7df718d6d7514279e4b371a85c8b9d0b1c5c227fa2",
+    "enquete-caoutchouc.html": "238afda424108d4fbb05c1da70b6372c026c382f6e4994f4ba83150a7791e566",
+    "enquete-d.js": "8526cd78998bab77204b7b9532a781d993635b999693209efc5b5a9f377983d0",
+    "enquete-decolletage.html": "a3d0f392f2e87938c161a8ce8d7469be61053b9bdcc89d5a9845399873a78b38",
+    "enquete-traitement-surface.html": "407bb89ebbfadb38bb1b58c04d8fda36959bef136a01cc12b96e56e04ee437d7",
+    "enquete-ts.js": "604d22d25f51966d3e9ec17e41354fbed0d4a42d4543b6efcfc59138868be016",
+    "enquete.html": "a09b2015a5535f0937e76e761944a9f6c20737f5e02fe0c3525146a285a407fd",
+    "enquete.js": "b1129ac854f451771a5df9376054941872f9d3e1015faa8ead7aee82e6062cb5",
+    "vp-expert-consolide.js": "15e1fab37933b3711b8fa0b294b934ff3fc3e7dd5ca5f58d61532c1695278ffe",
+    "vp-expert-number.js": "34ad1f6963f93b39716263715e9fbcb55e4d6cc69ebca1211d09e5d0ceb82a9f",
+    "vp-expert-ui.js": "4f1a99bba7d61cbb7de87cd942e237ed237f0736499ed1fb9a02831b0c98d4f7",
+    "vp-expert-ui.css": "5f01bcd60b61061bd9d89aaa6e41c2cb9cb3c2f5b5b6214f1c2c43645310f282",
+    "design.md": "1785e49d7ed10c54a1a3a6448f9e0005e6034d91a207fdd75e8e994bb38f3749",
+    "NOTICE-VP-EXPERT.md": "eae8175d5fab298c5536ee96aa8ce1153e1613c69caeb703c6967569bce887e7",
+    "tests/.gitignore": "7df69b0a8df4de51aa5750f952790b19a5c95b400a7ed5a2b03553467bebff52",
+    "tests/regression.py": "11fdc47d3549f2378df7fd394aaf533e56a9251205746321b3d1245b913ed966",
+    "tests/responsive.py": "23122c88a51717f20ab0ce95cf5a3e2e6cb6450f7d5ec05372bc7f127ec5dfb9"
+  }
+}
