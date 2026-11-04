@@ -188,9 +188,9 @@ function chart(cash){
  <polyline points="${pts}" fill="none" stroke="#aa352b" stroke-width="2.5" stroke-linejoin="round" clip-path="url(#cneg)"/>
  <polyline points="${pts}" fill="none" stroke="#2f6b4f" stroke-width="3" stroke-linejoin="round" clip-path="url(#cpos)"/>
  ${lo>0&&cash[lo]<0?`<text x="${x(lo)+16}" y="${y(cash[lo])+14}" text-anchor="middle" font-size="11" fill="#aa352b" font-family="IBM Plex Mono">${eur(cash[lo])}</text>`:''}
- ${pb>0?`<circle cx="${x(pb)}" cy="${y(cash[pb])}" r="9" fill="#2f6b4f" fill-opacity=".18"/><circle cx="${x(pb)}" cy="${y(cash[pb])}" r="4.5" fill="#2f6b4f" stroke="#fff" stroke-width="2"/><text x="${x(pb)-12}" y="${y(cash[pb])-10}" text-anchor="end" font-size="12" fill="#2f6b4f" font-family="General Sans, IBM Plex Sans" font-weight="600">Rentabilisé · mois ${pb}</text>`:''}
+ ${pb>0?`<circle cx="${x(pb)}" cy="${y(cash[pb])}" r="9" fill="#2f6b4f" fill-opacity=".18"/><circle cx="${x(pb)}" cy="${y(cash[pb])}" r="4.5" fill="#2f6b4f" stroke="#fff" stroke-width="2"/><text x="${x(pb)-12}" y="${y(cash[pb])-10}" text-anchor="end" font-size="12" fill="#2f6b4f" font-family="Geist, system-ui, sans-serif" font-weight="600">Rentabilisé · mois ${pb}</text>`:''}
  ${[0,12,24,36].map(m=>`<text x="${x(m)}" y="${H-8}" font-size="11" fill="#5a6676" text-anchor="${m===0?'start':m===36?'end':'middle'}" font-family="IBM Plex Mono">${m===0?'Mois 0':m}</text>`).join('')}
- <text x="${W-p}" y="${y(cash[36])-10}" font-size="13" fill="#173a6b" text-anchor="end" font-family="General Sans, IBM Plex Sans" font-weight="600">${eur(cash[36])}</text></svg>`;
+ <text x="${W-p}" y="${y(cash[36])-10}" font-size="13" fill="#173a6b" text-anchor="end" font-family="Geist, system-ui, sans-serif" font-weight="600">${eur(cash[36])}</text></svg>`;
 }
 
 let HYPD=null;

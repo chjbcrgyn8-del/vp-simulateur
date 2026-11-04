@@ -20,9 +20,6 @@ fs.writeFileSync(file,`<!doctype html>
 <meta property="og:title" content="${esc(title)} · Vella Partners">
 <meta property="og:description" content="${esc(desc)}">
 <link rel="stylesheet" href="fonts.css?v=1">
-<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
-<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
-<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="st.css">
 <link rel="stylesheet" href="premium.css?v=9">

@@ -8,8 +8,8 @@
   --navy:#0f2340;--accent:#97571d;--soft:#eceff3;
   --good:#22613f;--goodbg:#e4f0e8;--warn:#86520f;--warnbg:#f8eedb;--bad:#a2342a;--badbg:#f8e7e3;
   --orange:#d9873a;--copper:#b8732f;--night:#0a1320;--night2:#132339;
-  --font:'Switzer','Helvetica Neue',system-ui,sans-serif;
-  --display:'General Sans','Switzer',system-ui,sans-serif;
+  --font:'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --display:'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:'IBM Plex Mono',ui-monospace,monospace;
   --r:10px;--r-lg:14px;
   --shadow:0 1px 2px rgba(13,20,33,.04),0 8px 24px -12px rgba(13,20,33,.12);
