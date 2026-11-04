@@ -6,8 +6,10 @@
   'use strict';
   const $ = s => document.querySelector(s);
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let timer = null, idx = -1, playing = false, active = false, hl = null, card = null, bar = null, ticks = 0;
+  let laters = [], timer = null, idx = -1, playing = false, active = false, hl = null, card = null, bar = null, ticks = 0;
 
+  const later = (ms, fn) => { laters.push(setTimeout(() => { try { if (active) fn(); } catch (e) { /* sans effet */ } }, ms)); };
+  const clearLaters = () => { laters.forEach(clearTimeout); laters = []; };
   const stepBtn = n => $('[data-vp-step="' + n + '"]');
   const go = n => { const b = stepBtn(n); if (b) b.click(); };
   const click = el => { if (el) el.click(); return !!el; };
@@ -33,13 +35,23 @@
       run: () => { go(2); ['qui', 'ou', 'quand', 'freq', 'vis', 'terme'].forEach(k => click(firstBtn(k))); }, el: () => $('#vp-step-2 .opts') },
     { t: '3 · Les contrôles, dans l’ordre', d: 11, x: 'VP Expert classe les contrôles et dit pourquoi chacun est proposé ici. Le premier est celui à faire en priorité.',
       run: () => { go(3); }, el: () => next() },
+    { t: 'Au poste : le mode Focus sur téléphone', d: 15, x: 'Au pied de la presse, le régleur ne voit qu’un contrôle à la fois, en grand, avec trois réponses possibles. Il appuie, le contrôle suivant s’affiche.',
+      run: () => {
+        go(3);
+        const F = window.VPFocus; if (!F) return;
+        F.setFocus(true); F.setPhone(true);
+        later(4500, () => { const c = next(); click($(isGate(c) ? '#vf-ok' : '#vf-nc')); });
+        later(9500, () => click($('#vf-nv')));
+      }, el: () => $('#vp-focus') },
     { t: 'Constater, sans conclure', d: 12, x: 'Chaque contrôle reçoit un constat : conforme, non conforme, ou non vérifié quand il est impossible ou non concluant. Un constat n’est jamais une cause démontrée.',
       run: () => {
-        const c = next();
-        if (isGate(c)) { click(c.querySelector('[data-ok]')); const c2 = next(); if (c2) click(c2.querySelector('[data-nc]')); }
-        else click(c && c.querySelector('[data-nc]'));
-        const c3 = next(); if (c3) click(c3.querySelector('[data-ok]'));
-        const c4 = next(); if (c4) click(c4.querySelector('[data-nv]'));
+        const F = window.VPFocus; if (F && F.isOn()) F.setFocus(false);
+        go(3);
+        let c = next();
+        if (c && isGate(c)) { click(c.querySelector('[data-ok]')); c = next(); }
+        if (!$('#res .cc.found') && c) { click(c.querySelector('[data-nc]')); c = next(); }
+        if (!$('#res .cc.done') && c) { click(c.querySelector('[data-ok]')); c = next(); }
+        if (!$('#res .cc.unver') && c) click(c.querySelector('[data-nv]'));
       }, el: () => $('#res .cc.found') || $('#res .cc') },
     { t: '4 · Essai, action, résultat', d: 12, x: 'Après les contrôles : la cause retenue, l’action menée, le résultat observé. La validation par la qualité reste nécessaire.',
       run: () => {
@@ -85,7 +97,7 @@
 
   function to(i) {
     if (i < 0 || i >= STEPS.length) return;
-    idx = i; ticks = 0;
+    idx = i; ticks = 0; clearLaters();
     const s = STEPS[i];
     try { s.run(); } catch (e) { /* un clic raté ne doit jamais bloquer la démonstration */ }
     card.querySelector('.vp-demo-k').textContent = 'Démonstration guidée · étape ' + (i + 1) + ' sur ' + STEPS.length + ' · cas fictif';
@@ -116,7 +128,8 @@
   }
 
   function stop() {
-    active = false; playing = false; clearInterval(timer);
+    active = false; playing = false; clearInterval(timer); clearLaters();
+    const F = window.VPFocus; if (F && F.isOn()) F.setFocus(false);
     if (card) card.hidden = true;
     show(null);
     document.body.classList.remove('vp-demo-on');
