@@ -175,3 +175,21 @@ main.smain{display:block;width:100%;box-sizing:border-box;flex:1}
 .rsk b{font-size:22px;color:var(--navy);font-variant-numeric:tabular-nums}.rsk span{font-size:12.5px;color:var(--muted)}
 .rscan .note{border-left:3px solid var(--orange);padding-left:10px}
 @media(max-width:620px){.rsk{grid-template-columns:repeat(2,1fr)}}
+
+/* Causes écartées / piste signalée par le contrôle simulé */
+.rk .rk-tag{grid-column:1/-1;font-size:12px;font-weight:600;line-height:1.35}
+.rk.out{opacity:.55;cursor:default;background:var(--soft)}.rk.out .rl{text-decoration:line-through}.rk.out:hover{border-color:var(--line)}
+.rk .rk-out{color:var(--muted)}
+.rk.hint{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+.rk .rk-hint{color:var(--accent)}
+
+/* Retours Henry 2/11 : contrôles de la machine dans la notification, historique « Action efficace » */
+.phone2 .ptk{margin-top:9px;display:flex;flex-direction:column;gap:6px}
+.phone2 .ptq{margin:0;font-size:12px;font-weight:600;color:var(--navy);text-align:center}
+.phone2 .ptb{display:flex;gap:6px}
+.phone2 .ptb button{flex:1;border:0;border-radius:10px;background:var(--navy);color:#fff;font:600 12px var(--font);padding:8px 6px;cursor:pointer;min-height:40px}
+.phone2 .ptb button.pk2{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.phone2 .pcx{border:1px solid #b4232a55;background:#fff;color:var(--bad);border-radius:10px;font:600 12px var(--font);padding:7px;cursor:pointer;min-height:40px}
+.ccl{color:var(--muted);font-style:italic}
+.histo td.eff .ok{color:var(--good);font-weight:600}.histo td.eff .ko{color:var(--bad);font-weight:600}
+.legal.simnote{margin-top:24px}

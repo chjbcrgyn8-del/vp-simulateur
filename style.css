@@ -344,3 +344,5 @@ a.btn,a.btn:hover{text-decoration:none}
 .nosale{margin:8px 0 0;font-size:14px;color:#0a0f19;background:#f6ecdc;border-left:3px solid #e3b47c;padding:8px 12px;border-radius:0 8px 8px 0}
 .live .lp.nosale{color:#9a5f28}
 .hist-demo{margin:-4px 0 14px;color:#5a6270}
+.fb.todo{color:#a8690f;background:#fbefd9}
+.fields:not(.two):not(.three){grid-template-columns:minmax(0,1fr)}.idk{white-space:normal;text-align:left}.field{min-width:0}
