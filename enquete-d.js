@@ -18,7 +18,7 @@ const LBL={};[OU,QUAND,FREQ,TERME,QUI,COMBIEN].forEach(l=>l.forEach(([v,t])=>LBL
 const lab=(l,v)=>(l.find(x=>x[0]===v)||[,''])[1];
 const BR=['Mesure','Outil','Machine et thermique','Barre et matière','Programme et réglages','Expertise documentaire'];
 const S={def:'D01',fam:'all',qd:'',br:'sans',mach:'canon',param:'d',dir:'up',ou:undefined,quand:undefined,freq:undefined,terme:undefined,qui:undefined,combien:undefined};
-const HIST=[],REC={},OK={},NUM={};
+const HIST=[],REC={},OK={},NV={},NUM={};
 const base=()=>S.br==='derive'?'d|'+S.param+S.dir+'|'+S.mach:'p|'+S.def+'|'+S.mach;
 const KEY=()=>base()+'#'+(NUM[base()]||0);
 const DEF=()=>REF.find(d=>d.tab===S.def);
@@ -70,9 +70,10 @@ function card(c,i,st,nx){
  if(st==='lock')act=`<p class="lockt">Verrouillé : contre-mesure d’abord ${rtag('DC01-R01')}${gateState()==='bad'?' · moyen de mesure douteux, aucune correction d’outil avant une mesure fiable':''}</p>`;
  else if(st==='nc')act=`<div class="cst nc nv"><b>${c.gate?'Moyen douteux ou écart non confirmé :':'Écart observé :'}</b> ${c.gate?'aucune correction d’outil tant que la mesure n’est pas fiable.':'hypothèse à vérifier, cause non démontrée. Aucun apprentissage à partir de ce clic.'} <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>${nclE(c.r)}`;
  else if(st==='ok')act=`<div class="cst ok nv"><b>${c.gate?'Écart confirmé, moyen fiable :':'Contrôle conforme :'}</b> ${c.gate?'les leviers de réglage sont déverrouillés.':'hypothèse non étayée par ce contrôle.'} <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
- else act=c.gate?`<div class="acts nv"><button type="button" class="btn sm bok" data-ok="${c.id}">Écart confirmé sur le moyen de référence</button><button type="button" class="btn ghost sm bnc" data-nc="${c.id}">Écart non confirmé ou moyen douteux</button></div>`
-  :`<div class="acts nv"><button type="button" class="btn sm bnc" data-nc="${c.id}">Non conforme après contrôle</button><button type="button" class="btn ghost sm bok" data-ok="${c.id}">Conforme après contrôle</button></div>`;
- return `<div class="cc${i===0?' best':''}${st==='ok'?' done':''}${st==='lock'?' lock':''}${st==='nc'?' found':''}${nx?' next':''}" data-id="${c.id}"><div class="ch"><span class="rk">${i+1}</span><b>${nx?'<span class="tg nxt nv">Contrôle suivant</span>':''}${esc(c.n)}${c.t?'<span class="tg mes">Donnée de mesure</span>':''}${c.gate?'<span class="tg mes">Avant toute correction</span>':''}${rtag(c.r)}</b><span class="ind" title="Score de pertinence, pas une probabilité">${c.pct}<small> pts</small></span></div><div class="bar"><i style="width:${c.pct}%"></i></div><p><span class="fam">${esc(c.b)}</span> <b>Contrôle :</b> ${esc(c.ctl)}</p><p class="why">${c.ms&&M.why(c,c.ms)?M.why(c,c.ms)+' · ':''}${c.rank?`Rang ${c.rank} dans l’ordre candidat · ${esc((RU[c.r]||{}).t||'')}`:esc(c.x||'')}${c.w&&c.w.length?' · vos réponses « '+esc(c.w.join(' », « '))+' » vont dans le sens de ce levier':' · aucune de vos réponses ne pointe vers ce levier, il reste possible'}</p>${act}</div>`;}
+ else if(st==='nv')act=`<div class="cst unv nv"><b>Non vérifié :</b> contrôle impossible, non réalisé ou non concluant. Aucune conclusion tirée : l’hypothèse reste à examiner. <button type="button" class="lk" data-fix="${c.id}">Corriger la saisie</button></div>`;
+ else act=c.gate?`<div class="acts nv"><button type="button" class="btn sm bok" data-ok="${c.id}">Écart confirmé sur le moyen de référence</button><button type="button" class="btn ghost sm bnc" data-nc="${c.id}">Écart non confirmé ou moyen douteux</button><button type="button" class="btn ghost sm bnv" data-nv="${c.id}" title="Contrôle impossible, non réalisé ou non concluant : aucune conclusion n’est tirée">Non vérifié</button></div>`
+  :`<div class="acts nv"><button type="button" class="btn sm bnc" data-nc="${c.id}">Non conforme après contrôle</button><button type="button" class="btn ghost sm bok" data-ok="${c.id}">Conforme après contrôle</button><button type="button" class="btn ghost sm bnv" data-nv="${c.id}" title="Contrôle impossible, non réalisé ou non concluant : aucune conclusion n’est tirée">Non vérifié</button></div>`;
+ return `<div class="cc${i===0?' best':''}${st==='ok'?' done':''}${st==='lock'?' lock':''}${st==='nc'?' found':''}${st==='nv'?' unver':''}${nx?' next':''}" data-id="${c.id}"><div class="ch"><span class="rk">${i+1}</span><b>${nx?'<span class="tg nxt nv">Contrôle suivant</span>':''}${esc(c.n)}${c.t?'<span class="tg mes">Donnée de mesure</span>':''}${c.gate?'<span class="tg mes">Avant toute correction</span>':''}${rtag(c.r)}</b><span class="ind" title="Score de pertinence, pas une probabilité">${c.pct}<small> pts</small></span></div><div class="bar"><i style="width:${c.pct}%"></i></div><p><span class="fam">${esc(c.b)}</span> <b>Contrôle :</b> ${esc(c.ctl)}</p><p class="why">${c.ms&&M.why(c,c.ms)?M.why(c,c.ms)+' · ':''}${c.rank?`Rang ${c.rank} dans l’ordre candidat · ${esc((RU[c.r]||{}).t||'')}`:esc(c.x||'')}${c.w&&c.w.length?' · vos réponses « '+esc(c.w.join(' », « '))+' » vont dans le sens de ce levier':' · aucune de vos réponses ne pointe vers ce levier, il reste possible'}</p>${act}</div>`;}
 let LAST=[];
 function draw3(){const d=S.br==='derive';let h=(d?'':M.table())+'<p class="vpx">VP Expert · guide les contrôles</p>',list;
  $('t3').textContent=d?'Origines à contrôler, dans l’ordre':'Leviers à contrôler, dans l’ordre';
@@ -81,7 +82,7 @@ function draw3(){const d=S.br==='derive';let h=(d?'':M.table())+'<p class="vpx">
  const tot=list.filter(c=>!c.gate).reduce((a,c)=>a+c.s,0)||1;list.forEach(c=>c.pct=c.gate&&isDim()?100:Math.max(1,Math.round(c.s/tot*100)));
  list.sort((a,b)=>b.s-a.s);LAST=list;
  const K=KEY(),Rc=REC[K]||{},O=OK[K]||{},gs=gateState();
- const stOf=c=>Rc[c.id]?'nc':O[c.id]?'ok':(c.adj&&(gs==='open'||gs==='bad'))?'lock':'open';
+ const stOf=c=>Rc[c.id]?'nc':O[c.id]?'ok':(NV[K]||{})[c.id]?'nv':(c.adj&&(gs==='open'||gs==='bad'))?'lock':'open';
  const nxi=list.findIndex(c=>stOf(c)==='open');
  const nShow=Math.max(5,nxi+1,...list.map((c,i)=>Rc[c.id]?i+1:0));
  const nNc=Object.keys(Rc).filter(id=>!(id.endsWith('_M'))).length,nOk=Object.keys(O).filter(id=>!(id.endsWith('_M'))).length;
@@ -91,6 +92,7 @@ function draw3(){const d=S.br==='derive';let h=(d?'':M.table())+'<p class="vpx">
  if(list.length&&gs!=='bad')h+=nNc?`<div class="emsg win nv"><b>${nNc} écart${nNc>1?'s':''} observé${nNc>1?'s':''}.</b> Cause non déterminée. Plusieurs écarts peuvent coexister : poursuivre les contrôles pertinents, puis faire valider la causalité et l’action dans le contexte machine, matière et outil. <button type="button" class="lk" data-new="1">Nouvelle enquête sur ce défaut</button></div>`
   :nOk?`<div class="emsg nv">${nOk} contrôle${nOk>1?'s':''} conforme${nOk>1?'s':''}. ${nxi>=0?'Passez au contrôle suivant, n° '+(nxi+1)+'.':'Aucune hypothèse étayée : solliciter une revue métier, sans conclure à une cause.'}</div>`
   :'<p class="sl nv">Après chaque contrôle, indiquez le constat. Plusieurs écarts peuvent être relevés ; aucun ne démontre seul la cause. Une erreur de saisie se corrige.</p>';
+ if(list.length&&Object.keys(NV[K]||{}).length)h+=`<p class="sl nv unvn"><b>${Object.keys(NV[K]||{}).length} contrôle${Object.keys(NV[K]||{}).length>1?'s':''} non vérifié${Object.keys(NV[K]||{}).length>1?'s':''}</b> : à reprendre. Aucune conclusion n’est tirée d’un contrôle non réalisé.</p>`;
  h+=list.length?'<div class="cl">'+list.slice(0,S.showall?list.length:nShow).map((c,i)=>card(c,i,stOf(c),i===nxi)).join('')+'</div>':'<p class="sl">Aucune cause ne correspond : c’est un cas à ajouter à la base du site.</p>';
  if(!S.showall&&list.length>nShow)h+=`<p class="sl">${list.length-nShow} autre${list.length-nShow>1?'s':''} levier${list.length-nShow>1?'s':''} possible${list.length-nShow>1?'s':''}. <button type="button" class="lk" id="showall">Afficher tous les contrôles</button> Score illustratif calculé à partir de l’ordre candidat et des indices : ce n’est ni une probabilité, ni une fréquence terrain. Les clics ne modifient pas le classement.</p>`;
  if(hiddenN()&&!d)h+=`<p class="sl hidnote">${hiddenN()} levier canon masqué pour une machine « ${esc(lab(MACH,S.mach).toLowerCase())} » ${rtag('DC01-R04')}.</p>`;
@@ -107,13 +109,14 @@ function draw3(){const d=S.br==='derive';let h=(d?'':M.table())+'<p class="vpx">
  $('res').innerHTML=h;$('s4').hidden=d;
  if(!d){$('ititle').textContent='Diagramme d’Ishikawa · '+DEF().defect.toLowerCase();$('ihint').textContent='Les leviers grisés sont rendus moins probables par une mesure conforme et stable, sans être exclus. Les autres sont colorés selon le nombre de vos réponses qui y renvoient.';
   const C=cands();$('ishi').innerHTML=BR.map(B=>`<section><h3>${B}</h3><ul>`+(C.filter(c=>c.b===B).map(c=>{const n=why(c.ind).length,x=M.isLo(M.of(c));return `<li class="${x?'x':n>=3?'s3':n===2?'s2':n===1?'s1':''}">${esc(c.n)}</li>`}).join('')||'<li class="x">aucun levier pour ce défaut</li>')+'</ul></section>').join('');}}
-function drawH(){$('hist').hidden=!HIST.length;$('hb').innerHTML=HIST.map((r,ix)=>`<tr class="${r.r}"><td>${r.t}</td><td>${esc(r.d)}</td><td>${esc(r.c)}</td><td><span class="res ${r.r}">${r.g?(r.r==='nc'?'Moyen douteux ou écart non confirmé':'Écart confirmé, moyen fiable'):(r.r==='nc'?'Écart observé : cause non démontrée':'Contrôle conforme : hypothèse non étayée')}</span></td><td><button type="button" class="lk" data-hfix="${ix}">Corriger</button></td></tr>`).join('');}
+function drawH(){$('hist').hidden=!HIST.length;$('hb').innerHTML=HIST.map((r,ix)=>`<tr class="${r.r==='nv'?'unv':r.r}"><td>${r.t}</td><td>${esc(r.d)}</td><td>${esc(r.c)}</td><td><span class="res ${r.r==='nv'?'unv':r.r}">${r.r==='nv'?'Non vérifié : aucune conclusion':r.g?(r.r==='nc'?'Moyen douteux ou écart non confirmé':'Écart confirmé, moyen fiable'):(r.r==='nc'?'Écart observé : cause non démontrée':'Contrôle conforme : hypothèse non étayée')}</span></td><td><button type="button" class="lk" data-hfix="${ix}">Corriger</button></td></tr>`).join('');}
 function undo(ix){const r=HIST[ix];if(!r)return;HIST.splice(ix,1);if(r.g){const deps=new Set(cands().filter(c=>c.adj).map(c=>c.id));for(let j=HIST.length-1;j>=0;j--){const h=HIST[j];if(h.key===r.key&&deps.has(h.id)){delete (REC[h.key]||{})[h.id];delete (OK[h.key]||{})[h.id];HIST.splice(j,1);}}}
  if(r.r==='nc'){if(REC[r.key])delete REC[r.key][r.id];}
+ else if(r.r==='nv'){if(NV[r.key])delete NV[r.key][r.id];}
  else if(OK[r.key])delete OK[r.key][r.id];}
-function record(id,res){const K=KEY();REC[K]=REC[K]||{};OK[K]=OK[K]||{};if(REC[K][id]||OK[K][id])return;
+function record(id,res){const K=KEY();REC[K]=REC[K]||{};OK[K]=OK[K]||{};NV[K]=NV[K]||{};if(REC[K][id]||OK[K][id]||NV[K][id])return;
  const c=LAST.find(x=>x.id===id);if(!c||c.adj&&['open','bad'].includes(gateState()))return;
- if(res==='nc')REC[K][id]=1;else OK[K][id]=1;
+ if(res==='nc')REC[K][id]=1;else if(res==='nv')NV[K][id]=1;else OK[K][id]=1;
  HIST.unshift({key:K,id,r:res,g:c.gate,t:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),d:S.br==='derive'?CFG.params.find(p=>p.id===S.param).sn+(S.dir==='up'?' en hausse':' en baisse'):DEF().defect,c:c.n});}
 function render(){draw0();draw1();draw2();draw3();drawH();window.dispatchEvent(new Event('vp:enquete-render'));}
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
@@ -123,6 +126,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
  if(b.dataset.b){S.br=b.dataset.b;render();return}
  if(b.dataset.go){S.br=b.dataset.go;render();$('s1').scrollIntoView({behavior:'smooth'});return}
  if(b.dataset.nc){record(b.dataset.nc,'nc');render();return}
+ if(b.dataset.nv){record(b.dataset.nv,'nv');render();const n=document.querySelector('.cc.next');if(n)n.scrollIntoView({behavior:'smooth',block:'center'});return}
  if(b.dataset.ok){record(b.dataset.ok,'ok');render();const n=document.querySelector('.cc.next');if(n)n.scrollIntoView({behavior:'smooth',block:'center'});return}
  if(b.dataset.fix){const K=KEY(),ix=HIST.findIndex(r=>r.key===K&&r.id===b.dataset.fix);undo(ix);render();return}
  if(b.dataset.hfix){undo(+b.dataset.hfix);render();return}
@@ -133,5 +137,5 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
 $('dq').addEventListener('input',e=>{S.qd=e.target.value;draw0()});
 document.body.classList.add('rc');
 render();
-window.VPConsolidation?.bind({sector:'DC',S,REC,OK,NUM,HIST,render,cands,KEY,measures:M.measures,mesTitle:'Mesures de la machine',nativeSpec(state){state={...state};const old={...S};try{Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,state);const p=CFG.params.find(p=>p.id===S.param);if(CFG.params.length&&(!p||!(p.dirs||['up','down']).includes(S.dir)))throw Error('Paramètre ou sens incompatible');return {base:base(),params:CFG.params.map(p=>p.id),gateActive:S.br!=='derive'&&isDim(),candidates:S.br==='derive'?((CFG.kb[S.param]||{})[S.dir]||[]).filter(c=>canonOn()||!c.canon).map((c,k)=>({id:'d'+S.param+S.dir+k})):cands()};}finally{Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,old);}},choices:{mes:'object',def:REF.map(d=>d.tab),fam:['all',...FAM.map(x=>x[0])],qd:'text',showall:'boolean',br:SIT.map(x=>x[0]),mach:MACH.map(x=>x[0]),param:CFG.params.map(p=>p.id),dir:['up','down'],...Object.fromEntries(Object.entries({ou:OU,quand:QUAND,freq:FREQ,terme:TERME,qui:QUI,combien:COMBIEN}).map(([k,v])=>[k,v.map(x=>x[0])]))}});
+window.VPConsolidation?.bind({sector:'DC',S,REC,OK,NV,NUM,HIST,render,cands,KEY,measures:M.measures,mesTitle:'Mesures de la machine',nativeSpec(state){state={...state};const old={...S};try{Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,state);const p=CFG.params.find(p=>p.id===S.param);if(CFG.params.length&&(!p||!(p.dirs||['up','down']).includes(S.dir)))throw Error('Paramètre ou sens incompatible');return {base:base(),params:CFG.params.map(p=>p.id),gateActive:S.br!=='derive'&&isDim(),candidates:S.br==='derive'?((CFG.kb[S.param]||{})[S.dir]||[]).filter(c=>canonOn()||!c.canon).map((c,k)=>({id:'d'+S.param+S.dir+k})):cands()};}finally{Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,old);}},choices:{mes:'object',def:REF.map(d=>d.tab),fam:['all',...FAM.map(x=>x[0])],qd:'text',showall:'boolean',br:SIT.map(x=>x[0]),mach:MACH.map(x=>x[0]),param:CFG.params.map(p=>p.id),dir:['up','down'],...Object.fromEntries(Object.entries({ou:OU,quand:QUAND,freq:FREQ,terme:TERME,qui:QUI,combien:COMBIEN}).map(([k,v])=>[k,v.map(x=>x[0])]))}});
 })();

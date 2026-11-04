@@ -118,3 +118,7 @@ Les 4 enquêtes chargent désormais `vp-expert-vella.css` : la structure de `vp-
 ## Export PDF (4 novembre 2026)
 
 Les synthèses et dossiers se téléchargent aussi en PDF, en plus du `.md` et du JSON : « Synthèse (PDF) » et « Dossier complet (PDF) » dans la section Synthèse, « Dossier complet (PDF) » dans la barre « Dossier VP Expert ». Le contenu est celui du téléchargement `.md` ; le PDF est généré dans le navigateur par `vp-expert-pdf.js`, sans bibliothèque ni service externe (A4, polices standard, adresses des sources cliquables, en-tête et pagination). Aucune donnée ne quitte la page.
+
+## Contrôle « non vérifié » (5 novembre 2026)
+
+Chaque contrôle peut maintenant être marqué « Non vérifié » (contrôle impossible, non réalisé ou non concluant), en plus de « Conforme » et « Non conforme ». Ce troisième état ne change ni le classement, ni les causes retenues ; il apparaît dans le journal, la synthèse (« Reprendre le contrôle non vérifié ») et l'export JSON (champ `native.unverified`, facultatif : les anciens exports restent lisibles). « Corriger la saisie » l'annule. Pour le contrôle de moyen de mesure (décolletage, traitement de surface), « non vérifié » laisse les corrections verrouillées.
