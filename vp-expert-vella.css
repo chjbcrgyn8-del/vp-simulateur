@@ -291,3 +291,9 @@ body.vp-ui .sx-bar .sx-bo.off,body.vp-ui .sx-bar .sx-bo.off b,body.vp-ui .sx-bar
 body.vp-ui :is(button,a,input,textarea,select,summary):focus-visible{outline:3px solid #e8841f!important;outline-offset:3px!important}
 body.vp-ui .skip{color:#0a0f19}
 body.vp-ui .sx-bar .sx-sep{color:#566273}
+
+/* mémoire atelier : action visible, repère lisible sur les leviers */
+body.vp-ui .vp-rex-btn{display:inline-flex;align-items:center;min-height:44px;margin:6px 10px 6px 0;padding:0 20px;border-radius:999px;border:1px solid #0a0f19;background:#0a0f19;color:#fff;font:600 14px/1 var(--font);cursor:pointer}
+body.vp-ui .vp-rex-btn:hover{background:#1a2638}
+body.vp-ui .vp-rex-note{display:block;color:#566273;font-size:13px;line-height:1.5;max-width:60ch}
+body.vp-ui .tg.rex{background:#e8f3ee!important;color:#1f5e46!important;border:1px solid #bfdccc}
