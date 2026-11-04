@@ -110,3 +110,7 @@ Les fichiers de cette livraison ont été appliqués tels quels sur `main` (comm
 Contrôles refaits après intégration : `tests/regression.py` (937 combinaisons rendues, 34 imports invalides refusés, 4 parcours PASS) et `tests/responsive.py` (12 vues, sans erreur ni débordement) ; contraste, textes sous 12 px et débordements mesurés sur les 4 étapes de chaque parcours, en 1 440 et 390 px.
 
 La mention « aucune publication » ci-dessus décrit l'état de la livraison, avant cette intégration.
+
+## Identité Vella (5 novembre 2026)
+
+Les 4 enquêtes chargent désormais `vp-expert-vella.css` : la structure de `vp-expert-ui.css` avec l'identité Vella Partners (crème, graphite, cuivre, Instrument Serif), comme l'accueil et les secteurs. `vp-expert-ui.css` (violet) reste dans le dépôt comme référence mais n'est plus chargée. Les polices (IBM Plex Mono, Instrument Serif, Switzer) sont les mêmes que sur l'accueil et viennent de Google Fonts et Fontshare.
