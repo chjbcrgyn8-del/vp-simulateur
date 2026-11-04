@@ -1,0 +1,7 @@
+/* Boutons d'action en pilule sur tout le site (comme le bouton « Essayer VP Expert » de l'accueil).
+   Chargée en dernier. Ne touche ni les cartes, ni les filtres, ni les champs. */
+body .btn,body a.btn,body button.btn,body .topcta,
+body .vp-stage-footer button,body #vp-prev,body #vp-next,
+body .vp-case .vp-case-primary,body .vp-case .vp-case-reset,
+body .expert-tools button,body .expert-tools a,
+body.doc-app .actions button,body.doc-app .actions a,body.doc-app .doc-top nav .pill{border-radius:999px!important}
