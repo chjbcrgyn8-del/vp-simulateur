@@ -237,7 +237,7 @@
       "trigger": "Aspect irrégulier, particules ou marque sombre.",
       "hypothesis": "Une pré-vulcanisation est une hypothèse parmi plusieurs ; aucun test visuel universel n’est fourni.",
       "check": "Réunir photos localisées, chronologie et résultats disponibles du laboratoire. Une coupe ou un prélèvement doit être autorisé.",
-      "limits": "La couleur et l’impression de dureté ne démontrent pas le mécanisme.",
+      "limits": "La couleur et l’impression de dureté ne démontrent pas le mécanisme. Une brûlure localisée par air comprimé (fin de remplissage, évent, zone de confinement) n’est pas un grillage du mélange : localisation, évents et vide avant toute action thermique.",
       "closure": "Classification argumentée par Qualité ou le laboratoire ; sinon défaut non classé.",
       "review": null,
       "refs": [
@@ -369,7 +369,7 @@
       "trigger": "Évolution de lot ou utilisation de Ts2, T10 ou T90 pour expliquer le défaut.",
       "hypothesis": "Les indicateurs de courbe doivent être interprétés dans leur méthode ; ils ne sont pas une recette presse.",
       "check": "Obtenir courbe complète, température d’essai, méthode, unité du couple et définition des indicateurs du laboratoire.",
-      "limits": "T10 n’est pas une mesure directe de 10 % de ponts chimiques. T90 n’est pas automatiquement le temps de cuisson de la pièce.",
+      "limits": "T10 n’est pas une mesure directe de 10 % de ponts chimiques. T90 n’est pas automatiquement le temps de cuisson de la pièce : mesuré en laboratoire sur échantillon mince, il ne se transpose pas en temps de presse sur une pièce épaisse ; deux rhéomètres de conception différente peuvent ne pas donner les mêmes résultats (ASTM D5289).",
       "closure": "Interprétation laboratoire documentée et propriétés produit contrôlées.",
       "review": {
         "status": "Définition confirmée ; transfert à qualifier",
@@ -564,7 +564,7 @@
       "trigger": "Défaut interne ou résultat fonctionnel non conforme en zone épaisse.",
       "hypothesis": "L’histoire thermique et la cure peuvent influencer les propriétés ; elles ne prouvent pas seules l’origine d’une cloque.",
       "check": "Rapprocher épaisseur, données thermiques, résultats laboratoire et essais fonctionnels existants.",
-      "limits": "Ni hausse automatique de température moule ni clôture sur une dureté de surface ou le seul T90.",
+      "limits": "Ni hausse de température moule par réflexe (sur pièce épaisse, elle accentue l’écart cœur/surface et le risque de cuisson inhomogène), ni clôture sur une dureté de surface, le seul T90 ou la seule dureté mesurée en atelier lorsque la propriété critique est fonctionnelle.",
       "closure": "Conformité interne et fonctionnelle selon le dossier produit, sans effet secondaire identifié.",
       "review": {
         "status": "Appui expérimental conditionnel",
