@@ -136,3 +136,9 @@ En attendant des photos réelles validées par les experts, 16 schémas dessiné
 ## Mode Focus refondu et aperçu téléphone (5 novembre 2026)
 
 Le mode Focus (vue du régleur au poste) reprend la charte Vella : défaut, carte sombre du contrôle prioritaire avec sa progression (« Contrôle 2 sur 5 »), trois réponses (Conforme, Non conforme, Non vérifié) avec icône, puis l'action suivante. Sur téléphone étroit, il masque la barre d'étapes pour que le contrôle et les premiers boutons tiennent dans le premier écran. Un bouton « Aperçu téléphone » (écrans larges) l'affiche dans un cadre de téléphone. La démonstration guidée passe maintenant par ce mode, dans un téléphone, à l'étape 5 sur 10 (environ 95 secondes). Aucun moteur modifié ; fichiers : `vp-focus.js`, `vp-focus.css`, `vp-expert-demo.js`.
+
+## Parcours téléphone (5 novembre 2026)
+
+Le bouton « Parcours téléphone » (sous les étapes de chaque enquête, ou lien `?app=1`) ouvre l'enquête complète en plein écran sur téléphone, ou dans un cadre de téléphone sur grand écran, écran par écran : Quel défaut (tuiles avec schéma), Diagnostic (trois questions, « Je ne sais pas » laisse la réponse vide), Contrôle n sur N (Conforme, Non conforme, Non vérifié, « Pourquoi ce contrôle ? »), Historique, Ça a marché ? (cause, action, résultat), Dossier prêt (PDF, mémoire d'atelier, nouveau dossier). Il s'ajoute au parcours habituel, qui reste inchangé : les boutons de l'enquête sont actionnés en arrière-plan, les données restent celles du dossier, aucun moteur modifié. Échap ferme. Fichiers : `vp-expert-app.js`, `vp-expert-app.css`.
+
+Volontairement non repris de la maquette d'inspiration : chiffres de performance, mentions « validé par les Méthodes » ou niveaux de confiance, valeurs machine en direct, tableau d'approbation Méthodes, photo et dictée vocale.
