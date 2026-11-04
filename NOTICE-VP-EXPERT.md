@@ -114,3 +114,7 @@ La mention « aucune publication » ci-dessus décrit l'état de la livraison, a
 ## Identité Vella (5 novembre 2026)
 
 Les 4 enquêtes chargent désormais `vp-expert-vella.css` : la structure de `vp-expert-ui.css` avec l'identité Vella Partners (crème, graphite, cuivre, Instrument Serif), comme l'accueil et les secteurs. `vp-expert-ui.css` (violet) reste dans le dépôt comme référence mais n'est plus chargée. Les polices (IBM Plex Mono, Instrument Serif, Switzer) sont les mêmes que sur l'accueil et viennent de Google Fonts et Fontshare.
+
+## Export PDF (4 novembre 2026)
+
+Les synthèses et dossiers se téléchargent aussi en PDF, en plus du `.md` et du JSON : « Synthèse (PDF) » et « Dossier complet (PDF) » dans la section Synthèse, « Dossier complet (PDF) » dans la barre « Dossier VP Expert ». Le contenu est celui du téléchargement `.md` ; le PDF est généré dans le navigateur par `vp-expert-pdf.js`, sans bibliothèque ni service externe (A4, polices standard, adresses des sources cliquables, en-tête et pagination). Aucune donnée ne quitte la page.
