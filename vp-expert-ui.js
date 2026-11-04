@@ -10,7 +10,7 @@
  const main=document.querySelector('main');
  document.body.classList.add('vp-ui');
  const hero=main.querySelector('.ehero');
- hero.innerHTML='<div class="vp-eyebrow"><span class="vp-dot"></span> VP EXPERT <span class="vp-slash">/</span> '+sector[0]+'</div><h1>Un défaut qui revient ?<br><span>Traitez-le avec méthode.</span></h1><p class="lead">Du défaut constaté à la solution validée : des contrôles dans le bon ordre,<br class="vp-desktop"> des essais tracés, un savoir capitalisé.</p><div class="vp-hero-meta"><span>Sans connexion machine</span><span>Sans inscription</span><span>'+sector[1]+'</span></div>';
+ hero.innerHTML='<div class="vp-eyebrow"><span class="vp-dot"></span> VP EXPERT <span class="vp-slash">/</span> '+sector[0]+'</div><h1>Un défaut qui revient ?<br><span>Traitez-le avec méthode.</span></h1><p class="lead">Du défaut constaté à la résolution documentée : des contrôles dans le bon ordre,<br class="vp-desktop"> des essais tracés, un savoir capitalisé.</p><div class="vp-hero-meta"><span>Sans connexion machine</span><span>Sans inscription</span><span>'+sector[1]+'</span></div>';
  const nav=main.querySelector('.esteps');
  nav.setAttribute('aria-label','Parcours VP Expert');
  nav.innerHTML=labels.map((l,i)=>'<li><button type="button" data-vp-step="'+(i+1)+'"><span class="vp-step-number">0'+(i+1)+'</span><span>'+l+'</span></button></li>').join('');
