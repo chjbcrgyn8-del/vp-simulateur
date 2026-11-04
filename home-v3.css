@@ -102,3 +102,19 @@
 .offer.main .ofb{background:linear-gradient(135deg,#e3b47c,#c98a4b)!important;color:#0b111c!important;border:0!important}
 @media(max-width:900px){.vnav .dd>summary{display:flex;width:100%}.vnav .dd>summary::after{margin-right:6px}}
 .offer .ofl{margin-top:12px;font-size:13.5px;font-weight:600;color:inherit;opacity:.85;text-decoration:underline;text-underline-offset:3px}.offer .ofl:hover,.offer .ofl:focus-visible{opacity:1}
+
+/* Choix du métier dans le bandeau : quatre boutons */
+.pick{margin:28px 0 0;max-width:560px}
+.pick-l{margin:0 0 12px;font:500 11.5px/1.4 var(--mono,monospace);letter-spacing:.14em;text-transform:uppercase;color:#e3b47c}
+.pick-g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pick-b{position:relative;display:flex;align-items:center;gap:10px;min-height:64px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:#f3efe7;text-decoration:none;transition:border-color .2s,background .2s,transform .2s}
+.pick-b:hover{border-color:#e3b47c;background:rgba(227,180,124,.1);transform:translateY(-2px)}
+.pick-b:focus-visible{outline:3px solid #e8841f;outline-offset:3px}
+.pick-n{font:500 11.5px/1 var(--mono,monospace);letter-spacing:.1em;color:#e3b47c}
+.pick-b b{flex:1;font-weight:600;font-size:16px;line-height:1.25;letter-spacing:-.01em}
+.pick-b .sx-dot{flex:none}
+.pick-go{color:#e3b47c;transition:transform .2s}.pick-b:hover .pick-go{transform:translateX(4px)}
+.pick-lg{display:flex;flex-wrap:wrap;gap:6px 20px;margin:14px 0 0;font-size:13px;color:#aeb8c6}
+.pick-lg span{display:inline-flex;align-items:center;gap:7px}
+@media(max-width:560px){.pick-g{grid-template-columns:1fr}}
+.pick .sx-dot.ok,.pick-lg .sx-dot.ok{background:#6fcf9b}.pick .sx-dot.cand,.pick-lg .sx-dot.cand{background:#e3b47c}

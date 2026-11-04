@@ -10,7 +10,7 @@
   --night:#0a0f19;--night2:#111a29;
   --accent:#9a5f28;--copper:#b47a3e;--orange:#c98a4b;
   --champ1:#e3b47c;--champ2:#b77a3d;
-  --serif:'Instrument Serif','Cormorant Garamond',Georgia,serif;
+  --serif:'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;
   --r:6px;--r-lg:8px;
   --shadow:0 1px 0 rgba(11,17,28,.03),0 12px 32px -18px rgba(11,17,28,.18);
   --shadow-lg:0 1px 0 rgba(11,17,28,.04),0 30px 60px -30px rgba(11,17,28,.32);
