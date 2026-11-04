@@ -1,7 +1,7 @@
 /* Pages documentaires (décolletage, expertise, lot 3) : même identité que l'accueil et les enquêtes.
    Chargée après lot2bis.css / lot3.css / ux.css. Mêmes jetons : crème #f5f2eb, papier #fffdf9, encre #0b111c, nuit #0a0f19, cuivre #9a5f28, champagne #e3b47c. */
 body.doc-app{--ink:#0b111c;--paper:#f5f2eb;--panel:#fffdf9;--line:#e4ded2;--muted:#566273;--accent:#9a5f28;--radius:8px;
- font:15px/1.65 Switzer,'Helvetica Neue',system-ui,Arial,sans-serif;color:#0b111c;background-color:#f5f2eb;
+ font:15px/1.65 'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;color:#0b111c;background-color:#f5f2eb;
  background-image:linear-gradient(rgba(11,17,28,.034) 1px,transparent 1px),linear-gradient(90deg,rgba(11,17,28,.034) 1px,transparent 1px),linear-gradient(rgba(11,17,28,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(11,17,28,.018) 1px,transparent 1px);
  background-size:120px 120px,120px 120px,24px 24px,24px 24px;background-position:-1px -1px}
 body.doc-app .doc-top{background:linear-gradient(180deg,rgba(26,34,48,.97),rgba(10,15,25,.97));border-bottom:1px solid rgba(0,0,0,.6);box-shadow:inset 0 -1px 0 rgba(227,180,124,.14)}
@@ -10,7 +10,7 @@ body.doc-app .doc-top nav a:hover{color:#f3efe7}
 body.doc-app h1,body.doc-app h2,body.doc-app .doc-panel h2{font-family:'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;font-weight:400;color:#0b111c;letter-spacing:-.005em}
 body.doc-app h1{font-size:clamp(34px,4vw,50px);line-height:1.08}
 body.doc-app h2{font-size:28px;line-height:1.2}
-body.doc-app h3{font-family:Switzer,'Helvetica Neue',system-ui,Arial,sans-serif;font-weight:600;color:#0b111c}
+body.doc-app h3{font-family:'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;font-weight:600;color:#0b111c}
 body.doc-app .eyebrow,body.doc-app .version{font-family:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;color:#8a4a0c}
 body.doc-app .doc-panel,body.doc-app .rule,body.doc-app .dc-stats>div{background:#fffdf9;border-color:#e4ded2;border-radius:8px;box-shadow:0 1px 0 rgba(11,17,28,.03),0 12px 32px -18px rgba(11,17,28,.18)}
 body.doc-app .doc-warning{background:#f4e9db;border-left-color:#c98a4b;color:#3a2410}

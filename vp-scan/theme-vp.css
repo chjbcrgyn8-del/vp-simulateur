@@ -9,9 +9,9 @@
   --signal:#c98a4b;--warm:#f8eedb;
   --accent:#9a5f28;--champ1:#e3b47c;--champ2:#b77a3d;
   --ok:#22613f;--ok-bg:#e4f0e8;--warn:#86520f;--warn-bg:#f8eedb;--bad:#a2342a;--bad-bg:#f8e7e3;
-  --font:'Switzer','Helvetica Neue',system-ui,sans-serif;
-  --display:'General Sans','Switzer',system-ui,sans-serif;
-  --serif:'Instrument Serif','Cormorant Garamond',Georgia,serif;
+  --font:'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --display:'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --serif:'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:'IBM Plex Mono',ui-monospace,monospace;
   --shadow:0 1px 0 rgba(11,17,28,.03),0 12px 32px -18px rgba(11,17,28,.18);
 }
