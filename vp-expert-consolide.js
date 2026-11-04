@@ -139,7 +139,7 @@
    function quoi(){const s=[...document.querySelectorAll('#fiche span')].find(x=>(x.querySelector('i')||{}).textContent==='Quoi');if(!s)return '';const i=s.querySelector('i').textContent;return s.textContent.slice(s.textContent.indexOf(i)+i.length).trim()}
    /* ----- Dossier (exports, reprise, sources) : en bas de page, après l'enquête ----- */
    const bar=document.createElement('aside');bar.className='expert-dev';bar.id='expert-toolbar';
-   bar.innerHTML=`<strong>Dossier VP Expert</strong><p>Démonstrateur public : les réponses et contrôles restent dans cette page, sans sauvegarde serveur. Exportez le dossier avant de quitter.</p><div class="expert-tools"><button class="expert-primary" id="expert-export">Exporter le dossier JSON</button><button id="expert-report">Télécharger la synthèse</button><button id="expert-import">Reprendre un dossier</button><button id="expert-new">Nouveau dossier</button>${api.sector==='DC'||ADP?.example?'<button id="expert-example">Essayer le cas fictif</button>':''}<a href="${ADP?.sourcesPage||'lot3-documentaire.html'}" data-keep>Sources et méthode</a></div><p id="expert-status" role="status">Le JSON consolidé utilise un nouveau format ; les anciens exports restent lisibles dans les pages historiques.</p><input hidden id="expert-file" type="file" accept=".json,application/json"><div id="expert-more"></div>`;
+   bar.innerHTML=`<strong>Dossier VP Expert</strong><p>Démonstrateur public : les réponses et contrôles restent dans cette page, sans sauvegarde serveur. Exportez le dossier avant de quitter.</p><div class="expert-tools"><button class="expert-primary" id="expert-export">Exporter le dossier JSON</button><button id="expert-report">Télécharger la synthèse</button><button id="expert-pdf">Dossier complet (PDF)</button><button id="expert-import">Reprendre un dossier</button><button id="expert-new">Nouveau dossier</button>${api.sector==='DC'||ADP?.example?'<button id="expert-example">Essayer le cas fictif</button>':''}<a href="${ADP?.sourcesPage||'lot3-documentaire.html'}" data-keep>Sources et méthode</a></div><p id="expert-status" role="status">Le JSON consolidé utilise un nouveau format ; les anciens exports restent lisibles dans les pages historiques.</p><input hidden id="expert-file" type="file" accept=".json,application/json"><div id="expert-more"></div>`;
    const duo=main.querySelector('.vpduo');if(duo)main.insertBefore(bar,duo);else main.append(bar);
    const fields=(group,labels)=>`<div class="expert-grid">${Object.entries(labels).map(([k,t])=>`<label class="expert-field">${esc(t)}<textarea rows="2" maxlength="15000" data-expert-group="${group}" data-expert-field="${k}"></textarea></label>`).join('')}</div>`;
    const context=document.createElement('details');context.className='expert-panel';context.id='expert-context';
@@ -163,7 +163,7 @@
    $('s3').after(follow);
    /* ----- Synthèse pour la direction ----- */
    const syn=document.createElement('section');syn.id='expert-synthese';syn.className='ebox';
-   syn.innerHTML=`<h2><span class="num">${nSyn}</span> Synthèse</h2><div id="syn-body"></div><div class="expert-tools syn-tools"><button type="button" class="expert-primary" id="syn-copy">Copier la synthèse</button><button type="button" id="syn-dl">Télécharger (.md)</button><button type="button" id="syn-export">Exporter le dossier JSON</button><button type="button" id="syn-print">Imprimer</button></div><p class="expert-muted">Synthèse générée à partir de vos réponses et constats, sans sauvegarde serveur. Une disparition déclarée du défaut ne prouve pas seule une cause. La validation qualité et la tenue dans le temps restent nécessaires.</p>`;
+   syn.innerHTML=`<h2><span class="num">${nSyn}</span> Synthèse</h2><div id="syn-body"></div><div class="expert-tools syn-tools"><button type="button" class="expert-primary" id="syn-copy">Copier la synthèse</button><button type="button" id="syn-dl">Télécharger (.md)</button><button type="button" id="syn-pdf">Synthèse (PDF)</button><button type="button" id="syn-pdf-full">Dossier complet (PDF)</button><button type="button" id="syn-export">Exporter le dossier JSON</button><button type="button" id="syn-print">Imprimer</button></div><p class="expert-muted">Synthèse générée à partir de vos réponses et constats, sans sauvegarde serveur. Une disparition déclarée du défaut ne prouve pas seule une cause. La validation qualité et la tenue dans le temps restent nécessaires.</p>`;
    follow.after(syn);
    if(steps){if(nativeSteps<5){const li=document.createElement('li');li.dataset.n=String(nFollow);li.textContent='Essai et suivi';steps.append(li)}if(steps.querySelectorAll('li').length<nSyn){const li2=document.createElement('li');li2.dataset.n=String(nSyn);li2.textContent='Synthèse';steps.append(li2)}document.body.classList.add('steps-'+(nSyn))}
    const dialog=document.createElement('dialog');dialog.id='expert-dialog';dialog.innerHTML='<h2>Remplacer le dossier en cours ?</h2><p>Le contenu actuel sera remplacé. Exportez-le d’abord si vous souhaitez le conserver.</p><div class="expert-tools"><button id="expert-cancel">Annuler</button><button class="expert-primary" id="expert-confirm">Remplacer le dossier</button></div>';document.body.append(dialog);
@@ -193,6 +193,8 @@
     if(b.id==='rex-clear'){if(confirm('Effacer la mémoire atelier de ce navigateur pour ce secteur ?')){window.VPREX.clear(api.sector);api.render();status('Mémoire atelier effacée.')}return}
     if(b.id==='syn-copy'){if(!navigator.clipboard){status('Copie indisponible : utilisez le téléchargement.');return}navigator.clipboard.writeText(synText()).then(()=>status('Synthèse copiée.'),()=>status('Copie impossible : utilisez le téléchargement.'));return}
     if(b.id==='syn-dl'){download('Vella_Partners_Synthese_VP_Expert_'+api.sector+'.md',synText()+'\n\n---\n\n'+report(snapshot()),'text/markdown');return}
+    if(b.id==='syn-pdf'){makePdf('synthese');return}
+    if(b.id==='syn-pdf-full'){makePdf('dossier');return}
     if(b.id==='syn-export'){$('expert-export').click();return}
     if(b.id==='syn-print'){window.print();return}
    });
@@ -305,7 +307,18 @@ ${api.measures?`<div class="syn-card"><h3>${esc(api.mesTitle||'Mesures de la pre
     if(spec.gateActive){const gate=spec.candidates.find(a=>a.gate),adj=new Set(spec.candidates.filter(a=>a.adj).map(a=>a.id));let verified=false;for(const h of n.history.slice().reverse()){if(h.id===gate?.id)verified=h.r==='ok';else if(adj.has(h.id)&&!verified)throw Error('Contre-mesure fiable requise avant les corrections');}}
     return x;
    }
-   function download(name,content,type){const url=URL.createObjectURL(new Blob([content],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)}
+   function download(name,content,type){const url=URL.createObjectURL(content instanceof Blob?content:new Blob([content],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)}
+   const SECTOR_FR={TP:'Injection plastique',CA:'Caoutchouc',DC:'Décolletage',TS:'Traitement de surface'};
+   /* PDF : même contenu que le téléchargement .md (synthèse, ou synthèse + dossier), généré dans le navigateur par vp-expert-pdf.js. */
+   function makePdf(kind){
+    try{
+     if(!window.VPExpertPDF)throw Error('le générateur PDF n’est pas chargé, rechargez la page');
+     const full=kind!=='synthese',md=full?synText()+'\n\n---\n\n'+report(snapshot()):synText();
+     const blob=window.VPExpertPDF.build(md,{secteur:SECTOR_FR[api.sector]||'',type:full?'dossier':'synthese'});
+     const name='Vella_Partners_'+(full?'Dossier':'Synthese')+'_VP_Expert_'+api.sector+'.pdf';
+     download(name,blob,'application/pdf');status('PDF téléchargé : '+name+'.');
+    }catch(err){status('PDF indisponible : '+(err&&err.message||err)+'. Utilisez « Imprimer » ou le téléchargement .md.')}
+   }
    function report(x){const c=x.case,n=c.native,txt=s=>String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;');
     let m='# Vella Partners | Dossier VP Expert\n\n'+(c.fictional?'CAS ENTIÈREMENT FICTIF. Mesures, interventions, autorisations et conclusions inventées.\n\n':'')+NOTICE+'\n\nSecteur : '+x.sector+' ; défaut : '+n.state.def+'.\n\n## Contexte\n\n';
     for(const [group,labels] of [['context',CONTEXT],['trial',TRIAL],['result',RESULT]]){if(group!=='context')m+='\n## '+(group==='trial'?'Essai proposé, non autorisé par l’application':'Résultats déclarés')+'\n\n';for(const[k,label]of Object.entries(labels))m+='- '+label+' : '+txt(c[group][k]||'Non renseigné')+'\n';}
@@ -329,6 +342,7 @@ ${api.measures?`<div class="syn-card"><h3>${esc(api.mesTitle||'Mesures de la pre
     dirty=Object.keys(data.evidence).some(k=>!k.startsWith(key+'::'))||api.HIST.some(h=>h.key!==key)||Object.entries(drafts).some(([k,v])=>k!==key&&[...Object.values(v.trial),...Object.values(v.result)].some(Boolean));
     status('JSON exporté : contexte, contrôles et preuves du cas sélectionné, bilan, synthèse et sources.'+(dirty?' D’autres brouillons existent en mémoire : revenez à chacun pour l’exporter avant de quitter.':''));
    };
+   $('expert-pdf').onclick=()=>makePdf('dossier');
    $('expert-report').onclick=()=>download('Vella_Partners_Synthese_VP_Expert_'+api.sector+'.md',synText()+'\n\n---\n\n'+report(snapshot()),'text/markdown');
    $('expert-import').onclick=()=>$('expert-file').click();
    $('expert-file').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{if(f.size>1000000)throw Error('Fichier trop volumineux');const x=validate(JSON.parse(await f.text()));replace(()=>load(x))}catch(err){status('Import refusé : '+err.message)}};
