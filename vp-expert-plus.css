@@ -1,0 +1,36 @@
+/* VP Expert · module « réflexes de l’expert » */
+.vpp{margin:14px 0 4px;padding:12px 14px;border:1px solid var(--line,#d9dee6);border-radius:10px;background:var(--panel,#f7f9fb)}
+.vpp .vpp-h{margin:0 0 8px}
+.vpp .vpp-h .sl{display:block;margin-top:2px}
+.vpp-tw{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.vpp-tw li{display:grid;gap:2px}
+.vpp-tw li span{font-size:.92em;opacity:.85}
+.vpp-note{font-size:.82em;opacity:.7;margin:8px 0 0}
+.vpp-or{margin:10px 0 0;padding:10px 12px;border-radius:8px;background:#eef3f8;border-left:4px solid #2b5c8a}
+.vpp-or.warn{background:#fff6e8;border-left-color:#c77700}
+.vpp-or.ok{background:#eaf7ee;border-left-color:#2e7d4f}
+.vpp-or ul{margin:6px 0 0;padding-left:18px}
+.vpp-or li{margin:3px 0}
+.vpp-fam{margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px}
+.vpp-fam span{font-size:.82em;padding:2px 8px;border-radius:999px;background:#dfe6ee}
+.vpp-fam span.up{background:#d6ecdc}
+.vpp-fam span.down{background:#f1dede}
+.vpp-tog{display:block;margin-top:8px;font-size:.9em}
+.vpp-badge{display:inline-block;margin-left:8px;font-size:.72em;font-weight:600;padding:1px 7px;border-radius:999px;vertical-align:middle}
+.vpp-badge.up{background:#d6ecdc;color:#1f5e37}
+.vpp-badge.down{background:#f1dede;color:#8a2b2b}
+.vpp-badge:empty{display:none}
+.vpp-test{margin:6px 0;padding:8px 10px;border-radius:6px;background:rgba(43,92,138,.07);font-size:.92em}
+.vpp-test i{display:block;margin-top:2px;font-style:normal;opacity:.8}
+.vpp-cc{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.vpp-cc .vpp-or{flex-basis:100%}
+.vpp-grid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.vpp-grid.c4{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.vpp-grid label{display:grid;gap:3px;font-size:.88em}
+.vpp-grid input{padding:7px 9px;border:1px solid var(--line,#cfd6de);border-radius:6px;font:inherit}
+.vpp-el{margin:0;padding-left:18px}
+.vpp-el li{margin:3px 0;font-size:.92em}
+.vpp-lvl{display:block;margin-top:10px;font-size:.9em}
+.vpp-lvl select{margin-left:6px;padding:5px 8px;font:inherit}
+.cc .rk[title]{outline:2px dotted #2b5c8a;outline-offset:1px}
+@media (prefers-color-scheme:dark){.vpp{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12)}.vpp-or{background:rgba(43,92,138,.18)}.vpp-or.warn{background:rgba(199,119,0,.18)}.vpp-or.ok{background:rgba(46,125,79,.18)}.vpp-fam span{background:rgba(255,255,255,.1)}.vpp-test{background:rgba(255,255,255,.06)}}
