@@ -35,7 +35,7 @@ fs.writeFileSync(file,`<!doctype html>
 <a class="skip" href="#main">Aller au contenu</a>
 <header class="top">
   <a class="brand" href="index.html" aria-label="Vella Partners, accueil"><img src="img/logo-vella-partners.png" alt="Vella Partners" width="517" height="150"></a>
-  <nav class="tabs menu" aria-label="Menu"><a href="index.html">Accueil</a><a href="index.html#offres">Nos offres</a><a href="index.html#essayer">Essayer</a><a href="savoir.html" aria-current="page">Savoir technique</a></nav>
+  <nav class="tabs menu" aria-label="Menu"><a href="index.html">Accueil</a><a href="presentation.html#offres">Nos offres</a><a href="presentation.html#offres">Essayer</a><a href="savoir.html" aria-current="page">Savoir technique</a></nav>
 </header>
 <main id="main" class="st"><p class="crumb"><a href="savoir.html">Savoir technique</a> › ${esc(crumb)}</p>
 <header class="ds-hero"><div class="eyebrow">${esc(eyebrow)}</div><h1>${esc(h1)}</h1><p class="ds-lead">${lead}</p></header>
