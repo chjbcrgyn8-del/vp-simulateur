@@ -29,7 +29,7 @@
     if (!v) return '';
     return '<button type="button" class="' + cls + '" data-film="' + esc(v.f) + '" data-title="' + esc(v.t) + '" aria-label="Voir le film : ' + esc(v.t) + ' (' + esc(dur(v.d)) + ')">' +
       '<img src="' + esc(href(v.f + '.jpg')) + '" alt="" loading="lazy"><span class="play" aria-hidden="true"><i></i></span>' +
-      '<span class="vl"><b>Voir le film</b> · ' + esc(dur(v.d)) + '</span></button>';
+      '<span class="vl"><b>' + (cls.indexOf('hero') >= 0 ? 'Voir le film' : 'Film') + '</b> · ' + esc(dur(v.d)) + '</span></button>';
   }
   var href = function(u){ return /^https?:/.test(u) ? u : BASE + u; };
 

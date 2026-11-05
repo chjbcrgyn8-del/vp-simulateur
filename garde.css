@@ -124,12 +124,13 @@ button{font:inherit;color:inherit}
 .vid .play{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:rgba(227,180,124,.95);box-shadow:0 10px 30px rgba(0,0,0,.45);transition:transform .15s}
 .vid:hover .play{transform:scale(1.06)}
 .vid .play i{position:absolute;left:25px;top:19px;border-style:solid;border-width:13px 0 13px 22px;border-color:transparent transparent transparent #0b111c}
-.vid .vl{position:absolute;left:12px;bottom:10px;padding:6px 10px;border-radius:7px;background:rgba(10,19,32,.78);color:var(--txt);font:400 12px/1 var(--mono);letter-spacing:.02em}
+.vid .vl{position:absolute;left:12px;bottom:10px;padding:6px 10px;border-radius:7px;background:rgba(10,19,32,.78);color:var(--txt);font:400 12px/1 var(--mono);letter-spacing:.02em;white-space:nowrap}
 .vid .vl b{font-weight:500}
 .vid.hero{border:1px solid var(--line2);box-shadow:0 30px 70px -30px rgba(0,0,0,.7)}
 .vid.hero .play{width:84px;height:84px;margin:-42px 0 0 -42px}
 .vid.hero .play i{left:33px;top:25px;border-width:17px 0 17px 28px}
 .g-card .vid{border-radius:10px}
+.g-card .vid .vl{left:8px;bottom:8px;padding:5px 8px;font-size:11px}
 .g-card .vid .play{width:48px;height:48px;margin:-24px 0 0 -24px}
 .g-card .vid .play i{left:19px;top:14px;border-width:10px 0 10px 16px}
 .g-video{padding:0;border:0;border-radius:14px;background:#0b111c;color:var(--txt);width:min(1100px,94vw);max-width:none;box-shadow:0 40px 100px rgba(0,0,0,.7)}
