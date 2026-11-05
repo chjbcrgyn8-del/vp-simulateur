@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Page d’accueil « boîte à outils » (5 novembre 2026). Ancien accueil public conservé dans presentation.html ; version de référence : tag ref-accueil-public-2026-11-05. -->
+<!-- Page d’accueil « boîte à outils » (5 novembre 2026 ; films de présentation ajoutés le même jour). Ancien accueil public conservé dans presentation.html ; version de référence : tag ref-accueil-public-2026-11-05. -->
 <html lang="fr">
 <head>
 <meta charset="utf-8">
@@ -8,7 +8,7 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="img/favicon.png">
 <link rel="stylesheet" href="fonts.css?v=2">
-<link rel="stylesheet" href="garde.css?v=1">
+<link rel="stylesheet" href="garde.css?v=2">
 </head>
 <body>
 
@@ -33,7 +33,13 @@
 
   <main class="g-main">
     <div class="g-empty" id="g-empty" aria-hidden="false">
-      <div><div class="mark" aria-hidden="true">VP</div><p><b>Choisissez un secteur à gauche.</b><br>Les trois outils apparaîtront ici : chiffrer, résoudre, anticiper.</p></div>
+      <div class="g-intro">
+        <p class="k">Notre offre en 1 min 43</p>
+        <h2>VP Scan, VP Expert, VP Predict : <span>chiffrer, résoudre, anticiper.</span></h2>
+        <div class="g-hero" id="g-hero"></div>
+        <p class="g-intro-note">Film de présentation : captures réelles des démonstrateurs, voix de synthèse. Exemples fictifs et cycles réels rejoués.</p>
+        <p><b>Choisissez un secteur à gauche.</b><br>Les trois outils apparaîtront ici, chacun avec son film.</p>
+      </div>
     </div>
 
     <section class="g-tools" id="g-tools" aria-live="polite">
@@ -52,7 +58,13 @@
   <span>Les démonstrations n’enregistrent rien sur serveur. Chiffres de rejeu publics, cas illustratifs.</span>
 </footer>
 
+<dialog class="g-video" id="g-video" aria-label="Film de présentation">
+  <div class="gv-bar"><span class="gv-title"></span><button type="button" class="gv-close" aria-label="Fermer">×</button></div>
+  <video controls playsinline preload="none"></video>
+  <p class="gv-note">Voix de synthèse · captures réelles des démonstrateurs · exemples fictifs et cycles réels rejoués · rien n’est enregistré.</p>
+</dialog>
+
 <script src="secteurs-data.js?v=5"></script>
-<script src="garde.js?v=1"></script>
+<script src="garde.js?v=2"></script>
 </body>
 </html>

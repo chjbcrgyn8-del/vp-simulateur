@@ -10,6 +10,27 @@
   var ICON = { scan: '€', expert: '✓', predict: '↗' };
   var current = null;
   var BASE = document.documentElement.getAttribute('data-base') || '';
+  /* Films de présentation (voix de synthèse, captures réelles des démonstrateurs). Durées en secondes. */
+  var FILMS = {
+    general: { f: 'video/vp-offre-complete', t: 'Notre offre : VP Scan, VP Expert, VP Predict', d: 103 },
+    plastique: {
+      scan:    { f: 'video/vp-scan', t: 'VP Scan · chiffrer et prioriser', d: 70 },
+      expert:  { f: 'video/vp-expert-plastique', t: 'VP Expert · injection plastique', d: 89 },
+      predict: { f: 'video/vp-predict-plastique', t: 'VP Predict · injection plastique', d: 83 }
+    },
+    caoutchouc: {
+      scan:    { f: 'video/vp-scan', t: 'VP Scan · chiffrer et prioriser', d: 70 },
+      expert:  { f: 'video/vp-expert-caoutchouc', t: 'VP Expert · caoutchouc', d: 94 },
+      predict: { f: 'video/vp-predict-caoutchouc', t: 'VP Predict · caoutchouc', d: 81 }
+    }
+  };
+  function dur(s){ var m = Math.floor(s / 60), r = s % 60; return m ? (m + ' min' + (r ? ' ' + (r < 10 ? '0' : '') + r : '')) : (r + ' s'); }
+  function filmBtn(v, cls){
+    if (!v) return '';
+    return '<button type="button" class="' + cls + '" data-film="' + esc(v.f) + '" data-title="' + esc(v.t) + '" aria-label="Voir le film : ' + esc(v.t) + ' (' + esc(dur(v.d)) + ')">' +
+      '<img src="' + esc(href(v.f + '.jpg')) + '" alt="" loading="lazy"><span class="play" aria-hidden="true"><i></i></span>' +
+      '<span class="vl"><b>Voir le film</b> · ' + esc(dur(v.d)) + '</span></button>';
+  }
   var href = function(u){ return /^https?:/.test(u) ? u : BASE + u; };
 
   function statusOf(sec){ return (sec.expert && sec.expert.statut) === 'ok' ? 'ok' : 'cand'; }
@@ -32,15 +53,17 @@
     });
   }
 
-  function card(k, s){
+  function card(k, s, sk){
     var t = s[k], off = O.filter(function(o){ return o.k === k; })[0] || {};
     if (!t) return '';
+    var film = FILMS[sk] && FILMS[sk][k];
     var facts = (t.fait || t.mesures || []).slice(0, 3);
     if (k === 'predict' && t.mesures) facts = ['Mesures suivies : ' + t.mesures.slice(0, 3).join(', ')].concat(t.connexion ? ['Connexion : ' + t.connexion] : []);
     return '<article class="g-card" data-tool="' + k + '">' +
       '<div class="ot"><span class="k">' + esc(VERB[k]) + '</span><span class="st"><i class="dot ' + (t.statut === 'ok' ? '' : 'cand') + '"></i>' + esc(toolLabel(t)) + '</span></div>' +
       '<h3>' + esc(off.nom || k) + '<span>' + esc(t.question || off.q || '') + '</span></h3>' +
       '<ul>' + facts.map(function(f){ return '<li>' + esc(f) + '</li>'; }).join('') + '</ul>' +
+      filmBtn(film, 'vid') +
       '<p class="base">' + esc(t.base || '') + '</p>' +
       '<a class="go' + (k === 'expert' ? ' main' : '') + '" href="' + esc(href(t.demo)) + '">' + esc(t.demoL || 'Ouvrir la démonstration') + ' <i aria-hidden="true">→</i></a>' +
       '</article>';
@@ -52,7 +75,7 @@
     document.querySelectorAll('#g-sect button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-k') === k)); });
     $('g-title').innerHTML = esc(s.nom) + '<small>' + esc(s.accroche || '') + ' ' + esc(s.exemple ? 'Exemples : ' + s.exemple : '') + '</small>';
     $('g-chip').innerHTML = '<i class="dot ' + (statusOf(s) === 'ok' ? '' : 'cand') + '"></i>' + esc(s.chiffre) + ' <b>' + esc(s.chiffreL) + '</b>';
-    $('g-cards').innerHTML = ['scan', 'expert', 'predict'].map(function(t){ return card(t, s); }).join('');
+    $('g-cards').innerHTML = ['scan', 'expert', 'predict'].map(function(t){ return card(t, s, k); }).join('');
     var res = (s.ressources || []).map(function(r){ return '<a href="' + esc(href(r[1])) + '">' + esc(r[0]) + '</a>'; });
     res.push('<a class="doc" href="' + esc(href('secteur-' + k + '.html')) + '">Page secteur complète</a>');
     $('g-res').innerHTML = res.join('');
@@ -75,8 +98,36 @@
 
   $('g-reset').addEventListener('click', reset);
 
+  /* ---- Visionneuse (un seul lecteur ; rien n'est chargé avant le clic) ---- */
+  var dlg = $('g-video'), vid = dlg ? dlg.querySelector('video') : null;
+  function openFilm(base, title){
+    if (!dlg || !vid) { location.href = href(base + '.mp4'); return; }
+    dlg.querySelector('.gv-title').textContent = title || '';
+    vid.poster = href(base + '.jpg');
+    vid.src = href(base + '.mp4');
+    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+    var p = vid.play(); if (p && p.catch) p.catch(function(){});
+  }
+  function closeFilm(){
+    if (!dlg) return;
+    try { vid.pause(); } catch (e) {}
+    vid.removeAttribute('src'); vid.load();
+    if (dlg.open && typeof dlg.close === 'function') dlg.close(); else dlg.removeAttribute('open');
+  }
+  if (dlg) {
+    dlg.querySelector('.gv-close').addEventListener('click', closeFilm);
+    dlg.addEventListener('close', closeFilm);
+    dlg.addEventListener('click', function(e){ if (e.target === dlg) closeFilm(); });
+  }
+  document.addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('[data-film]') : null;
+    if (b) { e.preventDefault(); openFilm(b.getAttribute('data-film'), b.getAttribute('data-title')); }
+  });
+  var hero = $('g-hero'); if (hero) hero.innerHTML = filmBtn(FILMS.general, 'vid hero');
+
   document.addEventListener('keydown', function(e){
     if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (dlg && dlg.open) return;
     var tag = (e.target && e.target.tagName) || '';
     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
     var n = parseInt(e.key, 10);
