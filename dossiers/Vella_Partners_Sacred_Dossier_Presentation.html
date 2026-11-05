@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Vella Partners – Sacred | Dossier de présentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0f1d2e;--navy2:#162a40;--ink:#1a2333;--mute:#5d6878;--line:#dcd8cf;--cream:#f7f5f0;--gold:#c4a066;--teal:#3d7a74;--sand:#f3ece0;--mist:#eef2f3}
+@page{size:1280px 720px;margin:0}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Sans",Arial,sans-serif;color:var(--ink);background:#888}
+.pg{width:1280px;height:720px;position:relative;overflow:hidden;background:var(--cream);page-break-after:always;padding:0 56px}
+.pg:last-child{page-break-after:auto}
+.hd{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:14px;font-weight:700;letter-spacing:.18em;font-size:13px}
+.vp{width:42px;height:42px;border-radius:8px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-family:"Noto Serif";font-weight:700;font-size:16px;letter-spacing:0}
+.sec{font-size:11px;letter-spacing:.06em;color:var(--mute);text-transform:uppercase}
+.ft{position:absolute;left:56px;right:56px;bottom:0;height:42px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;font-size:9.5px;letter-spacing:.2em;color:var(--mute);text-transform:uppercase}
+.ft b{color:var(--ink);letter-spacing:.04em;font-size:11px}
+.kick{font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--teal);text-transform:uppercase;margin:26px 0 10px}
+h1,h2{font-family:"Noto Serif",Georgia,serif;font-weight:400;margin:0;line-height:1.18}
+h2{font-size:34px;color:var(--ink)}
+.lead{font-size:15px;color:var(--mute);margin:12px 0 0;line-height:1.5;max-width:980px}
+.small{font-size:11px;color:var(--mute);line-height:1.45}
+.lbl{font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+/* cover */
+.cover{background:var(--navy);color:#fff;padding:0}
+.cover .hd{position:absolute;left:44px;right:44px;top:0;border-color:#2b3c52;z-index:2}
+.cover .vp{background:#22364d}
+.cover .sec{color:#b7c2cf}
+.cover .left{position:absolute;left:56px;top:120px;width:640px;z-index:3}
+.cover .right{position:absolute;right:0;top:0;bottom:0;width:530px;background:var(--navy2)}
+.cover .right img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55;filter:saturate(.6)}
+.cover .right:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--navy) 0%,rgba(15,29,46,.2) 35%,rgba(15,29,46,.35) 100%)}
+.cover .cap{position:absolute;bottom:62px;left:0;right:0;text-align:center;font-size:10.5px;letter-spacing:.2em;color:#d7dee6;z-index:2;font-weight:700}
+.cover h1{font-size:44px;margin-top:22px}
+.cover .bar{width:52px;height:4px;background:var(--gold);margin:40px 0 18px}
+.cover .ft{border-color:#2b3c52;color:#8c9aab;left:44px;right:44px}
+.cover .ft b{color:#fff}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.chip{border:1px solid #3a4e66;color:#d9e1ea;border-radius:20px;padding:5px 12px;font-size:11.5px}
+/* generic */
+.row{display:flex;gap:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.dark{background:var(--navy);color:#fff;border-radius:22px;padding:24px 28px}
+.dark .lbl{color:var(--gold)}
+.num{font-family:"Noto Serif";color:var(--gold);font-size:22px}
+.steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.steps4 div{padding:16px 18px;border-right:1px solid var(--line)}
+.steps4 div:last-child{border-right:0}
+.steps4 b{display:block;font-size:13px;letter-spacing:.12em;margin:4px 0}
+.team{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:12px}
+.tm{display:flex;gap:10px;align-items:flex-start}
+.av{flex:none;width:34px;height:34px;border-radius:50%;background:var(--sand);color:var(--teal);display:flex;align-items:center;justify-content:center;font-family:"Noto Serif";font-weight:700}
+.tm b{font-size:11.5px;letter-spacing:.06em;display:block}
+.tm span{font-size:11.5px;color:var(--mute)}
+.fact{font-family:"Noto Serif";font-size:30px;color:var(--ink)}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.facts .card{padding:14px 18px}
+.facts .small{margin-top:2px}
+ul.l{margin:8px 0 0;padding-left:18px;font-size:13px;line-height:1.55}
+ul.l li{margin-bottom:3px}
+.map{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;font-size:12.5px;margin-top:10px}
+.map div{display:flex;gap:8px;align-items:baseline}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--teal);flex:none;transform:translateY(-1px)}
+.dot.g{background:var(--gold)}
+.offer{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:16px;margin-top:22px}
+.offer .card{padding:18px 20px;position:relative}
+.offer .core{background:var(--navy);color:#fff;border:0}
+.offer .core ul{color:#e3e9ef}
+.offer .q{font-family:"Noto Serif";font-size:16px;margin:8px 0 6px}
+.offer h3{margin:4px 0 0;font-size:20px}
+.tag{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--teal)}
+.core .tag{color:var(--gold)}
+.offer .how{margin-top:10px;font-size:11.5px;color:var(--mute);border-top:1px solid var(--line);padding-top:8px}
+.core .how{color:#aebccb;border-color:#2e4259}
+.stp{display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 16px;margin-bottom:8px;border-left:4px solid var(--gold)}
+.stp .c{flex:none;width:30px;height:30px;border-radius:50%;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.stp b{flex:none;width:150px;font-size:12.5px;letter-spacing:.04em}
+.stp span{font-size:12.5px;color:var(--mute)}
+.stp.t{border-left-color:var(--teal)} .stp.t .c{background:var(--teal)}
+.badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;padding:3px 8px;border-radius:10px;text-transform:uppercase}
+.b-c{background:#e8f0ee;color:var(--teal)} .b-e{background:#f6ead6;color:#9a6c24}
+.memo{display:flex;gap:0;margin-top:12px}
+.memo div{flex:1;background:#fff;border:1px solid var(--line);border-right:0;padding:12px 14px}
+.memo div:first-child{border-radius:10px 0 0 10px}
+.memo div:last-child{border-right:1px solid var(--line);border-radius:0 10px 10px 0;background:var(--sand)}
+.memo b{display:block;font-size:12px;margin:2px 0}
+.memo span{font-size:11px;color:var(--mute)}
+.memo i{font-style:normal;font-family:"Noto Serif";color:var(--gold);font-size:15px}
+</style>
+</head>
+<body>
+
+<!-- 1. COUVERTURE -->
+<section class="pg cover">
+  <div class="hd"><div class="brand"><div class="vp">VP</div>VELLA PARTNERS</div><div class="sec">Présentation à l’attention du groupe Sacred · Novembre 2026</div></div>
+  <div class="left">
+    <div class="lbl" style="color:var(--gold);letter-spacing:.3em">Vella Partners × Sacred</div>
+    <h1>Le savoir-faire élastomère,<br>au service de la décision.</h1>
+    <div class="bar"></div>
+    <div style="font-size:21px;font-weight:700">VP Expert</div>
+    <p style="font-size:15px;line-height:1.5;color:#cdd6e0;margin:8px 0 0;max-width:500px">Diagnostic guidé des défauts et mémoire d’atelier partagée — une démarche à étudier avec les équipes Sacred, de Saint-Lubin-des-Joncherets à l’ensemble des sites du groupe.</p>
+    <div class="chips"><span class="chip">EPDM</span><span class="chip">Silicone</span><span class="chip">Injection caoutchouc</span><span class="chip">Multi-sites</span></div>
+  </div>
+  <div class="right"><img src="../img/savoir.jpg" alt=""><div class="cap">PIÈCES TECHNIQUES ÉLASTOMÈRES · ILLUSTRATION</div></div>
+  <div class="ft"><span>Vella Partners / Document de discussion — Diffusion restreinte</span><b>01 / 06</b></div>
+</section>
+
+<!-- 2. QUI EST VELLA PARTNERS -->
+<section class="pg">
+  <div class="hd"><div class="brand"><div class="vp">VP</div>VELLA PARTNERS</div><div class="sec">01 / Qui est Vella Partners ?</div></div>
+  <div class="kick">Conseil et logiciel industriel · fondée à Lyon en 2026</div>
+  <h2>Des experts d’atelier, un logiciel sans boîte noire,<br>un accompagnement jugé sur preuves.</h2>
+  <p class="lead">Vella Partners réunit un fondateur issu de vingt ans de sociétés de services et de conseil, et des experts métier de la plasturgie et du caoutchouc qui ont dirigé des ateliers d’injection pendant une trentaine d’années.</p>
+  <div class="row" style="margin-top:20px">
+    <div class="card" style="flex:1"><div class="lbl" style="color:var(--teal)">Le savoir métier</div><p class="small" style="font-size:12.5px;margin:8px 0 0">Référentiels de défauts, ordre des contrôles, gestes du régleur : écrits avec nos experts, relus pour chaque procédé.</p></div>
+    <div class="card" style="flex:1"><div class="lbl" style="color:var(--teal)">Le logiciel</div><p class="small" style="font-size:12.5px;margin:8px 0 0">VP Expert, VP Scan et VP Predict : règles explicites et sourcées, vos données restent chez vous.</p></div>
+    <div class="card" style="flex:1"><div class="lbl" style="color:var(--teal)">L’accompagnement</div><p class="small" style="font-size:12.5px;margin:8px 0 0">Un pilote court, une date de décision fixée au départ, un gain mesuré depuis votre point de départ.</p></div>
+  </div>
+  <div class="steps4">
+    <div><span class="num">01</span><b>OBSERVER</b><span class="small">Défauts et signaux</span></div>
+    <div><span class="num">02</span><b>COMPRENDRE</b><span class="small">Causes à vérifier</span></div>
+    <div><span class="num">03</span><b>AGIR</b><span class="small">Décision humaine</span></div>
+    <div><span class="num">04</span><b>CONSERVER</b><span class="small">Mémoire d’atelier</span></div>
+  </div>
+  <div class="lbl" style="color:var(--mute);margin-top:18px">L’équipe et les expertises associées</div>
+  <div class="team">
+    <div class="tm"><div class="av">F</div><div><b>FRÉDÉRIC VELLA</b><span>Direction et développement</span></div></div>
+    <div class="tm"><div class="av">H</div><div><b>HENRI BERNARD</b><span>Méthodes et qualité</span></div></div>
+    <div class="tm"><div class="av">S</div><div><b>SYLVAIN KOMMER</b><span>Injection caoutchouc</span></div></div>
+    <div class="tm"><div class="av">C</div><div><b>CHRISTOPHE PLETTY</b><span>Injection thermoplastique</span></div></div>
+    <div class="tm"><div class="av">L</div><div><b>LOUIS DUQUENNOY</b><span>UX et sécurisation numérique</span></div></div>
+  </div>
+  <div class="ft"><span>Vella Partners / Document de discussion — Diffusion restreinte</span><b>02 / 06</b></div>
+</section>
+
+<!-- 3. CE QUE NOUS AVONS COMPRIS DE SACRED -->
+<section class="pg">
+  <div class="hd"><div class="brand"><div class="vp">VP</div>VELLA PARTNERS</div><div class="sec">02 / Ce que nous avons compris de Sacred</div></div>
+  <div class="kick">Un spécialiste des élastomères techniques, depuis 1946</div>
+  <h2>Huit sites, deux matériaux exigeants,<br>un même savoir-faire à faire circuler.</h2>
+  <div class="facts">
+    <div class="card"><div class="fact">1946</div><div class="small">Année de fondation ; siège et R&amp;D à Saint-Lubin-des-Joncherets (28)</div></div>
+    <div class="card"><div class="fact">8 sites</div><div class="small">de production : 4 en France, 4 à l’international</div></div>
+    <div class="card"><div class="fact">≈ 540</div><div class="small">collaborateurs (« plus de 500 » selon le groupe)</div></div>
+    <div class="card"><div class="fact">≈ 70 M€</div><div class="small">de chiffre d’affaires (67 M€ en 2023)</div></div>
+  </div>
+  <div class="row" style="margin-top:16px">
+    <div class="card" style="flex:1.1">
+      <div class="lbl" style="color:var(--teal)">Savoir-faire et marchés</div>
+      <ul class="l">
+        <li>Conception et production de pièces en <b>EPDM et silicone</b>, y compris covulcanisation et collage des deux matériaux</li>
+        <li>Automobile (constructeurs et équipementiers de rang 1), ferroviaire, transport routier</li>
+        <li>Petites et moyennes séries techniques via la filiale Gouillardon Gaudry</li>
+      </ul>
+    </div>
+    <div class="card" style="flex:1">
+      <div class="lbl" style="color:var(--teal)">Implantations</div>
+      <div class="map">
+        <div><span class="dot"></span>Saint-Lubin-des-Joncherets (28)</div><div><span class="dot g"></span>Wuhan (Chine)</div>
+        <div><span class="dot"></span>Vieux-Thann (68)</div><div><span class="dot g"></span>Aguascalientes (Mexique)</div>
+        <div><span class="dot"></span>Bert (03)</div><div><span class="dot g"></span>Casablanca (Maroc)</div>
+        <div><span class="dot"></span>Corbas (69)</div><div><span class="dot g"></span>Făgăraș (Roumanie)</div>
+      </div>
+    </div>
+    <div class="dark" style="flex:1;border-radius:14px;padding:18px 22px">
+      <div class="lbl">Ce que cela implique pour l’atelier</div>
+      <ul class="l" style="color:#e3e9ef;font-size:12.5px">
+        <li>Un même défaut peut apparaître sur plusieurs sites, sur plusieurs continents</li>
+        <li>Le savoir des régleurs expérimentés doit survivre aux départs</li>
+        <li>Les exigences automobiles imposent de tracer chaque décision</li>
+      </ul>
+    </div>
+  </div>
+  <p class="small" style="margin-top:12px">Sources publiques (site sacredgroup.com, Club ETI Centre-Val de Loire, Ecozoom, presse régionale) — chiffres et périmètre à confirmer avec Sacred. Enjeux formulés comme hypothèses de travail.</p>
+  <div class="ft"><span>Vella Partners / Document de discussion — Diffusion restreinte</span><b>03 / 06</b></div>
+</section>
+
+<!-- 4. L'OFFRE -->
+<section class="pg">
+  <div class="hd"><div class="brand"><div class="vp">VP</div>VELLA PARTNERS</div><div class="sec">03 / Notre offre</div></div>
+  <div class="kick">Une question, un outil</div>
+  <h2>VP Expert au centre ; VP Scan pour prioriser,<br>VP Predict pour anticiper.</h2>
+  <div class="offer">
+    <div class="card">
+      <div class="tag">Pour prioriser · Chiffrer</div><h3>VP Scan</h3>
+      <div class="q">« Quelles pertes traiter en premier ? »</div>
+      <ul class="l" style="font-size:12.5px">
+        <li>Intervention courte sur site, aucun matériel</li>
+        <li>Arrêts, rebuts et retouches chiffrés en euros, machine par machine</li>
+        <li>Feuille de route qui vous reste acquise, même sans suite</li>
+      </ul>
+      <div class="how">Forfait · un site, un atelier ciblé · facultatif</div>
+    </div>
+    <div class="card core">
+      <div class="tag">Le cœur · Résoudre</div><h3>VP Expert</h3>
+      <div class="q">« Que faire face à ce défaut ? »</div>
+      <ul class="l" style="font-size:12.5px">
+        <li>À chaque étape, le contrôle qui départage le mieux les pistes restantes, avec sa raison</li>
+        <li>Adapté au défaut, au moule, au mélange et à la presse</li>
+        <li>Constat ≠ cause démontrée ; retour au réglage d’origine si l’essai échoue</li>
+        <li>Chaque essai tracé, échecs compris : une mémoire qui ressert au prochain cas comparable</li>
+      </ul>
+      <div class="how">Toutes presses, connectées ou non · pilote puis abonnement par site</div>
+    </div>
+    <div class="card">
+      <div class="tag">En extension · Anticiper</div><h3>VP Predict</h3>
+      <div class="q">« Qu’est-ce qui commence à dériver ? »</div>
+      <ul class="l" style="font-size:12.5px">
+        <li>Chaque mesure de cycle face à sa référence</li>
+        <li>L’alerte nomme la mesure, la règle et la valeur</li>
+        <li>Puis les contrôles VP Expert, dans l’ordre</li>
+      </ul>
+      <div class="how">Euromap 77 / 63 ou MES · 1 à 3 presses critiques</div>
+    </div>
+  </div>
+  <div class="row" style="margin-top:18px;font-size:12.5px;color:var(--mute);gap:34px">
+    <span><b style="color:var(--ink)">Toutes marques</b>, connectées ou non</span>
+    <span><b style="color:var(--ink)">Décisions</b> prises par vos équipes</span>
+    <span><b style="color:var(--ink)">Vos données</b> restent les vôtres</span>
+    <span><b style="color:var(--ink)">Règles explicites</b>, pas de boîte noire</span>
+  </div>
+  <div class="ft"><span>Vella Partners / Document de discussion — Diffusion restreinte</span><b>04 / 06</b></div>
+</section>
+
+<!-- 5. VP EXPERT EN SITUATION -->
+<section class="pg">
+  <div class="hd"><div class="brand"><div class="vp">VP</div>VELLA PARTNERS</div><div class="sec">04 / VP Expert en situation</div></div>
+  <div class="kick">Exemple illustratif — injection caoutchouc EPDM</div>
+  <h2>Face à un défaut : une enquête métier structurée,<br>pas un réglage automatique.</h2>
+  <div class="row" style="margin-top:16px;gap:22px">
+    <div class="dark" style="width:380px;flex:none;padding:20px 26px">
+      <div class="lbl">Dossier en cours</div>
+      <div style="font-family:'Noto Serif';font-size:26px;margin:10px 0 4px">Manque matière</div>
+      <div style="font-size:12.5px;color:#b8c5d3">Presse 4 · Moule M-212 · EPDM lot 2318</div>
+      <div style="margin-top:16px;font-size:12.5px;line-height:1.5;color:#e3e9ef">
+        <div style="display:flex;justify-content:space-between;border-top:1px solid #2e4259;padding:8px 0"><span>1 · Évents et dégazage</span><span class="badge b-c">Constat</span></div>
+        <div style="display:flex;justify-content:space-between;border-top:1px solid #2e4259;padding:8px 0"><span>2 · Température des plateaux</span><span class="badge b-e">Essai</span></div>
+        <div style="display:flex;justify-content:space-between;border-top:1px solid #2e4259;padding:8px 0"><span>3 · Pesée de l’ébauche</span><span class="badge" style="background:#2a3d53;color:#b8c5d3">À venir</span></div>
+      </div>
+      <p style="font-size:11px;color:#9fb0c2;margin:10px 0 0">Encrassement sur deux évents : un constat, pas encore une cause. Cas fictif, non représentatif d’une pièce Sacred.</p>
+    </div>
+    <div style="flex:1">
+      <div class="stp"><div class="c">1</div><b>QUALIFIER</b><span>Référence, lot de mélange, données labo (rhéomètre, viscosité) disponibles.</span></div>
+      <div class="stp"><div class="c">2</div><b>VÉRIFIER</b><span>Température réelle matière / moule ; conformité des réglages au dossier.</span></div>
+      <div class="stp"><div class="c">3</div><b>INVESTIGUER</b><span>État de l’unité, du moule, des canaux, évents ou tirage de vide.</span></div>
+      <div class="stp t"><div class="c">4</div><b>TRACER &amp; VALIDER</b><span>Essais autorisés, résultat constaté, solution validée par méthodes / qualité.</span></div>
+      <div class="memo">
+        <div><i>1</i><b>Contexte</b><span>Pièce · mélange · moule · presse</span></div>
+        <div><i>2</i><b>Défaut</b><span>Quoi, quand, conditions</span></div>
+        <div><i>3</i><b>Hypothèses</b><span>Pistes et sources</span></div>
+        <div><i>4</i><b>Essais</b><span>Réussis ou non</span></div>
+        <div><i>5</i><b>Conclusion</b><span>Validée par le client</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="margin-top:14px;border-top:1px solid var(--line);padding-top:10px;gap:40px">
+    <div style="flex:1"><div class="lbl" style="color:var(--teal)">Disponible pour démonstration</div><p class="small" style="font-size:12.5px;margin:6px 0 0">Référentiel caoutchouc construit avec nos experts : manque matière, grillage, bulles / cloques. Démo ouverte, sans inscription.</p></div>
+    <div style="flex:1"><div class="lbl" style="color:var(--teal)">À construire avec Sacred</div><p class="small" style="font-size:12.5px;margin:6px 0 0">Défauts propres au silicone et à la covulcanisation EPDM / silicone ; partage des résolutions validées entre sites.</p></div>
+  </div>
+  <div class="ft"><span>Vella Partners / Document de discussion — Diffusion restreinte</span><b>05 / 06</b></div>
+</section>
+
+<!-- 6. PILOTE ET PROCHAINE ÉTAPE -->
+<section class="pg">
+  <div class="hd"><div class="brand"><div class="vp">VP</div>VELLA PARTNERS</div><div class="sec">05 / Pilote et prochaine étape</div></div>
+  <div class="kick">Commencer petit, décider sur preuves</div>
+  <h2>Un pilote sur un site,<br>une mémoire pensée pour le groupe.</h2>
+  <div class="row" style="margin-top:22px;gap:26px">
+    <div style="flex:1">
+      <div class="card" style="border-left:4px solid var(--navy)">
+        <div class="lbl" style="color:var(--teal)">Le pilote VP Expert</div>
+        <p style="font-size:13.5px;margin:8px 0 0;line-height:1.5">1 atelier · 1 à 3 presses · 1 à 2 défauts récurrents · 6 à 8 semaines.<br>Date de décision fixée au départ ; usage, délai de résolution et gains mesurés.</p>
+      </div>
+      <div style="display:flex;justify-content:center;height:16px"><div style="width:2px;background:var(--gold)"></div></div>
+      <div class="card" style="border-left:4px solid var(--gold);background:var(--sand)">
+        <div class="lbl" style="color:var(--teal)">Notre engagement</div>
+        <p style="font-size:13.5px;margin:8px 0 0;line-height:1.5">Abonnement proposé seulement si le gain brut mesuré vaut au moins <b>deux fois</b> son prix annuel. Objectifs prudents, gains jamais comptés deux fois.</p>
+      </div>
+      <div class="row" style="margin-top:14px;gap:10px;font-size:11.5px;color:var(--mute)">
+        <div class="card" style="flex:1;padding:10px 12px"><b style="color:var(--ink)">Régleur</b><br>utilise l’outil face au défaut</div>
+        <div class="card" style="flex:1;padding:10px 12px"><b style="color:var(--ink)">Méthodes / qualité</b><br>valident la mémoire</div>
+        <div class="card" style="flex:1;padding:10px 12px"><b style="color:var(--ink)">Décideur</b><br>juge le résultat économique</div>
+      </div>
+    </div>
+    <div class="dark" style="flex:1">
+      <div class="lbl">Proposition de rencontre</div>
+      <div style="display:flex;gap:18px;margin-top:18px"><span class="num">01</span><div><b>Comprendre l’existant Sacred</b><div style="font-size:12.5px;color:#b8c5d3;margin-top:4px">Défauts qui coûtent le plus, pratiques par site, outils qualité en place.</div></div></div>
+      <div style="display:flex;gap:18px;margin-top:16px"><span class="num">02</span><div><b>Présenter VP Expert</b><div style="font-size:12.5px;color:#b8c5d3;margin-top:4px">Démonstration sur cas caoutchouc et limites actuelles du référentiel.</div></div></div>
+      <div style="display:flex;gap:18px;margin-top:16px"><span class="num">03</span><div><b>Choisir le site pilote</b><div style="font-size:12.5px;color:#b8c5d3;margin-top:4px">Atelier, presses et défauts cibles ; option VP Scan si les priorités sont à établir.</div></div></div>
+      <div style="display:flex;gap:18px;margin-top:16px"><span class="num">04</span><div><b>Préparer le déploiement</b><div style="font-size:12.5px;color:#b8c5d3;margin-top:4px">Si le pilote est concluant : autres sites, mémoire partagée, VP Predict sur presses connectables.</div></div></div>
+    </div>
+  </div>
+  <div style="position:absolute;left:56px;right:56px;bottom:52px;display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:12px;font-size:13px">
+    <span><b>FRÉDÉRIC VELLA</b> · Président — Vella Partners</span>
+    <span style="color:var(--mute)">fvella@vella-partners.com · +33 6 22 15 43 62 · chjbcrgyn8-del.github.io/vp-simulateur</span>
+  </div>
+  <div class="ft"><span>Vella Partners / Document de discussion — Diffusion restreinte</span><b>06 / 06</b></div>
+</section>
+
+</body>
+</html>
