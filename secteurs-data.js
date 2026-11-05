@@ -13,7 +13,7 @@ window.VP_SECTEURS = {
       question: 'Où vos presses perdent-elles de l’argent ?',
       fait: ['Rebuts et arrêts chiffrés en euros, presse par presse', 'Qualité des données et presses connectables', 'Presses critiques et feuille de route'],
       base: 'Grille d’audit terrain de 32 points, issue de la méthode de notre expert injection',
-      demo: 'gains.html?express=1', demoL: 'Chiffrer mes pertes · 3 min'
+      demo: 'gains.html', demoL: 'Chiffrer mes pertes · 3 min'
     },
     expert: {
       statut: 'ok', statutL: 'Référentiel expert',

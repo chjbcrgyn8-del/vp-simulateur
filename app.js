@@ -269,7 +269,7 @@ function renderResult(){
   return {eco,op,cap,capH,lv};})();
  app.innerHTML=`<section class="screen wide">
  <p class="note">Modèle ${C.MODEL_VERSION} · Hypothèses illustratives : réduction qualité 20 %, part adressable 60 % par défaut. Les valeurs utilisées figurent dans le détail du calcul. Aucun gain garanti ; hypothèses à vérifier sur votre site.</p>
- ${EXAMPLE?'<div class="err" style="background:#fff4e0;border-color:#e0a64a;color:#7a4b00"><b>Exemple fictif :</b> atelier type de '+r.n+' presses, aucune de vos valeurs. Pour votre propre estimation, revenez à l’accueil et commencez l’estimation.</div>':(ACC.size||MOREK().some(k=>!KNOWN.has(k))?'<p class="note"><b>Valeurs types utilisées</b> (« Je ne sais pas » ou champ laissé vide) : '+[...new Set([...ACC,...MOREK().filter(k=>!KNOWN.has(k))])].map(k=>{for(const st of steps){const fs=[...((typeof st.fields==='function'?st.fields():st.fields)||[]),...(st.moreFields?st.moreFields():[])];const x=fs.find(y=>y.key===k);if(x)return x.label.toLowerCase();}return k;}).join(', ')+'.</p>':'')}<p class="printhead">Vella Partners · Estimation VP Expert · ${new Date().toLocaleDateString("fr-FR")}</p><p class="eyebrow">Votre estimation · scénario ${SL[s.scenario]}</p>
+ ${EXAMPLE?'<div class="err" style="background:#fff4e0;border-color:#e0a64a;color:#7a4b00"><b>Exemple fictif :</b> atelier type de '+r.n+' presses, aucune de vos valeurs. Pour votre propre estimation, revenez à l’accueil et commencez l’estimation.</div>':(ACC.size||MOREK().some(k=>!KNOWN.has(k))?'<p class="note"><b>Valeurs types utilisées</b> (« Je ne sais pas » ou champ laissé vide) : '+[...new Set([...ACC,...MOREK().filter(k=>!KNOWN.has(k))])].map(k=>{for(const st of steps){const fs=[...((typeof st.fields==='function'?st.fields():st.fields)||[]),...(st.moreFields?st.moreFields():[])];const x=fs.find(y=>y.key===k);if(x)return x.label.toLowerCase();}return k;}).join(', ')+'.</p>':'')}<p class="printhead">Vella Partners · Estimation VP Expert · ${new Date().toLocaleDateString("fr-FR")}</p><p class="eyebrow">${EXAMPLE?'Exemple fictif':'Votre estimation'} · scénario ${SL[s.scenario]}</p>
  <div class="scen" role="group" aria-label="Scénario affiché en détail">${['prudent','central','cible'].map(k=>`<button type="button" data-s="${k}" aria-pressed="${s.scenario===k}">${SL[k][0].toUpperCase()+SL[k].slice(1)}</button>`).join('')}</div>
  <div class="hero h3">
   <div><p class="lbl">Gain net annuel, en année pleine</p><p class="big">${eur(r.net)}</p>
@@ -387,6 +387,7 @@ ${(()=>{if(r.grossAll==null)return '';const K=['prudent','central','cible'];cons
  document.getElementById('edit').onclick=()=>{i=1;render();window.scrollTo(0,0);};
 }
 prev.addEventListener('click',()=>{next.style.visibility='visible';});
-if(new URLSearchParams(location.search).get('express')){i=steps.length-1;}
+/* Retour d'Henry (nov. 2026) : aucun chiffre avant saisie. « ?express=1 » n'ouvre plus le résultat ; seul « ?exemple=1 » affiche l'atelier fictif, signalé comme tel. */
+if(new URLSearchParams(location.search).get('exemple')){EXAMPLE=true;i=steps.length-1;}
 render();
 })();
