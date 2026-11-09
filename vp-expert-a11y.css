@@ -6,9 +6,9 @@
 /* ---------- Pastilles « VP Expert » / « VP Predict » ----------
    vp-expert-ui.css les écrit en violet #6240c9 sur fond violet (1,2:1) et en gris-lilas sur orange (1,3:1). */
 body.vp-ui .vpx{color:#fff!important}
-body.vp-ui .vpx.vpp{color:#1a1206!important}
+body.vp-ui .vpx.vpp{color:#1b1e22!important}
 body.vp-ui .vpduo .vpx{color:#fff!important}
-body.vp-ui .vpduo .vpx.vpp{color:#1a1206!important}
+body.vp-ui .vpduo .vpx.vpp{color:#1b1e22!important}
 
 /* ---------- Texte : 12 px minimum (valeurs d'origine de 8 à 11,5 px, aucune taille réduite) ---------- */
 body.vp-ui .sx-bn,

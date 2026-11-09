@@ -1,16 +1,16 @@
 /* VP Expert — mode Focus et ajustements atelier iPad (v2, palette Vella : crème, graphite, cuivre ; 5 nov. 2026).
  * Présentation seule : aucune règle métier. À charger après vp-expert-vella.css. */
 :root{
-  --vf-bg:#f5f2eb; --vf-panel:#fffdf9; --vf-ink:#0b111c; --vf-muted:#566273; --vf-line:#e4ded2;
-  --vf-accent:#8a4a0c; --vf-night:#0a0f19; --vf-champ:#e3b47c;
+  --vf-bg:#f1f5f9; --vf-panel:#ffffff; --vf-ink:#1b1e22; --vf-muted:#62676b; --vf-line:#e2e8f0;
+  --vf-accent:#9a6a12; --vf-night:#1b1e22; --vf-champ:#f5af20;
   --vf-ok:#14502f; --vf-okbg:#e6f1ea; --vf-okline:#b6d6c3;
-  --vf-nc:#7a3d0b; --vf-ncbg:#fbeadb; --vf-ncline:#e8c7a3;
-  --vf-nv:#3d4756; --vf-nvline:#9aa7b8; --vf-touch:60px;
+  --vf-nc:#9a6a12; --vf-ncbg:#fdf3dc; --vf-ncline:#f5af20;
+  --vf-nv:#2b2f36; --vf-nvline:#9aa0a6; --vf-touch:60px;
 }
 
 /* ---- Bascules ---- */
 .vp-focus-toggle{display:block;margin:12px auto 0;min-height:48px;padding:0 22px;border-radius:999px;
-  border:1px solid var(--vf-accent);background:transparent;color:var(--vf-ink);font:600 16px/1 var(--font,'Geist',system-ui,sans-serif);cursor:pointer}
+  border:1px solid var(--vf-accent);background:transparent;color:var(--vf-ink);font:600 16px/1 var(--font,'Inter',system-ui,sans-serif);cursor:pointer}
 .vp-focus-toggle[aria-pressed="true"]{background:var(--vf-accent);color:#fff}
 .vf-phone-btn{display:none;border-color:var(--vf-line);color:var(--vf-muted)}
 @media (min-width:901px){.vf-phone-btn:not([hidden]){display:block}}
@@ -26,37 +26,37 @@ body.vp-focus-on main > p.sl{display:none!important}
 /* ---- Panneau Focus ---- */
 #vp-focus{max-width:1040px;margin:18px auto 36px;padding:0 16px;display:grid;gap:14px;
   grid-template-columns:1.25fr 1fr;grid-template-areas:"def def" "ctl res" "next next" "guard guard";
-  font-family:var(--font,'Geist',system-ui,sans-serif);color:var(--vf-ink)}
+  font-family:var(--font,'Inter',system-ui,sans-serif);color:var(--vf-ink)}
 #vp-focus[hidden],#vp-focus [hidden]{display:none!important}
 #vp-focus{scroll-margin-top:120px}
 .vf-def{grid-area:def}.vf-ctl{grid-area:ctl}.vf-res{grid-area:res}.vf-next{grid-area:next}.vf-guard{grid-area:guard}
 
-.vf-card{background:var(--vf-panel);border:1px solid var(--vf-line);border-radius:18px;padding:18px 22px 20px;
+.vf-card{background:var(--vf-panel);border:1px solid var(--vf-line);border-radius:6px;padding:18px 22px 20px;
   display:flex;flex-direction:column;gap:10px;
-  box-shadow:0 1px 0 rgba(11,17,28,.04),0 18px 36px -24px rgba(11,17,28,.28)}
+  box-shadow:0 1px 0 rgba(27,30,34,.04),0 18px 36px -24px rgba(27,30,34,.28)}
 .vf-k{font:500 12px/1.3 var(--mono,'IBM Plex Mono',ui-monospace,monospace);letter-spacing:.14em;text-transform:uppercase;color:var(--vf-accent)}
 .vf-defh{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.vf-def>b{font:500 clamp(22px,2.4vw,28px)/1.15 var(--serif,'Geist',system-ui,sans-serif);letter-spacing:-.025em}
+.vf-def>b{font:500 clamp(22px,2.4vw,28px)/1.15 var(--serif,'Inter',system-ui,sans-serif);letter-spacing:-.025em}
 .vf-card p{margin:0;font-size:16px;line-height:1.55}
 .vf-note{font-size:13.5px!important;color:var(--vf-muted)}
 .vf-meta{color:var(--vf-muted);font-size:14px!important}
 .vf-meta small{display:block;font-size:12.5px;margin-top:2px}
 
 /* carte du contrôle prioritaire : sombre, pour que l'œil la trouve en premier */
-.vf-ctl{background:radial-gradient(70% 60% at 100% 0%,rgba(201,138,75,.16),transparent 62%),linear-gradient(180deg,#0e1626 0%,var(--vf-night) 100%);
-  border-color:#1f2b3d;border-top:3px solid var(--vf-champ);color:#f3efe7;gap:12px}
+.vf-ctl{background:radial-gradient(70% 60% at 100% 0%,rgba(224,154,18,.16),transparent 62%),linear-gradient(180deg,#1b1e22 0%,var(--vf-night) 100%);
+  border-color:#222629;border-top:3px solid var(--vf-champ);color:#f1f5f9;gap:12px}
 .vf-ctl .vf-k{color:var(--vf-champ)}
-.vf-ctl>b{font:500 clamp(24px,2.7vw,32px)/1.15 var(--serif,'Geist',system-ui,sans-serif);letter-spacing:-.025em;color:#f3efe7}
-.vf-ctl p{color:#d7deea;font-size:17px}
+.vf-ctl>b{font:500 clamp(24px,2.7vw,32px)/1.15 var(--serif,'Inter',system-ui,sans-serif);letter-spacing:-.025em;color:#f1f5f9}
+.vf-ctl p{color:#e2e8f0;font-size:17px}
 .vf-ctl .vf-meta{color:#aab4c4;font-size:13.5px!important}
 .vf-prog{display:flex;flex-direction:column;gap:7px;margin-top:2px}
 .vf-prog span{font:500 12.5px/1 var(--mono,'IBM Plex Mono',ui-monospace,monospace);letter-spacing:.08em;text-transform:uppercase;color:var(--vf-champ)}
-.vf-prog i{display:block;height:4px;border-radius:2px;background:#1f2b3d;overflow:hidden}
-.vf-prog u{display:block;height:100%;width:0;background:linear-gradient(90deg,#e3b47c,#b77a3d);border-radius:2px;transition:width .35s ease;text-decoration:none}
+.vf-prog i{display:block;height:4px;border-radius:2px;background:#222629;overflow:hidden}
+.vf-prog u{display:block;height:100%;width:0;background:linear-gradient(90deg,#f5af20,#e09a12);border-radius:2px;transition:width .35s ease;text-decoration:none}
 
 /* boutons de constat : lisibles, grands, sans couleurs criardes */
 .vf-acts{display:grid;grid-template-columns:1fr;gap:10px}
-.vf-big{min-height:var(--vf-touch);border-radius:16px;border:1.5px solid transparent;font:600 18px/1.2 var(--font,'Geist',system-ui,sans-serif);
+.vf-big{min-height:var(--vf-touch);border-radius:6px;border:1.5px solid transparent;font:600 18px/1.2 var(--font,'Inter',system-ui,sans-serif);
   color:var(--vf-ink);cursor:pointer;padding:0 18px;touch-action:manipulation;display:flex;align-items:center;justify-content:center;gap:12px;
   transition:transform .12s ease,box-shadow .18s ease,background .18s ease}
 .vf-big:active:not(:disabled){transform:scale(.98)}
@@ -71,12 +71,12 @@ body.vp-focus-on main > p.sl{display:none!important}
 .vf-go{background:var(--vf-night);color:#fff;border-color:var(--vf-night);margin-top:auto}
 @media (min-width:901px){body:not(.vp-phone) .vf-next{flex-direction:row;align-items:center;gap:20px;flex-wrap:wrap}body:not(.vp-phone) .vf-next .vf-k{flex:0 0 100%}body:not(.vp-phone) .vf-next p{flex:1 1 280px}body:not(.vp-phone) .vf-next .vf-go{margin:0;flex:0 1 340px}}
 .vf-go:hover:not(:disabled){background:#1a2638}
-.vf-ctl .vf-go{background:linear-gradient(180deg,#e3b47c,#b77a3d);color:#160d04;border-color:transparent}
-.vf-link{background:none;border:0;color:var(--vf-accent);font:600 15px var(--font,'Geist',system-ui,sans-serif);text-decoration:underline;text-underline-offset:3px;
+.vf-ctl .vf-go{background:linear-gradient(180deg,#f5af20,#e09a12);color:#1b1e22;border-color:transparent}
+.vf-link{background:none;border:0;color:var(--vf-accent);font:600 15px var(--font,'Inter',system-ui,sans-serif);text-decoration:underline;text-underline-offset:3px;
   min-height:44px;padding:0 4px;cursor:pointer}
 .vf-guard{color:var(--vf-muted);font-size:13.5px;line-height:1.5;margin:0;padding:0 4px}
 .vf-guard .vf-link{display:inline;min-height:0;margin-left:6px;font-size:13.5px}
-.vf-big:focus-visible,.vf-link:focus-visible,.vp-focus-toggle:focus-visible{outline:3px solid #e8841f;outline-offset:3px}
+.vf-big:focus-visible,.vf-link:focus-visible,.vp-focus-toggle:focus-visible{outline:3px solid #e09a12;outline-offset:3px}
 
 /* iPad portrait et téléphone : une colonne, contrôle prioritaire en premier */
 @media (max-width:900px){
@@ -88,11 +88,11 @@ body.vp-focus-on main > p.sl{display:none!important}
 /* ---- Aperçu téléphone : le panneau Focus dans un téléphone (démonstration, présentation) ---- */
 body.vp-phone #vp-focus{max-width:392px;margin:26px auto 40px;padding:56px 14px 38px;position:relative;
   grid-template-columns:1fr;grid-template-areas:"def" "ctl" "res" "next" "guard";gap:12px;
-  background:var(--vf-bg);border:11px solid #0a0f19;border-radius:50px;
-  box-shadow:0 0 0 2px #2b3a54,0 40px 70px -26px rgba(10,15,25,.6),inset 0 0 0 1px rgba(255,255,255,.06)}
-body.vp-phone #vp-focus::before{content:"";position:absolute;top:12px;left:50%;transform:translateX(-50%);width:104px;height:26px;border-radius:16px;background:#0a0f19}
-body.vp-phone #vp-focus::after{content:"";position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:116px;height:5px;border-radius:3px;background:#0a0f19;opacity:.85}
-body.vp-phone .vf-card{padding:15px 16px 16px;border-radius:16px}
+  background:var(--vf-bg);border:11px solid #1b1e22;border-radius:8px;
+  box-shadow:0 0 0 2px #2b3a54,0 40px 70px -26px rgba(27,30,34,.6),inset 0 0 0 1px rgba(255,255,255,.06)}
+body.vp-phone #vp-focus::before{content:"";position:absolute;top:12px;left:50%;transform:translateX(-50%);width:104px;height:26px;border-radius:6px;background:#1b1e22}
+body.vp-phone #vp-focus::after{content:"";position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:116px;height:5px;border-radius:3px;background:#1b1e22;opacity:.85}
+body.vp-phone .vf-card{padding:15px 16px 16px;border-radius:6px}
 body.vp-phone .vf-def>b{font-size:21px}
 body.vp-phone .vf-ctl>b{font-size:23px}
 body.vp-phone .vf-ctl p{font-size:15.5px}
@@ -108,7 +108,7 @@ body.vp-phone .vf-meta small{display:none}
 }
 
 /* ---- Paramètres machine : bande de tolérance lisible (presse*.html) ---- */
-.vf-param{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:12px 14px;border-radius:12px;background:#fff;color:var(--vf-ink)}
+.vf-param{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:12px 14px;border-radius:6px;background:#fff;color:var(--vf-ink)}
 .vf-param .vf-band{grid-column:1/-1;position:relative;height:10px;border-radius:5px;
   background:linear-gradient(90deg,#f1d9c9 0 15%,#d9efe2 15% 85%,#f1d9c9 85% 100%)}
 .vf-param .vf-band i{position:absolute;top:-4px;width:4px;height:18px;border-radius:2px;background:var(--vf-ink);
@@ -119,14 +119,14 @@ body.vp-phone .vf-meta small{display:none}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.vf-prog u,.vf-big{transition:none}}
 
 /* Défaut présélectionné signalé comme exemple */
-.vf-exemple{display:inline-block;align-self:flex-start;margin:2px 0 0;padding:4px 11px;border-radius:999px;background:#f4e9db;color:#6b3d12;font:600 12.5px/1.3 var(--font,'Geist',system-ui,sans-serif)}
+.vf-exemple{display:inline-block;align-self:flex-start;margin:2px 0 0;padding:4px 11px;border-radius:999px;background:#fdf3dc;color:#9a6a12;font:600 12.5px/1.3 var(--font,'Inter',system-ui,sans-serif)}
 @media print{#vp-focus,.vf-phone-btn{display:none!important}}
 
 /* Téléphone : en Focus, le contrôle prioritaire doit être visible dès le premier écran */
 @media (max-width:560px){
   body.vp-focus-on .esteps,body.vp-focus-on .sx-bar,body.vp-focus-on .top .tabs{display:none!important}
   body.vp-focus-on #vp-focus{margin-top:10px;padding:0 12px}
-  body.vp-focus-on .vf-card{padding:14px 16px 16px;border-radius:16px}
+  body.vp-focus-on .vf-card{padding:14px 16px 16px;border-radius:6px}
   body.vp-focus-on .vf-def>b{font-size:20px}
   body.vp-focus-on .vf-ctl>b{font-size:22px}
   body.vp-focus-on .vf-ctl p{font-size:15.5px}

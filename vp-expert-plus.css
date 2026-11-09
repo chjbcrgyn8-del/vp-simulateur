@@ -1,5 +1,5 @@
 /* VP Expert · module « réflexes de l’expert » */
-.vpp{margin:14px 0 4px;padding:12px 14px;border:1px solid var(--line,#d9dee6);border-radius:10px;background:var(--panel,#f7f9fb)}
+.vpp{margin:14px 0 4px;padding:12px 14px;border:1px solid var(--line,#d9dee6);border-radius:6px;background:var(--panel,#f7f9fb)}
 .vpp .vpp-h{margin:0 0 8px}
 .vpp .vpp-h .sl{display:block;margin-top:2px}
 .vpp-tw{list-style:none;margin:0;padding:0;display:grid;gap:6px}

@@ -11,32 +11,32 @@
 .vnav .dd>summary::after{content:"";width:7px;height:7px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .2s;opacity:.7}
 .vnav .dd[open]>summary::after{transform:translateY(1px) rotate(-135deg)}
 .vnav>a:hover,.vnav .dd>summary:hover,.vnav .dd[open]>summary{color:#fff;background:rgba(255,255,255,.07)}
-.vnav a:focus-visible,.vnav summary:focus-visible,.vburger:focus-visible{outline:2px solid #e3b47c;outline-offset:2px}
+.vnav a:focus-visible,.vnav summary:focus-visible,.vburger:focus-visible{outline:2px solid #f5af20;outline-offset:2px}
 .vnav .dd{position:relative}
-.ddm{position:absolute;top:calc(100% + 10px);left:0;z-index:80;min-width:270px;padding:8px;background:#fffdf9;border:1px solid #e4ded2;border-radius:14px;
- box-shadow:0 24px 60px -20px rgba(11,17,28,.45);display:grid;gap:2px;animation:ddin .16s ease-out}
+.ddm{position:absolute;top:calc(100% + 10px);left:0;z-index:80;min-width:270px;padding:8px;background:#ffffff;border:1px solid #e2e8f0;border-radius:6px;
+ box-shadow:0 24px 60px -20px rgba(27,30,34,.45);display:grid;gap:2px;animation:ddin .16s ease-out}
 @keyframes ddin{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-.ddm a{display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:9px;color:#0b111c;text-decoration:none;font:500 14px/1.3 var(--font,system-ui)}
+.ddm a{display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:9px;color:#1b1e22;text-decoration:none;font:500 14px/1.3 var(--font,system-ui)}
 .ddm a b{font-weight:600}
-.ddm a span{display:flex;align-items:center;gap:6px;font-size:12px;color:#5a6270}
-.ddm a:hover,.ddm a:focus-visible{background:#f4efe6}
+.ddm a span{display:flex;align-items:center;gap:6px;font-size:12px;color:#62676b}
+.ddm a:hover,.ddm a:focus-visible{background:#f1f5f9}
 .ddm .sx-dot{width:7px;height:7px;border-radius:50%;display:inline-block}
 .ddm.dd3{grid-template-columns:repeat(3,minmax(190px,1fr));gap:4px 10px;min-width:640px;left:50%;transform:translateX(-50%);animation:none}
 .ddm.dd3>div{display:grid;align-content:start;gap:0}
-.ddk{margin:6px 12px 6px;font:500 10.5px/1.4 var(--mono,monospace);letter-spacing:.12em;text-transform:uppercase;color:#9a5f28}
+.ddk{margin:6px 12px 6px;font:500 10.5px/1.4 var(--mono,monospace);letter-spacing:.12em;text-transform:uppercase;color:#9a6a12}
 .ddm.dd3 a{padding:8px 12px}
 .vnav-cta{display:none!important}
 .vburger{display:none}
 .top.vn .topcta{order:initial;margin:0}
 
 @media(max-width:1100px){.top.vn .topcta{display:none}.vnav-cta{display:inline-flex!important}
- .vnav .vnav-cta{color:#0b111c;background:linear-gradient(135deg,#e3b47c,#c98a4b);font-weight:600;margin-left:6px}}
+ .vnav .vnav-cta{color:#1b1e22;background:linear-gradient(135deg,#f5af20,#e09a12);font-weight:600;margin-left:6px}}
 
 /* ---------- Mobile et tablette : bouton Menu, panneau déroulant ---------- */
 @media(max-width:900px){
  .top.vn{flex-wrap:wrap;row-gap:0;padding-top:10px!important;padding-bottom:10px!important}
  .top.vn .brand img{height:40px;width:auto}
- .vburger{display:inline-flex;align-items:center;gap:10px;margin-left:auto;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.18);
+ .vburger{display:inline-flex;align-items:center;gap:10px;margin-left:auto;min-height:44px;padding:0 14px;border-radius:6px;border:1px solid rgba(255,255,255,.18);
   background:transparent;color:#fff;font:500 14px/1 var(--font,system-ui);cursor:pointer}
  .vb-i,.vb-i::before,.vb-i::after{display:block;width:16px;height:1.6px;background:currentColor;border-radius:2px;transition:transform .2s,opacity .2s}
  .vb-i{position:relative}.vb-i::before,.vb-i::after{content:"";position:absolute;left:0}.vb-i::before{top:-5px}.vb-i::after{top:5px}
@@ -49,7 +49,7 @@
  .ddm a{color:#fff;min-height:44px;justify-content:center}
  .ddm a span{color:rgba(255,255,255,.6)}
  .ddm a:hover,.ddm a:focus-visible{background:rgba(255,255,255,.06)}
- .ddk{color:#e3b47c;margin-top:10px}
+ .ddk{color:#f5af20;margin-top:10px}
  .vnav .vnav-cta{justify-content:center!important;margin:10px 0 0;min-height:48px}
 }
 /* le header « away » ne doit pas se cacher quand le menu est ouvert */
@@ -57,17 +57,17 @@
 
 /* ---------- Héros : lanceur de démo par métier ---------- */
 .dl{margin:28px 0 0;max-width:520px}
-.dl label{display:block;margin:0 0 10px;font:500 11.5px/1.4 var(--mono,monospace);letter-spacing:.14em;text-transform:uppercase;color:#e3b47c}
+.dl label{display:block;margin:0 0 10px;font:500 11.5px/1.4 var(--mono,monospace);letter-spacing:.14em;text-transform:uppercase;color:#f5af20}
 .dlr{display:flex;gap:10px;flex-wrap:wrap}
-.dlr select{flex:1 1 220px;min-height:52px;padding:0 44px 0 16px;border-radius:10px;border:1px solid rgba(255,255,255,.22);background-color:rgba(255,255,255,.06);
+.dlr select{flex:1 1 220px;min-height:52px;padding:0 44px 0 16px;border-radius:6px;border:1px solid rgba(255,255,255,.22);background-color:rgba(255,255,255,.06);
  color:#fff;font:500 16px/1 var(--font,system-ui);appearance:none;-webkit-appearance:none;cursor:pointer;
  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23e3b47c' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
  background-repeat:no-repeat;background-position:right 16px center}
-.dlr select:hover{border-color:rgba(227,180,124,.6)}
-.dlr select:focus-visible{outline:2px solid #e3b47c;outline-offset:2px}
-.dlr select option{color:#0b111c;background:#fff}
+.dlr select:hover{border-color:rgba(245,175,32,.6)}
+.dlr select:focus-visible{outline:2px solid #f5af20;outline-offset:2px}
+.dlr select option{color:#1b1e22;background:#fff}
 .dlr .btn{min-height:52px;flex:none}
-.dln{margin:12px 0 0;font-size:14px;color:#aeb8c6}
+.dln{margin:12px 0 0;font-size:14px;color:#9aa0a6}
 .dln a{color:#fff;border-bottom:1px solid rgba(255,255,255,.35);text-decoration:none}
 .dln a:hover{border-bottom-color:#fff}
 .hhero.h2.xh .htrust{margin-top:28px}
@@ -75,7 +75,7 @@
 
 /* ---------- Sources sous les chiffres ---------- */
 .v3src{grid-column:2;margin:18px 0 0 20px!important;font-size:14.5px!important;line-height:1.6!important;color:#3d4452!important;opacity:1!important}
-.v3src a{color:#173a6b}
+.v3src a{color:#222629}
 @media(max-width:860px){.v3src{grid-column:auto;margin:16px 0 0!important}}
 
 /* ---------- Détails repliables (avancement, comparatifs) ---------- */
@@ -85,36 +85,36 @@
 
 /* ---------- Offres : prix et bouton ---------- */
 .offer{display:flex!important;flex-direction:column}
-.offer .oprice{margin:6px 0 0;font:600 15px/1.4 var(--display,system-ui);color:#0b111c}
-.offer.main .oprice{color:#f6e6d2}
+.offer .oprice{margin:6px 0 0;font:600 15px/1.4 var(--display,system-ui);color:#1b1e22}
+.offer.main .oprice{color:#fdf3dc}
 .offer .ofb{margin-top:auto;align-self:flex-start}
 .offer .under{margin-bottom:18px}
 .offer .on{margin-bottom:18px!important}
 .v3h{margin:56px 0 0;font:600 22px/1.2 var(--display,system-ui);letter-spacing:-.015em}
 .v3h+.pth{margin-top:16px}
 .pt-fork .pt-box b{margin-bottom:0}
-.v3note{margin:22px 0 0;font-size:15px;color:#4a5160}
-.v3note a{color:#173a6b;font-weight:600;white-space:nowrap}
+.v3note{margin:22px 0 0;font-size:15px;color:#62676b}
+.v3note a{color:#222629;font-weight:600;white-space:nowrap}
 .qfqd{margin-top:22px}
 
 /* ---------- Bouton flottant mobile : renvoie au lanceur ---------- */
 .fcta small{letter-spacing:.06em}
-.offer.main .ofb{background:linear-gradient(135deg,#e3b47c,#c98a4b)!important;color:#0b111c!important;border:0!important}
+.offer.main .ofb{background:linear-gradient(135deg,#f5af20,#e09a12)!important;color:#1b1e22!important;border:0!important}
 @media(max-width:900px){.vnav .dd>summary{display:flex;width:100%}.vnav .dd>summary::after{margin-right:6px}}
 .offer .ofl{margin-top:12px;font-size:13.5px;font-weight:600;color:inherit;opacity:.85;text-decoration:underline;text-underline-offset:3px}.offer .ofl:hover,.offer .ofl:focus-visible{opacity:1}
 
 /* Choix du métier dans le bandeau : quatre boutons */
 .pick{margin:28px 0 0;max-width:560px}
-.pick-l{margin:0 0 12px;font:500 11.5px/1.4 var(--mono,monospace);letter-spacing:.14em;text-transform:uppercase;color:#e3b47c}
+.pick-l{margin:0 0 12px;font:500 11.5px/1.4 var(--mono,monospace);letter-spacing:.14em;text-transform:uppercase;color:#f5af20}
 .pick-g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.pick-b{position:relative;display:flex;align-items:center;gap:10px;min-height:64px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:#f3efe7;text-decoration:none;transition:border-color .2s,background .2s,transform .2s}
-.pick-b:hover{border-color:#e3b47c;background:rgba(227,180,124,.1);transform:translateY(-2px)}
-.pick-b:focus-visible{outline:3px solid #e8841f;outline-offset:3px}
-.pick-n{font:500 11.5px/1 var(--mono,monospace);letter-spacing:.1em;color:#e3b47c}
+.pick-b{position:relative;display:flex;align-items:center;gap:10px;min-height:64px;padding:12px 16px;border-radius:6px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:#f1f5f9;text-decoration:none;transition:border-color .2s,background .2s,transform .2s}
+.pick-b:hover{border-color:#f5af20;background:rgba(245,175,32,.1);transform:translateY(-2px)}
+.pick-b:focus-visible{outline:3px solid #e09a12;outline-offset:3px}
+.pick-n{font:500 11.5px/1 var(--mono,monospace);letter-spacing:.1em;color:#f5af20}
 .pick-b b{flex:1;font-weight:600;font-size:16px;line-height:1.25;letter-spacing:-.01em}
 .pick-b .sx-dot{flex:none}
-.pick-go{color:#e3b47c;transition:transform .2s}.pick-b:hover .pick-go{transform:translateX(4px)}
-.pick-lg{display:flex;flex-wrap:wrap;gap:6px 20px;margin:14px 0 0;font-size:13px;color:#aeb8c6}
+.pick-go{color:#f5af20;transition:transform .2s}.pick-b:hover .pick-go{transform:translateX(4px)}
+.pick-lg{display:flex;flex-wrap:wrap;gap:6px 20px;margin:14px 0 0;font-size:13px;color:#9aa0a6}
 .pick-lg span{display:inline-flex;align-items:center;gap:7px}
 @media(max-width:560px){.pick-g{grid-template-columns:1fr}}
-.pick .sx-dot.ok,.pick-lg .sx-dot.ok{background:#6fcf9b}.pick .sx-dot.cand,.pick-lg .sx-dot.cand{background:#e3b47c}
+.pick .sx-dot.ok,.pick-lg .sx-dot.ok{background:#6fcf9b}.pick .sx-dot.cand,.pick-lg .sx-dot.cand{background:#f5af20}
