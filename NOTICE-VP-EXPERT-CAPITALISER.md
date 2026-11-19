@@ -1,7 +1,7 @@
 # VP Expert · scène « Capitaliser » (19 novembre 2026)
 
-Statut : proposition sur la branche `vp-expert-scene-capitaliser`, non fusionnée dans `main`, donc absente du site publié.
-À valider par Vella Partners avant toute publication.
+Statut : fusionnée dans `main` et publiée le 19 novembre 2026, à la demande de Vella Partners.
+État précédent conservé sous l'étiquette `ref-avant-capitaliser-2026-11-19`.
 
 ## Ce que la scène montre
 
