@@ -23,7 +23,9 @@
 <link rel="stylesheet" href="ux.css?v=20261031-ts">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <link rel="stylesheet" href="titres.css?v=1"><link rel="stylesheet" href="pill.css?v=1">
-<link rel="stylesheet" href="vp-brand.css"><script src="secteur-choix.js?v=4"></script></head>
+<link rel="stylesheet" href="vp-brand.css"><script src="secteur-choix.js?v=4"></script><link rel="preload" href="fonts/inter-normal-400-800-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="vp-premium.css?v=1">
+</head>
 <body class="stp">
 <a class="skip" href="#main">Aller au contenu</a>
 <header class="top">
@@ -234,5 +236,6 @@
 <script src="typo.js"></script>
 <script src="ux.js?v=20261029-ux"></script>
 <script>document.querySelectorAll('.filters [data-c]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filters [data-c]').forEach(x=>x.setAttribute('aria-pressed',x===b));document.querySelectorAll('ol.srcl li').forEach(li=>li.hidden=!!b.dataset.c&&li.dataset.c!==b.dataset.c)});</script>
+<script src="vp-premium.js?v=1" defer></script>
 </body>
 </html>
