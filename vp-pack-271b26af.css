@@ -416,6 +416,11 @@ a.btn,a.btn:hover{text-decoration:none}
 .fb.todo{color:#a8690f;background:#fdf3dc}
 .fields:not(.two):not(.three){grid-template-columns:minmax(0,1fr)}.idk{white-space:normal;text-align:left}.field{min-width:0}
 
+/* Lot offre (24/11/2026) : à 375 px, le résultat caoutchouc débordait (grille .syn en 1fr, montants à 6 chiffres dans .cash3). Spécificité relevée pour passer devant result2.css dans les packs. */
+body .syn{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:860px){body .syn{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:480px){body .cash3{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}body .cash3>div{padding:8px}body .cash3 b{font-size:14px}}
+
 /* === sim2.css?v=8 === */
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .smain{max-width:1280px;margin:0 auto;padding:12px 24px 48px}
