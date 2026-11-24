@@ -12,14 +12,14 @@
   var BASE = document.documentElement.getAttribute('data-base') || '';
   /* Films de présentation (voix de synthèse, captures réelles des démonstrateurs). Durées en secondes. */
   var FILMS = {
-    general: { f: 'video/vp-offre-complete', t: 'Notre offre : VP Scan, VP Expert, VP Predict', d: 103 },
+    general: { f: 'video/vp-offre-complete', t: 'Notre offre : chiffrer, résoudre, anticiper', d: 103 },
     plastique: {
-      scan:    { f: 'video/vp-scan', t: 'VP Scan · chiffrer et prioriser', d: 70 },
+      scan:    { f: 'video/vp-scan', t: 'VP Expert · chiffrer et prioriser', d: 70 },
       expert:  { f: 'video/vp-expert-plastique', t: 'VP Expert · injection plastique', d: 89 },
       predict: { f: 'video/vp-predict-plastique', t: 'VP Predict · injection plastique', d: 83 }
     },
     caoutchouc: {
-      scan:    { f: 'video/vp-scan', t: 'VP Scan · chiffrer et prioriser', d: 70 },
+      scan:    { f: 'video/vp-scan', t: 'VP Expert · chiffrer et prioriser', d: 70 },
       expert:  { f: 'video/vp-expert-caoutchouc', t: 'VP Expert · caoutchouc', d: 94 },
       predict: { f: 'video/vp-predict-caoutchouc', t: 'VP Predict · caoutchouc', d: 81 }
     }
@@ -53,13 +53,35 @@
     });
   }
 
+  /* Une étape de VP Expert (chiffrer ou résoudre) : même contenu qu'une carte, sans le nom d'offre. */
+  function etape(k, s, sk, n){
+    var t = s[k]; if (!t) return '';
+    var film = FILMS[sk] && FILMS[sk][k];
+    return '<div class="g-et" data-tool="' + k + '">' +
+      '<div class="ot"><span class="k">' + n + ' · ' + esc(VERB[k]) + '</span><span class="st"><i class="dot ' + (t.statut === 'ok' ? '' : 'cand') + '"></i>' + esc(toolLabel(t)) + '</span></div>' +
+      '<p class="q">' + esc(t.question || '').replace(/ ([?:;!])/g, '&nbsp;$1') + '</p>' +
+      '<ul>' + (t.fait || []).slice(0, 3).map(function(f){ return '<li>' + esc(f) + '</li>'; }).join('') + '</ul>' +
+      filmBtn(film, 'vid') +
+      '<p class="base">' + esc(t.base || '') + '</p>' +
+      '<a class="go' + (k === 'expert' ? ' main' : '') + '" href="' + esc(href(t.demo)) + '">' + esc(t.demoL || 'Ouvrir la démonstration') + ' <i aria-hidden="true">→</i></a>' +
+      '</div>';
+  }
+  /* VP Expert : une seule carte, deux étapes (chiffrer, puis résoudre). */
+  function cardExpert(s, sk){
+    var off = O.filter(function(o){ return o.k === 'expert'; })[0] || {};
+    return '<article class="g-card duo" data-offer="expert">' +
+      '<h3>' + esc(off.nom || 'VP Expert') + '<span>Chiffrer les pertes, puis traiter le défaut avec méthode. Sans connexion machine.</span></h3>' +
+      '<div class="g-ets">' + etape('scan', s, sk, 1) + etape('expert', s, sk, 2) + '</div>' +
+      '</article>';
+  }
+
   function card(k, s, sk){
     var t = s[k], off = O.filter(function(o){ return o.k === k; })[0] || {};
     if (!t) return '';
     var film = FILMS[sk] && FILMS[sk][k];
     var facts = (t.fait || t.mesures || []).slice(0, 3);
     if (k === 'predict' && t.mesures) facts = ['Mesures suivies : ' + t.mesures.slice(0, 3).join(', ')].concat(t.connexion ? ['Connexion : ' + t.connexion] : []);
-    return '<article class="g-card" data-tool="' + k + '">' +
+    return '<article class="g-card" data-offer="' + k + '" data-tool="' + k + '">' +
       '<div class="ot"><span class="k">' + esc(VERB[k]) + '</span><span class="st"><i class="dot ' + (t.statut === 'ok' ? '' : 'cand') + '"></i>' + esc(toolLabel(t)) + '</span></div>' +
       '<h3>' + esc(off.nom || k) + '<span>' + esc(t.question || off.q || '') + '</span></h3>' +
       '<ul>' + facts.map(function(f){ return '<li>' + esc(f) + '</li>'; }).join('') + '</ul>' +
@@ -75,7 +97,7 @@
     document.querySelectorAll('#g-sect button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-k') === k)); });
     $('g-title').innerHTML = esc(s.nom) + '<small>' + esc(s.accroche || '') + ' ' + esc(s.exemple ? 'Exemples : ' + s.exemple : '') + '</small>';
     $('g-chip').innerHTML = '<i class="dot ' + (statusOf(s) === 'ok' ? '' : 'cand') + '"></i>' + esc(s.chiffre) + ' <b>' + esc(s.chiffreL) + '</b>';
-    $('g-cards').innerHTML = ['scan', 'expert', 'predict'].map(function(t){ return card(t, s, k); }).join('');
+    $('g-cards').innerHTML = cardExpert(s, k) + card('predict', s, k);
     var res = (s.ressources || []).map(function(r){ return '<a href="' + esc(href(r[1])) + '">' + esc(r[0]) + '</a>'; });
     res.push('<a class="doc" href="' + esc(href('secteur-' + k + '.html')) + '">Page secteur complète</a>');
     $('g-res').innerHTML = res.join('');
@@ -134,7 +156,7 @@
     if (n >= 1 && n <= keys.length) { select(keys[n - 1], true); return; }
     if (e.key === 'Escape') { reset(); return; }
     var map = { s: 'scan', e: 'expert', p: 'predict' }, t = map[e.key.toLowerCase()];
-    if (t && current) { var a = document.querySelector('.g-card[data-tool="' + t + '"] .go'); if (a) a.click(); }
+    if (t && current) { var a = document.querySelector('#g-cards [data-tool="' + t + '"] .go'); if (a) a.click(); }
   });
 
   renderRail();

@@ -1,4 +1,6 @@
-/* Structure du site par secteur · 4 secteurs × 3 offres (VP Scan, VP Expert, VP Predict).
+/* Structure du site par secteur · 4 secteurs × 2 offres (VP Expert, VP Predict).
+   Depuis le 24 novembre 2026, le chiffrage des pertes (clé « scan ») est la première étape de VP Expert, et non plus une offre séparée ;
+   la clé « scan » est conservée pour ne pas casser les liens. Version de référence : tag ref-avant-fusion-scan-expert-2026-11-24.
    Statuts : ok = démonstrateur en ligne ; cand = en ligne, référentiel candidat à valider par un expert ; todo = à construire.
    Les liens ouvrent les démonstrateurs existants du site. Mise en place le 31 octobre 2026 ; version de référence : tag ref-avant-secteurs-2026-10-31. */
 window.VP_SECTEURS = {
@@ -125,7 +127,7 @@ window.VP_SECTEURS = {
 };
 
 window.VP_OFFRES = [
-  { k: 'scan', nom: 'VP Scan', verbe: 'Chiffrer', q: 'Où perdons-nous de l’argent ?', d: 'Une intervention courte sur site : pertes chiffrées, données évaluées, priorités désignées.' },
-  { k: 'expert', nom: 'VP Expert', verbe: 'Résoudre', q: 'Que faire face à ce défaut ?', d: 'Le savoir des meilleurs experts du métier, rangé en contrôles dans l’ordre. Sans connexion machine.' },
+  { k: 'expert', nom: 'VP Expert', verbe: 'Chiffrer, puis résoudre', q: 'Que faire face à ce défaut ?', d: 'Les pertes chiffrées pour désigner les priorités, puis le savoir des meilleurs experts du métier, rangé en contrôles dans l’ordre. Sans connexion machine.',
+    etapes: [{ k: 'scan', verbe: 'Chiffrer' }, { k: 'expert', verbe: 'Résoudre' }] },
   { k: 'predict', nom: 'VP Predict', verbe: 'Anticiper', q: 'Qu’est-ce qui commence à dériver ?', d: 'Les mesures suivies en continu : la dérive est anticipée, identifiée, puis résolue avec les contrôles de VP Expert.' }
 ];

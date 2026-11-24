@@ -1,4 +1,4 @@
-/* VP Scan · décolletage et traitement de surface.
+/* Chiffrage des pertes (première étape de VP Expert, ancien « VP Scan ») · décolletage et traitement de surface.
    Calculateur dans le navigateur : pertes annuelles par poste, part adressable par VP Expert ou VP Predict,
    priorités, données disponibles. Valeurs de départ illustratives, objectifs = hypothèses Vella Partners.
    Aucun prix d'offre n'est affiché. */
@@ -115,8 +115,8 @@
     ${h ? `<span class="sc-h">${nb(h)}</span>` : ''}<span class="sc-tag" data-tag="${k}">Valeur d’exemple</span></label>`;
 
   root.innerHTML = `
-  <header class="sc-hero"><p class="eyebrow">VP Scan · ${C.nom}</p><h1>${nb(C.titre)}</h1><p class="sc-lead">${nb(C.lead)}</p>
-    <p class="sc-warn">Estimation dans votre navigateur, rien n’est envoyé. Les valeurs de départ sont des exemples et non des repères sectoriels ; les objectifs de réduction sont des hypothèses Vella Partners, à confirmer lors du VP Scan sur site.</p></header>
+  <header class="sc-hero"><p class="eyebrow">VP Expert · Chiffrer · ${C.nom}</p><h1>${nb(C.titre)}</h1><p class="sc-lead">${nb(C.lead)}</p>
+    <p class="sc-warn">Estimation dans votre navigateur, rien n’est envoyé. Les valeurs de départ sont des exemples et non des repères sectoriels ; les objectifs de réduction sont des hypothèses Vella Partners, à confirmer lors du diagnostic de départ sur site.</p></header>
   <div class="sc-grid">
     <form class="sc-form" id="sc-form" novalidate>
       ${C.groupes.map((g, i) => `<fieldset class="sc-g"><legend><span>${i + 1}</span>${g.t}</legend>${g.f.map(field).join('')}</fieldset>`).join('')}
@@ -144,9 +144,9 @@
   <section class="sc-hyp"><details><summary>Détail du calcul et hypothèses</summary>
     <table><thead><tr><th>Poste</th><th>Calcul</th><th>Perte</th><th>Objectif</th><th>Offre</th></tr></thead><tbody id="sc-hyp"></tbody></table>
     <p class="sc-h">Gain = perte × objectif de réduction × facteur de scénario (prudent 50 %, modéré 75 %, cible 100 %). Fourchette affichée : ± 35 % tant que les chiffres n’ont pas été vérifiés sur site. Pour les postes « outils » et « chimie », la perte retenue est la part évitable du budget, égale à l’objectif.</p></details></section>
-  <section class="sc-cta"><div><p class="eyebrow">Et ensuite</p><h2>Le VP Scan sur site vérifie ces chiffres</h2>
+  <section class="sc-cta"><div><p class="eyebrow">Et ensuite</p><h2>Le diagnostic de départ sur site vérifie ces chiffres</h2>
     <p>Une intervention courte : vos arrêts, rebuts et retouches relevés sur vos ${C.unites}, la qualité de vos données évaluée, les ${C.unites} critiques désignées. Vos priorités chiffrées vous restent acquises, même sans suite.</p></div>
-    <div class="sc-btns"><a class="btn primary" href="pilote.html#rdv">Préparer un VP Scan sur site</a><a class="btn ghost" href="${C.expert}">VP Expert · résoudre un défaut</a><a class="btn ghost" href="${C.predict}">VP Predict · voir une dérive</a></div></section>`;
+    <div class="sc-btns"><a class="btn primary" href="pilote.html#rdv">Préparer un diagnostic sur site</a><a class="btn ghost" href="${C.expert}">VP Expert · résoudre un défaut</a><a class="btn ghost" href="${C.predict}">VP Predict · voir une dérive</a></div></section>`;
 
   const $ = id => document.getElementById(id);
   document.body.appendChild(root.querySelector('.sc-mini'));
@@ -186,8 +186,8 @@
     const h = have.size, n = C.data.length;
     $('sc-dt').textContent = h === 0 ? 'Données à constituer' : h >= 3 ? 'Base suffisante pour un pilote VP Predict' : 'Base partielle';
     $('sc-dd').textContent = h === 0
-      ? `Sans données tracées, commencez par VP Expert, qui fonctionne sans connexion : chaque résolution saisie constitue l’historique. Le VP Scan dira quelles ${C.unites} connecter en premier.`
-      : h >= 3 ? `${h} sources sur ${n} existent déjà. Un pilote VP Predict de trois mois sur une à trois ${C.unites} critiques est envisageable ; le VP Scan vérifie la qualité de ces données (dates, unités, trous).`
+      ? `Sans données tracées, commencez par VP Expert, qui fonctionne sans connexion : chaque résolution saisie constitue l’historique. Le diagnostic de départ dira quelles ${C.unites} connecter en premier.`
+      : h >= 3 ? `${h} sources sur ${n} existent déjà. Un pilote VP Predict de trois mois sur une à trois ${C.unites} critiques est envisageable ; le diagnostic de départ vérifie la qualité de ces données (dates, unités, trous).`
       : `${h} source${h > 1 ? 's' : ''} sur ${n}. VP Expert peut démarrer tout de suite ; VP Predict demandera de compléter le suivi sur les ${C.unites} critiques.`;
     $('sc-hyp').innerHTML = P.map(p => `<tr><td>${p.n}</td><td>${nb(p.d(V))}</td><td>${eur(p.loss)}</td><td>${p.cible}\u00a0%</td><td>${ON[p.o]}</td></tr>`).join('');
   }

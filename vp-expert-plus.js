@@ -208,7 +208,7 @@ function drawCost(){const syn=$('expert-synthese');if(!syn)return;let box=$('vpp
  const a=reb!==null&&prix!==null?reb*prix:null,b=h!==null&&th!==null?h*th:null;
  if(a===null&&b===null){out.innerHTML='<span class="sl">Saisissez au moins rebuts et prix pièce, ou heures et coût horaire.</span>';return}
  const tot=(a||0)+(b||0);const f=x=>x.toLocaleString('fr-FR',{maximumFractionDigits:0});
- out.innerHTML=`<b>Environ ${f(tot)} € par jour</b> (${a!==null?'rebuts '+f(a)+' €':''}${a!==null&&b!==null?' + ':''}${b!==null?'temps perdu '+f(b)+' €':''}), soit ${f(tot*20)} € par mois à 20 jours. Hypothèses : les vôtres, sans double compte avec VP Scan. À reprendre dans la synthèse pour la direction.`;}
+ out.innerHTML=`<b>Environ ${f(tot)} € par jour</b> (${a!==null?'rebuts '+f(a)+' €':''}${a!==null&&b!==null?' + ':''}${b!==null?'temps perdu '+f(b)+' €':''}), soit ${f(tot*20)} € par mois à 20 jours. Hypothèses : les vôtres, sans double compte avec le chiffrage des pertes. À reprendre dans la synthèse pour la direction.`;}
 
 /* ---------- orchestration ---------- */
 function drawAll(){if(!api)return;try{drawTwins();drawOrient();drawConclude();decorateCards();drawTrial();drawCost()}catch(e){console.warn('vp-expert-plus',e)}}
