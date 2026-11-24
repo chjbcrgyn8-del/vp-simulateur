@@ -346,3 +346,8 @@ a.btn,a.btn:hover{text-decoration:none}
 .hist-demo{margin:-4px 0 14px;color:#62676b}
 .fb.todo{color:#a8690f;background:#fdf3dc}
 .fields:not(.two):not(.three){grid-template-columns:minmax(0,1fr)}.idk{white-space:normal;text-align:left}.field{min-width:0}
+
+/* Lot offre (24/11/2026) : à 375 px, le résultat caoutchouc débordait (grille .syn en 1fr, montants à 6 chiffres dans .cash3). Spécificité relevée pour passer devant result2.css dans les packs. */
+body .syn{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:860px){body .syn{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:480px){body .cash3{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}body .cash3>div{padding:8px}body .cash3 b{font-size:14px}}

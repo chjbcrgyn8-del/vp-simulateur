@@ -16,7 +16,7 @@ window.VellaPDF=async function(ctx){
  const line=(x1,y1,x2,y2,c=LINE,w=.25)=>{d.setDrawColor(...c);d.setLineWidth(w);d.line(x1,y1,x2,y2);};
  const wrap=(t,w)=>d.splitTextToSize(clean(t),w);
  const date=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
- const offer=r.conn?'VP Expert + VP Predict':'VP Expert';
+ const offer='Étape 1 du pilote dossier de preuve';
  const sector=RUB?'Moulage caoutchouc':'Injection plastique';
  const scen=SL[s.scenario][0].toUpperCase()+SL[s.scenario].slice(1);
 
@@ -77,7 +77,7 @@ window.VellaPDF=async function(ctx){
 
  // Prochaine étape
  d.setFillColor(...INK);d.roundedRect(M,y,CW,24,2,2,'F');F(11,'bold',[255,255,255]);T(M+6,y+8.5,'Prochaine étape : valider ces chiffres avec vos données réelles');
- F(8.5,'normal',[200,205,215]);T(M+6,y+14,'En 30 minutes, nous remplaçons les hypothèses par les relevés de votre atelier. Puis un pilote de 3 mois mesure le reste.');
+ F(8.5,'normal',[200,205,215]);T(M+6,y+14,'En 30 minutes, nous remplaçons les hypothèses par les relevés de votre atelier. Puis le pilote, en huit semaines, vérifie le reste.');
  T(M+6,y+19,'Frédéric Vella · 06 22 15 43 62 · fvella@vella-partners.com');
 
  /* ---------- Page 2 ---------- */

@@ -1,8 +1,7 @@
 (function(root){
   // Grille « Offres 2026 » (plaquette du 1er novembre 2026), tarifs indicatifs HT à confirmer par devis :
-  // VP Expert : pilote de mise en place 8 900 € (6 à 8 semaines indicatives), puis abonnement par site dès 300 €/mois (paliers 300 / 450 / 600 / 800 € selon le parc, voir PRICE_TIERS) selon résultat et périmètre ;
-  // VP Scan : diagnostic de départ inclus dans VP Expert, sans facturation séparée (décision du 24/11/2026, ancien forfait 4 900 €) ;
-  // VP Predict : pilote connecté dès 15 000 € sur 1 à 3 presses (sous réserve de faisabilité), puis option dès 150 €/presse/mois en complément de l'abonnement VP Expert ; pas de part variable.
+  // Pilote dossier de preuve : 8 900 € HT, huit semaines, VP Scan inclus en étape 1 (3 115 € HT dus si arrêt après la qualification), puis abonnement par site de 300 à 800 €/mois (paliers 300 / 450 / 600 / 800 € selon le parc, voir PRICE_TIERS) ;
+  // Les constantes et calculs « connexion » ci-dessous sont conservés pour ne pas casser le moteur, mais ne sont plus proposés : app.js force connMode='none' (offre sans connexion machine).
   // Matériel, licences tierces et raccordements spécifiques chiffrés séparément ; aucun avoir chiffré sur le pilote (un avoir éventuel serait précisé dans la proposition) ; aides étudiées au cas par cas.
   const PREDICT_PRICE=150,PREDICT_PRICE_11=150,PREDICT_SITE=0,PREDICT_MIN=1,PREDICT_DEFAULT=3,PREDICT_SUCCESS=0,PILOT_BASE=15000,PILOT_PER=0,PILOT_CREDIT=0,EXT_BASE=0,EXT_PER=0,SCAN_PRICE=0,EXPERT_PILOT=8900,EXPERT_SITE=300,FOCUS_EXP=.5;
   // Pack Usine retiré de la grille publique (sur devis pour les groupes) : constantes conservées, non utilisées.
