@@ -43,7 +43,7 @@ Aucun fichier n'a été supprimé. Les pages VP Predict, décolletage et traitem
 
 ```
 git checkout main
-git revert -m 1 <commit de fusion>     # annule la fusion sans réécrire l'historique
+git revert -m 1 6924dd1     # annule la fusion sans réécrire l'historique
 git push origin main
 ```
 
