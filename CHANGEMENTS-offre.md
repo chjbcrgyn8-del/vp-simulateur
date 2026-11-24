@@ -70,3 +70,12 @@ Référence : offre_v2/BRIEF.md. Une ligne par changement, « avant → après �
 
 ## style.css
 - Fin de fichier : aucune règle → `body .syn` en minmax(0,1fr) et `.cash3` resserré sous 480 px (débordement de 21 px du résultat caoutchouc à 375 px, préexistant). Packs CSS non reconstruits (propriété du chef d’équipe).
+
+## Recette (25/11/2026)
+- pdf.js, page 2 : notes des lignes tarifaires non imprimées → imprimées sous « Abonnement par site » et « Pilote dossier de preuve » (3 115 € HT si arrêt après qualification, grille 300 à 800 € HT par mois, indicatif, à confirmer par devis).
+- app.js / pdf.js : « Abonnement par site · 13 à 25 presses… après le pilote, au prix écrit dans le devis » → « Palier correspondant aux N presses de l’estimation (…) · grille de 300 à 800 € HT par mois · indicatif, à confirmer par devis ».
+- app.js : ligne « Presses » marquée « Vous · Répartition saisie » par défaut (S.profile vaut 'custom' dès l’ouverture, préexistant depuis 8a4e352) → « Vous » seulement si le nombre de presses a été saisi ou un profil choisi, sinon « Valeur type · Répartition type, à remplacer ».
+- app.js / pdf.js : « 0 valeur sur 10 vient de vous » → « 0 valeur clé sur 10 vient de vous », complété par « · nombre de presses saisi » si le parc a été saisi (le nombre de presses ne fait pas partie des 10 valeurs clés).
+- app.js / pdf.js : « Seuil d’engagement 2 × », badges « Objectif atteint / Seuil d’engagement / Sous le seuil » → « Repère : gain brut estimé ÷ abonnement », « Repère interne indicatif : 2 × », badges « Au-dessus du repère / Au niveau du repère / Sous le repère ».
+- calc.js (texte d’avertissement seul) : « Vella Partners ne propose l’abonnement que si le gain mesuré atteint au moins 2 fois son prix annuel. » → « Repère interne indicatif : 2 fois au moins, à vérifier au pilote ; ce n’est pas un engagement de résultat. »
+- gains.html, caoutchouc.html : calc.js?v=20261125-repere, app.js?v=20261125-repere2, pdf.js?v=7.
