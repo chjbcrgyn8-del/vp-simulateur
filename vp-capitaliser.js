@@ -22,7 +22,6 @@
     TS: { machine: 'Ligne', tool: 'Montage', exTool: 'Montage MT-07', exMachine: 'Ligne L-2' }
   };
   const voc = () => SECT[(window.VPExpertAPI && window.VPExpertAPI.sector) || 'TP'] || SECT.TP;
-  const dossierMoule = () => voc().tool === 'Moule';
   const EX_ACTION = 'Exemple fictif : réglage ramené à la fiche, contrôle refait sur trois cycles.';
   const EX_TAG = ' (exemple fictif)';
 
@@ -154,9 +153,8 @@
       (st.decision.open ? ', avec ' + st.decision.open + (st.decision.open > 1 ? ' réserves.' : ' réserve.') : '.') : 'Complément demandé par ' + st.decision.by + '.']);
     if (st.reuse) log.push([DAYS.reuse, 'Repris de nuit sur le même outillage, ' + (condKnown() ? 'conditions identiques' : 'après contrôle refait') + ' : ' +
       ({ efficace: 'efficace', partiel: 'résultat partiel', inefficace: 'sans effet' })[st.reuse] + '.']);
-    const moule = dossierMoule();
-    return '<aside class="vc-fiche" aria-label="' + (moule ? 'Dossier de preuve du moule' : 'Fiche de mémoire') + '">' +
-      '<p class="vc-fk">' + (moule ? 'Dossier de preuve · par moule' : 'Mémoire d’atelier · par outillage') + '</p>' +
+    return '<aside class="vc-fiche" aria-label="Fiche de mémoire">' +
+      '<p class="vc-fk">Mémoire d’atelier · par outillage</p>' +
       '<h3 class="vc-ft">' + (st.tool ? esc(st.tool) : 'Outillage à préciser') + '</h3>' +
       '<p class="vc-fs">' + esc([st.machine, c.defect].filter(Boolean).join(' · ')) + '</p>' +
       '<p class="vc-fb"><em class="vc-badge ' + s[0] + '">' + esc(s[1]) + '</em></p>' +
@@ -165,8 +163,7 @@
       '<div class="vc-log"><p class="vc-lk">Journal</p>' + (log.length ? '<ol>' + log.map(l => '<li><b>' + l[0] + '</b><span>' + esc(l[1]) + '</span></li>').join('') + '</ol>' :
         '<p class="vc-none">Rien pour l’instant : le cas n’est pas clôturé.</p>') + '</div>' +
       (st.reuse ? '<p class="vc-count"><b>1</b> reprise · <b>' + (st.reuse === 'efficace' ? 1 : 0) + '</b> efficace<small>Décompte seul : aucun taux en dessous de cinq reprises.</small></p>' : '') +
-      '<p class="vc-fn">' + v.tool + ' et ' + v.machine.toLowerCase() + ' : c’est par eux que le cas sera retrouvé.</p>' +
-      (moule ? '<p class="vc-fn"><b>Livrables du pilote, établis avec vos équipes :</b> fiche de transfert de moule s’il change de presse ; pré-rapport de réclamation (pré-8D) si une réclamation est en cause. La démonstration ne les génère pas et n’enregistre rien.</p>' : '') + '</aside>';
+      '<p class="vc-fn">' + v.tool + ' et ' + v.machine.toLowerCase() + ' : c’est par eux que le cas sera retrouvé.</p></aside>';
   }
 
   /* ---------- écrans ---------- */
@@ -215,7 +212,6 @@
     } else if (d.type === 'valide') {
       tail = '<div class="vc-done ok"><b>Méthode validée par ' + esc(d.by) + '.</b><span>Elle sera proposée en premier quand ce défaut reviendra sur cet outillage. Sa revue périodique est à convenir avec le site.</span>' +
         (g.length ? '<span class="vc-res">Réserves écrites sur la fiche : ' + esc(g.join(' ; ')) + '.</span>' : '') + '</div>' +
-        (dossierMoule() ? '<p class="vc-note">Le cas clos par le régleur et validé par les méthodes ou la qualité rejoint le dossier de preuve du moule. Le dossier de l’atelier rassemble constats, essais et pièces de preuve : photos, relevés et résultats de contrôle. Ici, la validation est simulée et rien n’est enregistré.</p>' : '') +
         '<div class="vc-acts"><button type="button" class="vc-btn gold" data-a="goto" data-v="reuse">Voir la suite : le défaut revient</button>' +
         '<button type="button" class="vc-btn" data-a="undo">Revenir sur la décision</button></div>';
     } else {
@@ -373,7 +369,7 @@
     if (!show) { if (box) box.hidden = true; return; }
     if (!box) {
       box = document.createElement('div'); box.id = 'vp-capi-cta'; box.className = 'vp-capi-cta';
-      box.innerHTML = '<div><b>Et ensuite : capitaliser.</b><span>' + (dossierMoule() ? 'Voir comment le cas est clos par le régleur, validé par les méthodes ou la qualité, puis rejoint le dossier de preuve du moule.' : 'Voir comment ce cas devient une méthode validée, puis sert au régleur suivant sur le même outillage.') + '</span></div>' +
+      box.innerHTML = '<div><b>Et ensuite : capitaliser.</b><span>Voir comment ce cas devient une méthode validée, puis sert au régleur suivant sur le même outillage.</span></div>' +
         '<button type="button" class="vp-capi-go">Ouvrir la scène Capitaliser</button>';
       $('button', box).addEventListener('click', open);
     }

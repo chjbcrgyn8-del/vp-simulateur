@@ -15,8 +15,8 @@ const KEY=()=>base()+'#'+(NUM[base()]||0);
 const isPF=()=>POSTFAB.includes(S.qui);
 const LATE=['Pièces déformées','Pièces cassantes','Bulles de vide','Fissuration sous contrainte'];
 const famOf=n=>{const d=DEFS.find(x=>x[0]===n);return d?lab(FAM,d[1]):''};
-/* 'sans' = mesures relevées à la main ; 'conforme' = mesures d’exemple ; 'derive' = recherche de l'origine d'une dérive */
-const SIT=[['sans','Relevé à la main','Le régleur saisit les mesures qu’il relève sur la presse. Sans valeur saisie, toutes les causes restent à vérifier.'],['conforme','Mesures d’exemple','Consigne, valeur actuelle, moyenne des OF précédents et tendance sont simulées pour la démonstration.'],['derive','Une mesure dérive','On cherche l’origine de la dérive : presse, outillage, périphérique…']];
+/* 'sans' = mesures relevées à la main (VP Expert seul) ; 'conforme' = mesures fournies par VP Predict (démonstration) ; 'derive' = recherche de l'origine d'une dérive */
+const SIT=[['sans','Relevé à la main','Le régleur saisit les mesures qu’il relève sur la presse. Sans valeur saisie, toutes les causes restent à vérifier.'],['conforme','Mesures de la presse','Consigne, valeur actuelle, moyenne des OF précédents et tendance arrivent de la presse. Valeurs de démonstration.'],['derive','Une mesure dérive','On cherche l’origine de la dérive : presse, outillage, périphérique…']];
 const isB=()=>S.def==='Bavure';
 /* Fiche de réglage d'exemple : consigne, tolérance et unité par mesure. Valeurs illustratives, à remplacer par la fiche validée de la presse. */
 const MES={to:{u:'°C',c:60,t:5,d:1},tm:{u:'°C',c:235,t:10,d:1},ti:{u:'s',c:1.20,t:0.15,d:2},com:{u:'bar',c:850,t:60,d:0},td:{u:'s',c:8.5,t:0.8,d:1},tc:{u:'s',c:32.0,t:1.5,d:1},mat:{u:'mm',c:5.0,t:1.5,d:1},visc:{u:'bar·s',c:100,t:12,d:0}};
@@ -24,7 +24,7 @@ const fmt=(p,v)=>Number(v).toFixed(MES[p].d).replace('.',',');
 /* Sens défavorable d'une cause liée à une mesure, lu dans son libellé */
 const dirOf=n=>/trop haute|trop forte|trop lent|trop élevé/i.test(n)?'haut':/trop basse|trop rapide|trop faible|insuffisant/i.test(n)?'bas':'var';
 const hash=s=>{let h=0;for(const ch of s)h=(h*31+ch.charCodeAt(0))>>>0;return h};
-/* Valeurs de démonstration : déterministes par défaut et par mesure. La première mesure liée au défaut est « conforme mais limite » avec tendance défavorable. */
+/* Valeurs de démonstration VP Predict : déterministes par défaut et par mesure. La première mesure liée au défaut est « conforme mais limite » avec tendance défavorable. */
 function demo(p,dir,rank){const m=MES[p],h=hash(S.def+p),j=(h%7-3)/10;
  const sgn=dir==='bas'?-1:1;
  if(rank===0)return {avg:m.c+sgn*m.t*0.25+j*m.t*0.1,cur:m.c+sgn*m.t*0.86};
@@ -69,13 +69,13 @@ function draw1(){
  const mh=document.querySelector('#mes .mesh');if(mh)mh.hidden=d;
  if(d){$('sit').innerHTML='';$('drv').innerHTML=`<div class="emsg"><b>Recherche de l’origine d’une dérive :</b> ${esc(lab(PROC,S.param))}. Le défaut en est probablement la conséquence ; on cherche d’où vient la dérive. <button type="button" class="lk" data-go="conforme">Revenir aux causes du défaut</button></div><p class="ml">Quelle mesure dérive ?</p>`+pills('param',PROC);$('msg').innerHTML='';$('msg').className='emsg';$('msg').hidden=true;return}
  $('msg').hidden=false;
- $('sit').innerHTML=SIT.filter(x=>x[0]!=='derive').map(([v,t,dd])=>`<button type="button" class="sc" data-b="${v}" aria-pressed="${S.br===v}"><em class="stag ${v==='sans'?'ex':'pr'}">${v==='sans'?'Saisie manuelle':'Exemple simulé'}</em><b>${t}</b><span>${dd}</span></button>`).join('');
+ $('sit').innerHTML=SIT.filter(x=>x[0]!=='derive').map(([v,t,dd])=>`<button type="button" class="sc" data-b="${v}" aria-pressed="${S.br===v}"><em class="stag ${v==='sans'?'ex':'pr'}">${v==='sans'?'VP Expert seul':'Avec VP Predict'}</em><b>${t}</b><span>${dd}</span></button>`).join('');
  if(!MC.length){$('drv').innerHTML='';$('msg').innerHTML='<b>Aucune mesure de presse n’est reliée à ce défaut</b> dans le référentiel : les causes se classent d’après le QQOQCP.';$('msg').className='emsg';return}
  const rows=MC.map(({p,dir,n})=>{const m=MES[p],s=mstat(p,dir);
   const cls=s.st==='none'?'':s.st==='hors'?'hors':(s.adverse||s.trend==='defav')?'lim':s.st==='ok'?'ok':'okl';
-  const trend=s.trend==='none'?'—':s.trend==='stable'?'Stable':s.trend==='defav'?'<b>Défavorable</b> '+(s.cur>s.avg?'↗':'↘'):'Favorable';
+  const trend=s.trend==='none'?(S.br==='conforme'?'—':'<span class="sl">avec VP Predict</span>'):s.trend==='stable'?'Stable':s.trend==='defav'?'<b>Défavorable</b> '+(s.cur>s.avg?'↗':'↘'):'Favorable';
   const val=S.br==='conforme'?`<b>${fmt(p,s.cur)}</b> ${m.u}`:`<input type="text" inputmode="decimal" maxlength="30" class="mesin" data-mes="${p}" value="${esc(S.mes[p]??'')}" aria-label="Valeur relevée, ${esc(lab(PROC,p))}" placeholder="relevé"> ${m.u}`;
-  const avg=S.br==='conforme'?fmt(p,s.avg)+' '+m.u:'—';
+  const avg=S.br==='conforme'?fmt(p,s.avg)+' '+m.u:'<span class="sl">avec VP Predict</span>';
   const stat=s.st==='none'?`<span class="mst">${s.invalid?'Saisie invalide':'À relever'}</span>`:`<span class="mst ${cls}">${s.txt}${s.trend==='defav'?' · tendance défavorable':''}</span>`;
   const link=(s.st==='hors'||(s.st==='limite'&&s.trend==='defav'))?` <button type="button" class="lk" data-drift="${p}">Chercher l’origine</button>`:'';
   return `<tr class="${cls}"><th scope="row">${esc(lab(PROC,p))}<small>${dir==='haut'?'défavorable si trop haute':dir==='bas'?'défavorable si trop basse':'défavorable si instable'}</small></th><td>${fmt(p,m.c)} ± ${fmt(p,m.t)} ${m.u}</td><td>${val}</td><td>${avg}</td><td>${trend}</td><td>${stat}${link}</td></tr>`}).join('');
@@ -83,7 +83,7 @@ function draw1(){
  const st=MC.map(x=>mstat(x.p,x.dir)),nOk=st.filter(s=>s.st==='ok'&&s.trend!=='defav').length,nLim=st.filter(s=>s.adverse&&s.st==='limite'||s.trend==='defav').length,nHors=st.filter(s=>s.st==='hors').length,nNone=st.filter(s=>s.st==='none').length;
  $('msg').innerHTML=S.br==='sans'?(nNone===MC.length?`<b>Relevé à la main :</b> saisissez les valeurs que vous relevez sur la presse. Sans valeur, les ${nMesOf()} causes liées aux mesures restent à vérifier comme les autres. Consignes : fiche de réglage d’exemple.`
    :`<b>${MC.length-nNone} mesure${(MC.length-nNone)>1?'s':''} relevée${(MC.length-nNone)>1?'s':''} :</b> ${nOk} conforme${nOk>1?'s':''}, ${nLim} en limite ou tendance défavorable, ${nHors} hors tolérance. Une mesure conforme rend ses causes moins probables sans les exclure ; une mesure en limite ou hors tolérance les fait remonter.`)
-  :`<b>Lecture des valeurs simulées :</b> ${nOk} mesure${nOk>1?'s':''} conforme${nOk>1?'s':''} et stable${nOk>1?'s':''}, ${nLim} conforme${nLim>1?'s':''} mais limite ou en tendance défavorable, ${nHors} hors tolérance. On peut être dans la plage et pourtant favoriser le défaut : les causes concernées remontent dans la liste.`;
+  :`<b>Lecture VP Predict (démonstration) :</b> ${nOk} mesure${nOk>1?'s':''} conforme${nOk>1?'s':''} et stable${nOk>1?'s':''}, ${nLim} conforme${nLim>1?'s':''} mais limite ou en tendance défavorable, ${nHors} hors tolérance. On peut être dans la plage et pourtant favoriser le défaut : les causes concernées remontent dans la liste.`;
  $('msg').className='emsg'+(nLim||nHors?' warnm':' win');
 }
 function draw2(){
@@ -91,7 +91,7 @@ function draw2(){
  $('t2').textContent=d?'Enquête QQOQCP sur la dérive':'Enquête QQOQCP : '+S.def.toLowerCase();
  let h='';
  if(d){
-  h+=q('Quoi','Quelle mesure dérive ?',`<p class="qv">${esc(lab(PROC,S.param))}</p><p class="hint">Écart indiqué au départ de l’enquête.</p>`);
+  h+=q('Quoi','Quelle mesure dérive ?',`<p class="qv">${esc(lab(PROC,S.param))}</p><p class="hint">Détectée par VP Predict sur la presse.</p>`);
   h+=q('Quand','Quand la dérive apparaît-elle ?',pills('quand',QUAND));
   h+=q('Comment','À quelle fréquence ?',pills('freq',FREQ));
   h+=q('Depuis','Sur quelle durée ?',pills('terme',TERME));

@@ -82,7 +82,7 @@ function advice(p, level){
   if (p.mode === 'non') return 'Relevés manuels et standards ; VP Expert possible sans connexion.';
   if (p.mode === '?') return 'Qualifier la connexion et la source avant toute suite.';
   if (p.mode === 'verif') return 'Obtenir un export autorisé et vérifier sa qualité ; VP Expert sans attendre.';
-  return level === 'Critique' ? 'Données accessibles : VP Expert sans connexion ; diagnostic de stabilité sur ces exports possible après un premier dossier résolu, sur devis.' : 'Données accessibles : VP Expert sans connexion ; exports utiles au chiffrage de départ.';
+  return level === 'Critique' ? 'Données accessibles : VP Expert, puis étude VP Predict à envisager.' : 'Données accessibles : VP Expert ; VP Predict si la presse devient critique.';
 }
 
 /* ---------- Contrôles automatiques ---------- */

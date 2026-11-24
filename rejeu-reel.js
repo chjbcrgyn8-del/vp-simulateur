@@ -1,4 +1,4 @@
-/* Rejeu des mesures d’origine (injection plastique, décolletage).
+/* Rejeu de cycles réels dans les simulateurs VP Predict (injection plastique, décolletage).
    Les mesures sont rejouées dans l'ordre, sans aucune dérive ajoutée. Les règles d'alerte sont celles du simulateur.
    À chaque alerte : identification (mesure, règle, valeur, référence), ce qui a bougé en même temps,
    pistes VP Expert classées (illustratives), choix du régleur, puis comparaison avec le journal de l'essai
@@ -31,7 +31,7 @@
 
   const CFG = {
     plastique: {
-      sets: { kassel1: 'Boîtier PA6 GF30 · 1 159 cycles d’essais', kassel3: 'Bac empilable PA6 GF30 · 1 320 cycles d’essais' },
+      sets: { kassel1: 'Boîtier PA6 GF30 · 1 159 cycles', kassel3: 'Bac empilable PA6 GF30 · 1 320 cycles' },
       file: 'banc-data-kassel.js?v=1', refN: 40, warm: 20, recent: 60, unitL: 'Cycle', machine: 'Presse Arburg 520E',
       src: 'Bogedale, Doerfel, Schrodt, Heim, Université de Kassel, <a href="https://doi.org/10.3390/polym15040978" target="_blank" rel="noopener">Polymers 2023</a> · données <a href="https://github.com/sc4t1m/scatimdata" target="_blank" rel="noopener">scatimdata</a>, licence CC BY 4.0. Cycles de redémarrage à temps nul retirés ; ordre conservé.',
       watch: k => ['weight', 'distanceA', 'distanceB'].includes(k),
@@ -55,9 +55,9 @@
   let D, C = {}, SEG, M, W, setId = Object.keys(CFG.sets)[0], S, timer = null, speed = 1, HIST = [];
 
   host.innerHTML = `
-  <div class="rr-head"><div><p class="eyebrow">${KIND === 'plastique' ? 'Cycles d’essais publics (université de Kassel)' : 'Mesures d’origine'}</p><h2>Les mesures d’origine, rejouées dans l’ordre</h2>
-    <p class="rr-lead">${KIND === 'plastique' ? 'Chaque point vient d’un essai piloté : ni production, ni données de client.' : 'Chaque point correspond à une pièce mesurée.'} Aucune dérive n’est ajoutée. Quand une règle se déclenche, choisissez une piste à vérifier, puis comparez-la au journal.</p></div>
-    <p class="rr-badge">Relecture brute · hypothèses à vérifier</p></div>
+  <div class="rr-head"><div><p class="eyebrow">VP Predict · cycles réels</p><h2>Une dérive réelle, rejouée dans l’ordre</h2>
+    <p class="rr-lead">Chaque point est ${/^pi/i.test(CFG.unitL)?'une '+CFG.unitL.toLowerCase()+' réelle':'un '+CFG.unitL.toLowerCase()+' réel'}, rejoué sans dérive ajoutée. Quand une règle se déclenche, vous identifiez la dérive, choisissez une piste VP Expert, puis comparez avec le journal de l’essai.</p></div>
+    <p class="rr-badge">Dérive réelle · résolution proposée à vérifier</p></div>
   <div class="rr-bar">
     <label class="rr-sel">Jeu de données <select id="rr-set">${Object.entries(CFG.sets).map(([k, l]) => `<option value="${k}">${l}</option>`).join('')}</select></label>
     <span class="rr-st" id="rr-st"><i></i><span>Chargement des cycles…</span></span>
@@ -73,7 +73,7 @@
       <ul class="legend"><li><i class="l-ref"></i>Référence</li><li><i class="l-tol"></i>Limite</li><li><i class="l-ew"></i>Tendance lissée</li><li><i class="rr-l-seg"></i>Changement du journal</li></ul></div>
     <div class="rr-side" id="rr-side" aria-live="polite"></div>
   </div>
-  <section class="rr-hist"><h3>Signaux examinés</h3>
+  <section class="rr-hist"><h3>Dérives réelles traitées</h3>
     <div class="tw"><table><thead><tr><th>${CFG.unitL}</th><th>Dérive identifiée</th><th>Piste retenue</th><th>Journal de l’essai</th><th>Concordance</th></tr></thead><tbody id="rr-hist"><tr><td colspan="5" class="empty">Aucune dérive traitée pour l’instant.</td></tr></tbody></table></div>
     <p class="legal"><b>Source.</b> ${CFG.src}</p>
     <p class="legal">${nb(CFG.journal)} Les pistes et leur ordre sont illustratifs, issus du référentiel de démonstration et non validés pour cette machine. Le journal décrit ce qui a été fait, pas une cause démontrée. Un rejeu n’est pas un gain client.</p>
@@ -255,11 +255,11 @@
     if (S.step === 'end') { set(`<div class="pane"><h3>Fin du jeu de données</h3><p class="sl">${HIST.length} dérive${HIST.length > 1 ? 's' : ''} traitée${HIST.length > 1 ? 's' : ''}. Recommencez ou choisissez un autre jeu.</p></div>`); return; }
     if (S.step !== 'alert') {
       set(`<div class="pane"><h3>${S.step === 'reref' ? 'Nouvelle référence en cours' : 'Surveillance en cours'}</h3><p class="sl">${S.step === 'reref' ? `La référence est recalculée sur les ${CFG.refN} prochains ${CFG.unitL.toLowerCase()}s, sans alerte pendant ce temps.` : `Les mesures qualité sont comparées à leur référence ${CFG.unitL.toLowerCase()} après ${CFG.unitL.toLowerCase()}. Lancez la lecture, ou allez directement à la prochaine alerte.`}</p>
-        <p class="sl"><b>Rien n’est ajouté aux données.</b> Les variations visibles sont celles du jeu d’origine.</p></div>`);
+        <p class="sl"><b>Rien n’est ajouté aux données.</b> Les dérives que vous verrez sont celles de l’essai réel.</p></div>`);
       return;
     }
     const m = a.m, r = S.ref[m.k], picked = S.pick != null;
-    if (!set(`<div class="pane al"><p class="rr-step">1 · Observer</p><h3>${esc(a.why)}</h3>
+    if (!set(`<div class="pane al"><p class="rr-step">1 · Anticiper</p><h3>${esc(a.why)}</h3>
       <dl class="rr-dl"><dt>Mesure</dt><dd>${esc(m.l)}</dd><dt>Valeur</dt><dd>${fmt(m, a.x)}</dd><dt>Référence</dt><dd>${fmt(m, r.m)} · σ ${nf(m.dec)(r.sd)}</dd><dt>${CFG.unitL}</dt><dd>${esc(D.rows[a.j][0])}</dd></dl></div>
     <div class="pane"><p class="rr-step">2 · Identifier</p><h3>Ce qui a bougé en même temps</h3>
       ${KIND === 'plastique' ? (a.moved.length ? `<ul class="rr-mv">${a.moved.map(o => `<li><b>${esc(o.m.l)}</b><span>${o.d > 0 ? '+' : ''}${fmt(o.m, o.d)} · ${nf(1)(o.z)} σ</span></li>`).join('')}</ul>` : '<p class="sl">Aucun paramètre process ne s’écarte de plus de 2 σ sur les 10 derniers cycles.</p>') : `<p class="sl">Ce jeu ne contient pas de paramètres de la commande numérique : le contexte (pièces depuis le début de la période, arrêts, pente) sert à classer les pistes.</p>`}
@@ -291,7 +291,7 @@
   $('rr-next').onclick = () => { if (S.step === 'alert') return; next(); };
   $('rr-reset').onclick = () => reset();
   $('rr-set').onchange = e => { setId = e.target.value; load(init); };
-  /* Onglets « Dérive simulée / Cycles d’essais publics » */
+  /* Onglets « Dérive simulée / Cycles réels » */
   const tabs = document.querySelector('.rr-tabs');
   function setBase(b, push) {
     const real = b === 'reel';
