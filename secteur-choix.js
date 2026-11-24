@@ -25,6 +25,21 @@
   var sec = P[name] !== undefined ? P[name] : get();
   if (P[name] !== undefined && sec < VIS) set(sec);
 
+  /* Pages communes qui prennent le secteur dans l'adresse (pilote, savoir technique).
+     Adresse précise (?secteur=…) : elle fait foi et devient le secteur mémorisé.
+     Adresse sans précision : on y inscrit le secteur mémorisé avant que la page ne se construise, pour qu'elle s'ouvre dans le bon métier. */
+  if (name === 'pilote' || name === 'savoir') {
+    var mq = /(?:^|[?&])secteur=([^&#]*)/.exec(location.search);
+    if (mq) {
+      var qv = decodeURIComponent(mq[1]);
+      if (qv === 'caoutchouc') sec = 0; else if (qv === 'injection' || qv === 'plastique') sec = 1;
+      if (sec !== null && sec < VIS) set(sec);
+    } else if (sec !== null && sec < VIS) {
+      var v = sec === 0 ? 'caoutchouc' : (name === 'savoir' ? 'injection' : null);
+      if (v) { try { history.replaceState(null, '', location.pathname + (location.search ? location.search + '&' : '?') + 'secteur=' + v + location.hash); } catch (e) {} }
+    }
+  }
+
   /* Liens à retirer des menus : ceux des secteurs non proposés, toujours ; ceux de l'autre secteur, une fois le métier choisi. */
   var out = function (j) { return sec === null ? j >= VIS : j !== sec; };
   var MENUS = ['nav.tabs.sector', '.vnav details.dd .ddm', '.pick-g', '.doc-top nav', '.sitefoot'];
@@ -33,6 +48,9 @@
     if (!out(P[f])) return;
     MENUS.forEach(function (m) { sel.push(m + ' a[href^="' + f + '.html"]'); });
   });
+  /* Pilote : les onglets portent le secteur dans l'adresse */
+  if (sec === 0) sel.push('nav.tabs.sector a[href="pilote.html"]');
+  if (sec === 1) sel.push('nav.tabs.sector a[href="pilote.html?secteur=caoutchouc"]');
   /* Savoir technique : les onglets changent de secteur sans changer de page */
   if (sec !== null && sec < VIS) sel.push('nav.tabs.sector a[data-sec="' + (sec === 0 ? 'p' : 'c') + '"]');
   /* Renvois vers le savoir et les sources des autres secteurs */
@@ -62,7 +80,7 @@
     document.querySelectorAll('nav.tabs.sector').forEach(function (nav) { nav.appendChild(mk('Changer de secteur')); });
     document.querySelectorAll('.vnav details.dd:nth-of-type(1) .ddm').forEach(function (m) { var a = mk('Changer de secteur'); a.style.display = 'block'; a.style.padding = '10px 14px'; m.appendChild(a); });
     document.querySelectorAll('nav.tabs.menu a, .vnav>a').forEach(function (a) {
-      if (/index\.html#secteurs$/.test(a.getAttribute('href') || '') || (a.textContent.trim() === 'Secteurs' && /#secteurs$/.test(a.getAttribute('href') || ''))) { a.setAttribute('href', href); a.textContent = 'Changer de secteur'; }
+      if (/index\.html#secteurs$/.test(a.getAttribute('href') || '') || (a.textContent.trim() === 'Secteurs' && /#secteurs$/.test(a.getAttribute('href') || ''))) { a.setAttribute('href', href); a.setAttribute('data-keep', ''); a.textContent = 'Changer de secteur'; }
     });
     var pg = document.querySelector('.pick-g');
     if (pg) {
@@ -83,11 +101,6 @@
         var links = [].slice.call(src.querySelectorAll('a[data-s]')).filter(keep);
         if (links.length) { src.innerHTML = 'Sources publiques : '; links.forEach(function (a, i) { if (i) src.appendChild(document.createTextNode(' · ')); src.appendChild(a); }); }
       }
-    }
-    /* Savoir technique : on ouvre le savoir du secteur choisi, sauf si l'adresse en demande un précisément */
-    if (name === 'savoir' && !/(^|[?&])secteur=/.test(location.search)) {
-      var c = document.querySelector('nav.tabs.sector [data-sec="' + (sec === 0 ? 'c' : 'p') + '"]');
-      if (c && c.getAttribute('aria-current') !== 'page') c.click();
     }
   });
 })();

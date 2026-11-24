@@ -38,13 +38,20 @@ document.body.appendChild(f);})();
 (function(){
 const MAP={'gains.html':'caoutchouc.html','presse.html':'presse-caoutchouc.html','enquete.html':'enquete-caoutchouc.html'};
 const BACK={'caoutchouc.html':'gains.html','presse-caoutchouc.html':'presse.html','enquete-caoutchouc.html':'enquete.html'};
-function isRub(){return /caoutchouc/.test(location.pathname)||new URLSearchParams(location.search).get('secteur')==='caoutchouc';}
+/* Savoir technique s'ouvre en caoutchouc quand l'adresse ne précise pas de secteur. */
+function isRub(){const q=new URLSearchParams(location.search).get('secteur');
+ return /caoutchouc/.test(location.pathname)||q==='caoutchouc'||(!q&&/(^|\/)savoir\.html$/.test(location.pathname));}
+/* Seuls les liens que ce script a lui-même basculés en caoutchouc sont ramenés en injection (data-sxm, data-sxq) :
+   un lien écrit vers une page caoutchouc dans une page commune (présentation, coulisses, pied de page) reste tel quel. */
+const NEUTRAL=['index.html','savoir.html','pilote.html'];
 window.vpSector=function(rub){if(rub===undefined)rub=isRub();
  document.querySelectorAll('a[href]').forEach(a=>{if(a.closest('.sector')||a.hasAttribute('data-keep'))return;
   const h=a.getAttribute('href');const m=h.match(/^([a-z-]+\.html)(\?[^#]*)?(#.*)?$/);if(!m)return;let [,f,q,hs]=m;q=q||'';hs=hs||'';
-  if(rub){if(MAP[f])f=MAP[f];if(['index.html','savoir.html','pilote.html'].includes(f)&&!/secteur=/.test(q))q='?secteur=caoutchouc';}
-  else{if(BACK[f])f=BACK[f];if(['index.html','savoir.html','pilote.html'].includes(f))q=q.replace(/\??secteur=caoutchouc/,'');}
-  a.setAttribute('href',f+q+hs);});};
+  if(rub){if(MAP[f]){f=MAP[f];a.setAttribute('data-sxm','');}
+   if(NEUTRAL.includes(f)&&!/secteur=/.test(q)){q=q?q+'&secteur=caoutchouc':'?secteur=caoutchouc';a.setAttribute('data-sxq','');}}
+  else{if(BACK[f]&&a.hasAttribute('data-sxm')){f=BACK[f];a.removeAttribute('data-sxm');}
+   if(a.hasAttribute('data-sxq')){q=q.replace(/[?&]secteur=caoutchouc/,'');if(q&&q[0]==='&')q='?'+q.slice(1);a.removeAttribute('data-sxq');}}
+  if(f+q+hs!==h)a.setAttribute('href',f+q+hs);});};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>vpSector());else vpSector();
 setTimeout(()=>vpSector(),400);
 })();

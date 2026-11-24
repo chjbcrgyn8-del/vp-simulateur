@@ -2,7 +2,7 @@
    Ajouts sans modification des moteurs existants (enquete.js, enquete-c.js, vp-expert-consolide.js) :
    1. Jumeaux à écarter (défauts proches et critère qui les sépare)
    2. Est / N’est pas, dernière bonne série, répétabilité : orientations expliquées et, sur option, classement réordonné
-   3. Test qui tranche pour chaque cause (règles par mot-clé, premier jet Vella, à valider par les experts)
+   3. Test qui tranche pour chaque cause (règles par mot-clé, premier jet Vella Partners, à valider par les experts)
    4. Protocole d’essai : une variable, série stabilisée, critère écrit avant l’essai
    5. Causes écartées et niveau de preuve pour la mémoire
    6. Mode « puis-je conclure ? » (données insuffisantes)
@@ -139,7 +139,7 @@ function defName(k){if(sector()==='TP')return k;const d=(window.VELLA_REF_DEFAUT
 function drawTwins(){const s0=$('s0');if(!s0)return;let box=$('vpp-twins');if(!box){box=document.createElement('div');box.id='vpp-twins';box.className='vpp';s0.append(box)}
  const T=sector()==='TP'?TWINS_TP:sector()==='CA'?TWINS_CA:null;const list=T&&T[defKey()];
  if(!list){box.hidden=true;return}box.hidden=false;
- box.innerHTML=`<p class="vpp-h"><b>Est-ce bien ce défaut ?</b> <span class="sl">Deux défauts se ressemblent souvent et ne se traitent pas pareil. Le critère qui les sépare :</span></p><ul class="vpp-tw">${list.map(([k,c])=>`<li><button type="button" class="lk" data-vpp-twin="${esc(k)}">C’est plutôt « ${esc(defName(k))} »</button><span>${esc(c)}</span></li>`).join('')}</ul><p class="vpp-note">Jumeaux et critères : premier jet Vella, à valider par nos experts.</p>`;}
+ box.innerHTML=`<p class="vpp-h"><b>Est-ce bien ce défaut ?</b> <span class="sl">Deux défauts se ressemblent souvent et ne se traitent pas pareil. Le critère qui les sépare :</span></p><ul class="vpp-tw">${list.map(([k,c])=>`<li><button type="button" class="lk" data-vpp-twin="${esc(k)}">C’est plutôt « ${esc(defName(k))} »</button><span>${esc(c)}</span></li>`).join('')}</ul><p class="vpp-note">Jumeaux et critères : premier jet Vella Partners, à valider par nos experts.</p>`;}
 
 /* ---------- rendu 2 : orientations ---------- */
 function orient(){const s=st(),fam={},lines=[];RULES.forEach(([cond,d,txt])=>{if(cond(s)){lines.push(txt);for(const f in d)fam[f]=(fam[f]||0)+d[f]}});return {fam,lines}}

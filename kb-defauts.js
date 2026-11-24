@@ -1,6 +1,6 @@
 /* Enquête défauts plastique : les 23 défauts hors bavure.
    Causes liées aux mesures : matrice des 24 défauts types établie avec l’expert plasturgie partenaire (expertise.js, DEF).
-   Autres causes : premier jet Vella à partir des tableaux de dépannage courants, recoupé avec les tableaux de dépannage publiés (MBPlastiPro), en relecture par l’expert plasturgie partenaire. */
+   Autres causes : premier jet Vella Partners à partir des tableaux de dépannage courants, recoupé avec les tableaux de dépannage publiés (MBPlastiPro), en relecture par l’expert plasturgie partenaire. */
 var FAM=[['rem','Remplissage'],['asp','Aspect'],['dim','Dimensions et tenue']];
 var DEFS=[
  ['Bavure','rem'],['Incomplet','rem'],['Retassure','rem'],['Bulles de vide','rem'],['Jet libre','rem'],['Ligne de soudure','rem'],['Goutte froide','rem'],
