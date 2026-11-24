@@ -140,3 +140,5 @@ main .histo h2{font-size:clamp(20px,1.6vw,24px)!important;margin-bottom:12px!imp
 /* ---------- Page de garde : boutons des cartes sur une ligne ---------- */
 #g-cards a.go{white-space:nowrap;gap:10px;font-size:clamp(13.5px,1.05vw,15px)!important}
 #g-cards a.go i{flex:0 0 auto}
+/* VP Scan rapide : la carte de la question signale déjà le focus */
+main#app input:focus-visible{outline:none!important}
