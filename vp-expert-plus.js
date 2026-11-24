@@ -93,7 +93,7 @@ const RULES=[
  [s=>s.machine==='oui',{machine:3},'Machine ou périphérique modifié : relire les valeurs réelles face à la fiche de réglage, pas seulement les consignes.'],
  [s=>s.equipe==='oui',{mo:2,methode:1},'Changement d’équipe : fiche de réglage respectée ? Écart de pratique (purge, démoulant, manipulation, cadence).'],
  [s=>s.milieu==='oui',{milieu:2,mat:1},'Conditions d’atelier : température matière et moule au démarrage, humidité, remise en température du mélange.'],
- [s=>s.lot==='meme'&&s.moule==='non'&&s.machine==='non'&&s.equipe==='non'&&s.milieu==='non',{moule:1,machine:1},'Rien n’a changé et le défaut apparaît : chercher la dérive lente (usure, encrassement, sonde, séchoir). C’est le cas que VP Predict repère sur presse connectée.']
+ [s=>s.lot==='meme'&&s.moule==='non'&&s.machine==='non'&&s.equipe==='non'&&s.milieu==='non',{moule:1,machine:1},'Rien n’a changé et le défaut apparaît : chercher la dérive lente (usure, encrassement, sonde, séchoir).']
 ];
 const famKey=t=>{t=norm(t);if(/mati|melange|lot|granul/.test(t))return 'mat';if(/moule|outil|empreinte|seuil|event|evant|plan de joint|insert/.test(t))return 'moule';if(/machine|presse|moyen|periph|hydraul|vis|fourreau|pot/.test(t))return 'machine';if(/param|regl|method|proc|dosage|vitesse|pression|temps/.test(t))return 'methode';if(/milieu|ambi|atelier/.test(t))return 'milieu';if(/main|oper|regleur|equipe/.test(t))return 'mo';return ''};
 const FAMLBL={mat:'Matière',moule:'Moule / outillage',machine:'Machine',methode:'Réglage / méthode',milieu:'Milieu',mo:'Main-d’œuvre'};

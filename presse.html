@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Simulateur presse · Vella Partners</title>
-<meta name="description" content="Une dérive de mesure rejouée sur 2 479 cycles réels de presse d’injection plastique, avec alerte avant la tolérance. Simulation pédagogique, sans inscription.">
+<title>Surveillance d’une dérive · démonstration technique · Injection plastique · Vella Partners</title>
+<meta name="description" content="Injection plastique : signal simulé ou rejeu de 2 479 cycles d’essais publics (université de Kassel). Ce ne sont ni des cycles de production ni des données d’un client.">
 <meta name="theme-color" content="#1b1e22">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="Vella Partners">
-<meta property="og:title" content="Simulateur presse · Vella Partners">
-<meta property="og:description" content="Une dérive de mesure rejouée sur 2 479 cycles réels de presse d’injection plastique, avec alerte avant la tolérance. Simulation pédagogique, sans inscription.">
+<meta property="og:title" content="Surveillance d’une dérive · démonstration technique · Injection plastique · Vella Partners">
+<meta property="og:description" content="Injection plastique : signal simulé ou rejeu de 2 479 cycles d’essais publics (université de Kassel), hors production et hors client.">
 <!-- vp-pack: fonts.css?v=2 style.css sim2.css?v=10 vp-expert-app.css?v=4 vp-predict-app.css?v=1 premium.css?v=9 signature.css?v=2 industrie.css?v=5 ux.css?v=20261031-ts secteurs.css?v=3 rejeu.css?v=1 titres.css?v=1 pill.css?v=1 vp-brand.css vp-premium.css?v=2 -->
 <link rel="stylesheet" href="vp-pack-4b38b193.css?v=830dbd35">
 <link rel="icon" type="image/png" href="img/favicon.png">
@@ -20,12 +20,12 @@
 <a class="skip" href="#main">Aller au contenu</a>
 <header class="top">
   <a class="brand" href="index.html" aria-label="Vella Partners, accueil"><span class="vp-brand"><span class="vp-brand-symbol">V<span>/</span>P</span><span class="vp-brand-name">Vella Partners<span>Diagnostic &amp; mémoire d’atelier</span></span></span></a>
-  <nav class="tabs sector" aria-label="Secteur"><span class="seclab">Secteur :</span><a href="presse.html" aria-current="page">Injection plastique</a><a href="presse-caoutchouc.html">Caoutchouc</a><a href="machine-decolletage.html">Décolletage</a><a href="machine-traitement-surface.html">Traitement de surface</a></nav><nav class="tabs menu" aria-label="Menu"><a href="index.html">Accueil</a><a href="presentation.html#offres">Nos offres</a><a href="index.html#secteurs">Secteurs</a><a href="savoir.html">Savoir technique</a></nav>
+  <nav class="tabs sector" aria-label="Secteur"><span class="seclab">Secteur :</span><a href="presse-caoutchouc.html">Caoutchouc</a><a href="presse.html" aria-current="page">Injection plastique</a></nav><nav class="tabs menu" aria-label="Menu"><a href="index.html">Accueil</a><a href="presentation.html#offres">Nos offres</a><a href="index.html#secteurs">Secteurs</a><a href="savoir.html?secteur=injection">Savoir technique</a></nav>
 
 </header>
 <main id="main" class="smain">
-<h1 class="vh">Simulateur presse · injection plastique</h1>
-<div class="rr-tabs" role="group" aria-label="Base des mesures"><button type="button" data-base="sim" aria-selected="true">Dérive simulée<small>vous déclenchez la dérive</small></button><button type="button" data-base="reel" aria-selected="false">2 479 cycles réels<small>dérive réelle, résolution proposée à vérifier</small></button></div>
+<div class="pane"><h1 class="vpx">Surveillance d’une dérive · démonstration technique</h1><p class="sl">Cette démonstration n’est pas une offre. Aucune connexion machine n’est nécessaire pour le pilote. Après un premier dossier résolu, un diagnostic de stabilité ponctuel peut être proposé sur les exports existants des presses, sur devis.</p></div>
+<div class="rr-tabs" role="group" aria-label="Base des mesures"><button type="button" data-base="sim" aria-selected="true">Dérive simulée<small>vous déclenchez la dérive</small></button><button type="button" data-base="reel" aria-selected="false">2 479 cycles d’essais publics<small>université de Kassel · mesures d’origine</small></button></div>
 <section class="console rr-simonly" aria-label="Simulateur">
  <div class="sbar">
   <div class="hmi"><span class="tlight" id="tlight" data-s="off" aria-hidden="true"><i></i><i></i><i></i></span><span class="pname">Presse 12 · injection plastique</span></div>
@@ -33,14 +33,14 @@
   <span class="cyc">Cycle <b id="cycle">0</b></span>
   <div class="ctrls"><button class="btn primary sm" id="drift" type="button" disabled>Je simule une dérive</button></div>
  </div>
- <details class="seuils"><summary><span class="vpx vpp">VP Predict</span> Seuils de surveillance · méthode, valeurs et règles d’alerte</summary>
+ <details class="seuils"><summary>Seuils de surveillance · méthode, valeurs et règles d’alerte</summary>
   <div class="setgrid"><fieldset><legend>Méthode de seuil</legend>
 <label><input type="radio" name="meth" value="recette" checked> Tolérances de recette</label>
 <label><input type="radio" name="meth" value="stat"> Moyenne ± 3 σ <small>sur la référence</small></label></fieldset>
    <fieldset><legend>Règles d’alerte</legend>
     <label><input type="checkbox" data-r="seuil" checked> Hors limite : seuil de tolérance franchi</label>
     <label><input type="checkbox" data-r="cote" checked> Alerte préventive : 7 cycles du même côté</label>
-    <label><input type="checkbox" data-r="ewma" checked> Alerte préventive : tendance lissée hors zone <button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Moyenne glissante (EWMA, λ 0,2, L 3) qui gomme le bruit d’un cycle à l’autre et montre une dérive lente bien avant le seuil."></span></button></label></fieldset>
+    <label><input type="checkbox" data-r="ewma" checked> Alerte de tendance : tendance lissée hors zone <button type="button" class="tip" data-g aria-label="Explication"><span class="tipbox" role="tooltip" data-t="Moyenne glissante (EWMA, λ 0,2, L 3) qui atténue les variations d’un cycle à l’autre."></span></button></label></fieldset>
    <fieldset><legend>Référence</legend><p class="sl">Calculée sur les 30 premiers cycles stables.</p></fieldset>
   </div></details>
  <div class="sgrid">
@@ -53,13 +53,13 @@
   <div class="side" id="side" aria-live="polite"></div>
  </div>
 </section>
-<section class="rr" id="rr" data-rr="plastique" hidden aria-label="Rejeu de mesures réelles"></section>
-<p class="duo">VP Predict repère la dérive sur vos presses connectées, VP Expert aide à choisir les contrôles sur vos presses. <a href="presentation.html#offres">Voir les offres</a> · Un défaut sans dérive de mesure ? <a href="enquete.html">Enquête défaut</a> · Sur des mesures réelles ? <a href="banc-essai.html?jeu=kassel1">Banc d’essai</a></p>
+<section class="rr" id="rr" data-rr="plastique" hidden aria-label="Rejeu des cycles d’essais publics de Kassel"></section>
+<p class="duo"><a href="enquete.html">Enquête défaut et dossier du moule</a> · <a href="banc-essai.html?jeu=kassel1">Banc d’essai</a> · <a href="donnees-sources.html">Sources des données</a></p>
 <section class="histo rr-simonly" aria-labelledby="hh">
  <h2 id="hh">Historique des dérives, causes et actions</h2>
- <p class="legal hist-demo"><b>Historique de démonstration, non conservé.</b> Il vit dans votre navigateur et disparaît au rechargement de la page. Dans l’application VP Expert, l’historique est partagé par site, presse, moule, matière, défaut, action et résultat vérifié.</p>
+ <p class="legal hist-demo"><b>Historique de démonstration, non conservé.</b> Il vit dans votre navigateur et disparaît au rechargement de la page. Rien n’est enregistré sur serveur.</p>
  <div class="tw"><table><thead><tr><th>Date</th><th>Heure</th><th>Dérive</th><th>Cause</th><th>Action</th><th>Action efficace</th></tr></thead><tbody id="hist"></tbody></table></div>
- <p class="legal">Démonstrateur : valeurs de référence et tolérances réelles, fournies par notre expert plasturgie partenaire ; le simulateur reproduit la variation d’un cycle à l’autre autour de ces valeurs et ajoute la dérive. Causes et actions issues de l’expertise initiale de l’expert plasturgie partenaire, à relire pour chaque site. Une action n’entre dans l’historique qu’après vérification par le régleur. Ici, l’historique est gardé le temps de la session ; en production, il est conservé dans une base par site, presse, moule, matière, recette, défaut, action et résultat vérifié. Le rappel au chef d’équipe est simulé.</p>
+ <p class="legal">Dans le mode simulé, les valeurs de référence et les tolérances viennent de l’expert plasturgie partenaire ; le signal et la dérive sont inventés. Les pistes et les actions sont à relire pour chaque site. L’action et le rappel au chef d’équipe sont simulés.</p>
 </section>
 <p class="legal simnote rr-simonly"><b>Simulation pédagogique uniquement.</b> Les causes, actions et valeurs affichées illustrent un scénario : ce ne sont pas des consignes machine approuvées. Aucun clic ne valide une cause réelle ni ne modifie les scores. Les bandes statistiques ne sont pas des tolérances produit.</p>
 </main>

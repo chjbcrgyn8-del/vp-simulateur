@@ -43,9 +43,9 @@
  };
 
  /* ---------- Mesures machine par cause (caoutchouc, décolletage, traitement de surface) ----------
-    Consigne, tolérance et unité : paramètres du secteur (fichiers kb-*.js, fiche d'exemple VP Predict).
+    Consigne, tolérance et unité : paramètres du secteur (fichiers kb-*.js, fiche d’exemple).
     Lecture : conforme · conforme mais limite (> 80 % de la tolérance) · hors tolérance ; tendance vs moyenne des OF précédents.
-    Valeurs « VP Predict » : démonstration déterministe, non issues d'une machine réelle. */
+    Valeurs d’exemple : démonstration déterministe, non issues d’une machine. */
  window.VPMes={make(o){
   const S=o.S;if(!S.mes||typeof S.mes!=='object')S.mes={};
   const P=id=>(o.params()||[]).find(p=>p.id===id);
@@ -82,14 +82,14 @@
    const man=S.br!=='conforme';
    const rows=L.map(({p,dir})=>{const m=P(p),s=stat(p,dir),k=cls(s);
     const val=man?`<input type="text" inputmode="decimal" maxlength="30" class="vpmesin" data-mes="${esc(p)}" value="${esc(S.mes[p]??'')}" aria-label="Valeur relevée, ${esc(nameOf(m))}" placeholder="relevé">${esc(unit(m))}`:`<b>${fmt(m,s.cur)}</b>${esc(unit(m))}`;
-    const avg=man?'<span class="sl">avec VP Predict</span>':fmt(m,s.avg)+esc(unit(m));
-    const tr=s.trend==='none'?(man?'<span class="sl">avec VP Predict</span>':'—'):s.trend==='stable'?'Stable':s.trend==='defav'?'<b>Défavorable</b> '+(s.cur>s.avg?'↗':'↘'):'Favorable';
+    const avg=man?'—':fmt(m,s.avg)+esc(unit(m));
+    const tr=s.trend==='none'?'—':s.trend==='stable'?'Stable':s.trend==='defav'?'<b>Défavorable</b> '+(s.cur>s.avg?'↗':'↘'):'Favorable';
     return `<tr class="${k}"><th scope="row">${esc(nameOf(m))}<small>${dir==='haut'?'défavorable si trop haut':dir==='bas'?'défavorable si trop bas':'défavorable si hors réglage ou instable'}</small></th><td>${fmt(m,m.c)} ± ${fmt(m,m.tol)}${esc(unit(m))}</td><td>${val}</td><td>${avg}</td><td>${tr}</td><td><span class="mst ${k}">${label(s)}</span></td></tr>`}).join('');
    const st=L.map(x=>stat(x.p,x.dir)),nOk=st.filter(isLo).length,nLim=st.filter(s=>(s.adverse&&s.st==='limite')||(s.st!=='hors'&&s.trend==='defav')).length,nH=st.filter(s=>s.st==='hors').length,nN=st.filter(s=>s.st==='none').length;
    const msg=man?(nN===L.length?`<b>Relevé à la main :</b> saisissez les valeurs relevées ${esc(o.where||'sur la machine')}. Sans valeur, les leviers liés aux mesures restent à vérifier comme les autres. Consignes : ${esc(o.fiche||'fiche de réglage')} d’exemple.`
      :`<b>${L.length-nN} mesure${(L.length-nN)>1?'s':''} relevée${(L.length-nN)>1?'s':''} :</b> ${nOk} conforme${nOk>1?'s':''}, ${nLim} en limite ou tendance défavorable, ${nH} hors tolérance. Une mesure conforme rend ses leviers moins probables sans les exclure ; une mesure en limite ou hors tolérance les fait remonter.`)
-    :`<b>Lecture VP Predict (démonstration) :</b> ${nOk} mesure${nOk>1?'s':''} conforme${nOk>1?'s':''} et stable${nOk>1?'s':''}, ${nLim} conforme${nLim>1?'s':''} mais limite ou en tendance défavorable, ${nH} hors tolérance. On peut être dans la tolérance et pourtant favoriser le défaut : les leviers concernés remontent dans la liste.`;
-   return `<div class="vpmes"><p class="ml mesh">Mesures ${esc(src)} · ${man?'relevé à la main':'remontées par VP Predict'}</p><div class="tw mest"><table><thead><tr><th>Mesure</th><th>Consigne<small>${esc(o.fiche||'fiche de réglage')}</small></th><th>Valeur actuelle</th><th>Moyenne<small>OF précédents</small></th><th>Tendance</th><th>Lecture</th></tr></thead><tbody>${rows}</tbody></table></div><div class="emsg${nLim||nH?' warnm':nOk?' win':''}">${msg}</div></div>`}
+    :`<b>Lecture des valeurs simulées :</b> ${nOk} mesure${nOk>1?'s':''} conforme${nOk>1?'s':''} et stable${nOk>1?'s':''}, ${nLim} conforme${nLim>1?'s':''} mais limite ou en tendance défavorable, ${nH} hors tolérance. On peut être dans la tolérance et pourtant favoriser le défaut : les leviers concernés remontent dans la liste.`;
+   return `<div class="vpmes"><p class="ml mesh">Mesures ${esc(src)} · ${man?'relevé à la main':'valeurs d’exemple simulées'}</p><div class="tw mest"><table><thead><tr><th>Mesure</th><th>Consigne<small>${esc(o.fiche||'fiche de réglage')}</small></th><th>Valeur actuelle</th><th>Moyenne<small>OF précédents</small></th><th>Tendance</th><th>Lecture</th></tr></thead><tbody>${rows}</tbody></table></div><div class="emsg${nLim||nH?' warnm':nOk?' win':''}">${msg}</div></div>`}
   function measures(){if(S.br==='derive')return [];return list().map(({p,dir})=>{const m=P(p),s=stat(p,dir);return {name:nameOf(m),unit:m.u,set:fmt(m,m.c)+' ± '+fmt(m,m.tol),cur:s.cur===undefined?null:fmt(m,s.cur),avg:s.avg===undefined?null:fmt(m,s.avg),status:s.st,trend:s.trend,adverse:!!s.adverse,txt:s.st==='none'?(s.invalid?s.txt:'Pas de valeur relevée'):label(s).replace(' · ',', ')}})}
   document.addEventListener('input',e=>{const el=e.target;if(!el.matches||!el.matches('.vpmesin'))return;const p=el.dataset.mes;if(el.value.trim()==='')delete S.mes[p];else S.mes[p]=el.value.trim();
    const x=list().find(y=>y.p===p),s=stat(p,x?x.dir:'var'),row=el.closest('tr');el.setAttribute('aria-invalid',String(!!s.invalid));if(row){const k=cls(s);row.className=k;const b=row.querySelector('.mst');if(b){b.className='mst '+k;b.textContent=label(s)}}});
