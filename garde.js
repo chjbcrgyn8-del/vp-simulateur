@@ -155,5 +155,10 @@
   renderRail();
   var h = (location.hash || '').replace('#', '');
   if (keys.indexOf(h) > -1) select(h, false);
+  /* Lien direct suivi sans rechargement (index.html#caoutchouc puis #plastique) : le lanceur suit l'adresse. */
+  window.addEventListener('hashchange', function(){
+    var k = (location.hash || '').replace('#', '');
+    if (keys.indexOf(k) > -1 && k !== current) select(k, false);
+  });
   /* La page de garde s'ouvre toujours vide en début de rendez-vous ; #secteur dans l'URL ouvre directement un secteur. */
 })();
