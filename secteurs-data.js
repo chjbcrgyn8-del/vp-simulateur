@@ -90,7 +90,7 @@ window.VP_SECTEURS = {
     scan: {
       statut: 'cand', statutL: 'Calculateur · valeurs d’exemple',
       question: 'Où vos machines perdent-elles de l’argent ?',
-      fait: ['Six postes chiffrés en euros : arrêts, réglages, rebuts, lots bloqués, tri, outils', 'Données existantes et machines connectables', 'Trois priorités, chacune reliée à VP Expert ou VP Predict'],
+      fait: ['Six postes chiffrés en euros : arrêts, réglages, rebuts, lots bloqués, tri, outils', 'Données existantes et machines connectables', 'Trois priorités, chacune reliée à VP Expert'],
       base: 'Valeurs de départ illustratives et objectifs Vella Partners ; grille à valider avec un expert décolletage',
       demo: 'scan-decolletage.html', demoL: 'Chiffrer mes pertes · 3 min'
     },
@@ -120,7 +120,7 @@ window.VP_SECTEURS = {
     scan: {
       statut: 'cand', statutL: 'Calculateur · valeurs d’exemple',
       question: 'Où vos lignes perdent-elles de l’argent ?',
-      fait: ['Six postes chiffrés en euros : retouches, arrêts, réclamations, vidanges, corrections de bain, chimie', 'Analyses de bain, épaisseurs et lignes connectables', 'Trois priorités, chacune reliée à VP Expert ou VP Predict'],
+      fait: ['Six postes chiffrés en euros : retouches, arrêts, réclamations, vidanges, corrections de bain, chimie', 'Analyses de bain, épaisseurs et lignes connectables', 'Trois priorités, chacune reliée à VP Expert'],
       base: 'Valeurs de départ illustratives et objectifs Vella Partners ; grille à valider avec un expert traitement de surface',
       demo: 'scan-traitement-surface.html', demoL: 'Chiffrer mes pertes · 3 min'
     },

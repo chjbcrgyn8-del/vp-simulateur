@@ -145,6 +145,12 @@
     if (t && current) { var a = document.querySelector('.g-card[data-tool="' + t + '"] .go'); if (a) a.click(); }
   });
 
+  /* « Changer de secteur » (index.html?changer=1#secteurs, posé par secteur-choix.js sur les autres pages) :
+     on oublie le secteur mémorisé dans ce navigateur et on repart d'un lanceur vide. */
+  if (/(^|[?&])changer(=|&|$)/.test(location.search)) {
+    try { localStorage.removeItem('vp-secteur'); } catch (e) {}
+    try { history.replaceState(null, '', location.pathname); } catch (e) {}
+  }
   renderRail();
   var h = (location.hash || '').replace('#', '');
   if (keys.indexOf(h) > -1) select(h, false);

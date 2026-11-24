@@ -65,15 +65,16 @@
         <h2>${esc(o.verbe)}</h2><p class="sx-q">«&nbsp;${nb(c.question)}&nbsp;»</p>
         ${body}<p class="sx-base">${nb(c.base)}</p>${btn}</article>`;
     };
-    document.title = `${s.nom} · Pilote dossier de preuve · Vella Partners`;
+    document.title = vis ? `${s.nom} · Pilote dossier de preuve · Vella Partners` : `${s.nom} · Vella Partners`;
     const others = vis && keys.length > 1;
     $('sx-main').innerHTML = `
       <p class="sx-crumb"><a href="index.html">Accueil</a> / <a href="index.html#secteurs">Secteurs</a> / ${esc(s.nom)}</p>
       <header class="sx-hero"><p class="eyebrow">Secteur ${s.num} · ${esc(s.machines)}</p><h1>${esc(s.nom)}</h1>
         <p class="sx-lead">${nb(s.accroche)}</p><p class="sx-ex"><b>Exemples</b>${nb(s.exemple)}</p>
         ${others ? `<nav class="sx-secnav" aria-label="Changer de secteur">${keys.map(k => `<a href="${hub(k)}"${k === cur ? ' aria-current="page"' : ''}>${esc(S[k].court)}</a>`).join('')}</nav>` : ''}</header>
-      <section class="sx-flow" aria-label="Le pilote en trois temps pour ce secteur">${O.map(col).join('')}</section>
-      <div class="sx-loop"><span class="sx-lk">Le dossier de preuve</span><p>Pour chaque moule, ce qui a été constaté, essayé et validé. <b>L’étape 1 (VP Scan)</b> chiffre les pertes et désigne le moule et les défauts du pilote. <b>VP Expert</b> guide l’analyse et la résolution du défaut constaté, sur toutes les ${esc(s.machines)}, sans connexion machine. Chaque cas, clos par le régleur puis validé par vos méthodes ou votre qualité, rejoint <b>le dossier du moule</b>, qui le suit d’une presse, d’une équipe ou d’un site à l’autre. L’outil propose, vos équipes décident.</p></div>
+      <section class="sx-flow" aria-label="${vis ? 'Le pilote en trois temps pour ce secteur' : 'Démonstrateurs de ce secteur'}">${O.map(col).join('')}</section>
+      ${vis ? '' : '<p class="sx-base"><b>Secteur non proposé aujourd’hui.</b> Référentiel en construction, à valider avec un expert du métier avant tout pilote. Les démonstrateurs ci-dessus restent consultables.</p>'}
+      <div class="sx-loop"${vis ? '' : ' hidden'}><span class="sx-lk">Le dossier de preuve</span><p>Pour chaque moule, ce qui a été constaté, essayé et validé. <b>L’étape 1 (VP Scan)</b> chiffre les pertes et désigne le moule et les défauts du pilote. <b>VP Expert</b> guide l’analyse et la résolution du défaut constaté, sur toutes les ${esc(s.machines)}, sans connexion machine. Chaque cas, clos par le régleur puis validé par vos méthodes ou votre qualité, rejoint <b>le dossier du moule</b>, qui le suit d’une presse, d’une équipe ou d’un site à l’autre. L’outil propose, vos équipes décident.</p></div>
       <section class="sx-res"><p class="eyebrow">Ressources du secteur</p><h2>Ce sur quoi nous nous appuyons</h2>
         <div class="sx-reslist">${s.ressources.map(r => `<a href="${r[1]}">${esc(r[0])}<span aria-hidden="true">→</span></a>`).join('')}</div>
         ${others ? `<div class="sx-next"><a href="${hub(prev)}">← Secteur précédent<b>${esc(S[prev].nom)}</b></a><a href="${hub(nxt)}">Secteur suivant →<b>${esc(S[nxt].nom)}</b></a></div>` : ''}</section>`;

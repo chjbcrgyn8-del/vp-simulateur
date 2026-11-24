@@ -241,6 +241,7 @@ button{font:inherit;color:inherit}
 .g-body{grid-template-columns:minmax(300px,380px) 1fr}
 .g-card .ot{flex-wrap:wrap;row-gap:6px}
 .g-card .ot .k,.g-card .ot .st{white-space:nowrap}
+.g-rail h2{text-wrap:balance}
 .g-card{min-width:0}
 .g-card.core{box-shadow:0 0 0 2px var(--cu),0 1px 2px rgba(0,0,0,.2),0 30px 60px -30px rgba(0,0,0,.6)}
 .g-when{padding:14px 14px 12px;border-radius:6px;background:#f4f1ea}
