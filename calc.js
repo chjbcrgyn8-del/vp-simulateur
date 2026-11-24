@@ -1,10 +1,10 @@
 (function(root){
   // Grille « Offres 2026 » (plaquette du 1er novembre 2026), tarifs indicatifs HT à confirmer par devis :
   // VP Expert : pilote de mise en place 8 900 € (6 à 8 semaines indicatives), puis abonnement par site dès 300 €/mois (paliers 300 / 450 / 600 / 800 € selon le parc, voir PRICE_TIERS) selon résultat et périmètre ;
-  // VP Scan : forfait indicatif 4 900 € (un site, un atelier ciblé), non requis avant VP Expert, sans gratuité de la mise en place VP Expert ;
+  // VP Scan : diagnostic de départ inclus dans VP Expert, sans facturation séparée (décision du 24/11/2026, ancien forfait 4 900 €) ;
   // VP Predict : pilote connecté dès 15 000 € sur 1 à 3 presses (sous réserve de faisabilité), puis option dès 150 €/presse/mois en complément de l'abonnement VP Expert ; pas de part variable.
   // Matériel, licences tierces et raccordements spécifiques chiffrés séparément ; aucun avoir chiffré sur le pilote (un avoir éventuel serait précisé dans la proposition) ; aides étudiées au cas par cas.
-  const PREDICT_PRICE=150,PREDICT_PRICE_11=150,PREDICT_SITE=0,PREDICT_MIN=1,PREDICT_DEFAULT=3,PREDICT_SUCCESS=0,PILOT_BASE=15000,PILOT_PER=0,PILOT_CREDIT=0,EXT_BASE=0,EXT_PER=0,SCAN_PRICE=4900,EXPERT_PILOT=8900,EXPERT_SITE=300,FOCUS_EXP=.5;
+  const PREDICT_PRICE=150,PREDICT_PRICE_11=150,PREDICT_SITE=0,PREDICT_MIN=1,PREDICT_DEFAULT=3,PREDICT_SUCCESS=0,PILOT_BASE=15000,PILOT_PER=0,PILOT_CREDIT=0,EXT_BASE=0,EXT_PER=0,SCAN_PRICE=0,EXPERT_PILOT=8900,EXPERT_SITE=300,FOCUS_EXP=.5;
   // Pack Usine retiré de la grille publique (sur devis pour les groupes) : constantes conservées, non utilisées.
   const PACK=[{add:18000,cap:12},{add:24000,cap:25},{add:30000,cap:40}],PACK_C=[{add:18000,cap:8},{add:24000,cap:20},{add:30000,cap:32}],PACK_EXTRA=100;
   const defaults={
@@ -151,7 +151,7 @@
     if(conn&&conn.pack&&grossAll/costAll<2)warnings.push(`Le Pack Usine rapporte ${(grossAll/costAll).toFixed(1)} fois son prix, sous le seuil de 2 fois.`);
     if(conn&&!conn.pack&&conn.ratio!==null&&conn.ratio<2)warnings.push(`VP Predict rapporte ${conn.ratio.toFixed(1)} fois son abonnement, sous le seuil de 2 fois : ${conn.k>PREDICT_MIN?'réduisez le périmètre aux presses critiques (forte valeur horaire, rebuts coûteux, dérives fréquentes)':'le pilote doit d’abord confirmer que ces presses concentrent bien les pertes'}. Sans gain mesuré d’au moins 2 fois, l’abonnement VP Predict ne démarre pas.`);
     if(conn&&conn.focus)warnings.push(`Les ${conn.k} presses sous VP Predict sont supposées porter ${Math.round(conn.lossShare*100)} % des pertes restantes (choix des presses les plus critiques), et non ${Math.round(conn.share*100)} % : hypothèse à vérifier au pilote, sur vos relevés de rebuts par presse.`);
-    if(scan>0)warnings.push('Démarrage par VP Scan (4 900 € HT) : le diagnostic chiffre vos pertes et vos priorités avant le pilote VP Expert. Il n’est pas obligatoire.');
+    
     if(gross===null)warnings.push('Données économiques incomplètes : aucun retour sur investissement global n’est affiché.');
     const modeledLosses=P===null||contribution===null||scrapCost===null?null:(changeH+techH+orgH+procH)*P*Q*contribution+H*D*(1-P)*Q*contribution+scrapCost*s.avoidable/100;
     const result={errors:[],warnings,modelVersion:MODEL_VERSION,assumptionsId:ASSUMPTIONS_ID,scan,setup,aidScan:conn?conn.aidScan:aidScanOnly,credit,year1Cost:costAll-credit,netPerPress:n>0&&grossAll!==null?(grossAll-costAll)/n:null,diagGain,RUB,mixH,cycle0,cycle1,cureAddressable,deflashGain,n,H,D,P,Q,trs:P===null?null:D*P*Q*100,changeH,stopH,rows,f,techRecovery,addressRecovery,equivalent,equivalentTechnical,perfAddressable,contribution,benchCA,caHourUsed,scrapCost,qualityTechnical,qualityGain,capacityGain,gross,grossAll,costAll,conn,c77,c63,c0,netRA:gross===null?null:gross-s.annualCost,net:grossAll===null?null:grossAll-costAll,upfront,cash,monthly,payback,year1:gross===null?null:cash[12],modeledLosses,remainingD:D1,projectedTrs:P===null?null:D1*(P+perfDelta*s.addressPerf/100)*Q*100};
