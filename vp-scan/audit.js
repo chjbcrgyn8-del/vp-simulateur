@@ -1,7 +1,7 @@
 window.VP.audit = [
  ['scope','Cadrage et échantillonnage','Ateliers, presses, moules, références, équipes, volumes et exclusions sont-ils identifiés ? L’échantillon couvre-t-il les situations critiques et les différents modes de collecte ?'],
  ['safety','Conditions de visite et sécurité','Accueil sécurité, accompagnement, équipements et autorisations d’observation sont-ils confirmés ? Aucun réglage ni accès machine sans autorisation du site. Une situation dangereuse est escaladée au responsable du site.'],
- ['quality','Exigences client et qualité','Critères pièce, contrôles, métrologie, étalonnages, traçabilité des lots et gestion des non-conformités sont-ils documentés ? Un audit réglementaire spécialisé reste hors du périmètre VP Scan.'],
+ ['quality','Exigences client et qualité','Critères pièce, contrôles, métrologie, étalonnages, traçabilité des lots et gestion des non-conformités sont-ils documentés ? Un audit réglementaire spécialisé reste hors du périmètre du diagnostic.'],
  ['context','Contexte de fabrication','Peut-on relier un constat à une presse, un moule, une référence, un lot matière, un OF et une équipe ? Les changements matière/outillage et les redémarrages sont-ils identifiables ?'],
  ['data','Fiabilité des enregistrements','Vérifier un échantillon : complétude, unités, horodatage, doublons, valeurs aberrantes, codification des causes et rapprochement avec les relevés terrain. Cela vaut aussi pour le papier et Excel.'],
  ['it','Accès, droits et confidentialité','Propriétaire des données, autorisation d’export, hébergement, accès en lecture seule, confidentialité et durée de conservation sont-ils convenus avec le client ? Ne pas demander de mot de passe dans cet outil.'],

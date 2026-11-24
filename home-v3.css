@@ -118,3 +118,9 @@
 .pick-lg span{display:inline-flex;align-items:center;gap:7px}
 @media(max-width:560px){.pick-g{grid-template-columns:1fr}}
 .pick .sx-dot.ok,.pick-lg .sx-dot.ok{background:#6fcf9b}.pick .sx-dot.cand,.pick-lg .sx-dot.cand{background:#f5af20}
+
+/* Tableau comparatif à deux offres (VP Expert, VP Predict) · fusion du chiffrage dans VP Expert, 24 novembre 2026 */
+.qfqt.duo .vr{grid-template-columns:1.7fr 1fr 1fr}
+.qfqt.duo .vr>:is(span,a):nth-child(3){background:none}
+.qfqt.duo .vr>:is(span,a):nth-child(2){background:rgba(184,115,47,.045)}
+@media (max-width:760px){.qfqt.duo .vr{grid-template-columns:repeat(2,1fr)}.qfqt.duo .vuse{grid-template-columns:1fr}}
