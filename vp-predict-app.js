@@ -1,9 +1,9 @@
-/* VP Predict · parcours téléphone (présentation seule).
-   Ce que vit le régleur sur une presse connectée : la presse tourne, VP Predict veille ; l'alerte arrive sur le téléphone ;
+/* Surveillance d’une dérive · parcours téléphone (démonstration technique).
+   Un régleur reçoit une alerte simulée sur le téléphone ;
    il la prend en charge ; VP Expert prend le relais (causes classées, action, vérification) ; le résultat rejoint l'historique.
    Même principe que le parcours téléphone de VP Expert : l'écran lit l'état affiché par la console (sim2.js) et clique sur
    ses vrais boutons. Aucun moteur n'est modifié, rien n'est enregistré ailleurs que dans l'historique de démonstration.
-   Dans la démonstration, la dérive est déclenchée à la main et l'alerte est simulée : en production, elle suppose une presse connectée. */
+   La dérive est déclenchée à la main et l’alerte est simulée dans le navigateur. */
 (function () {
   'use strict';
   const $ = (s, r = document) => r.querySelector(s);
@@ -76,13 +76,13 @@
   function viewWatch() {
     const st = statusInfo(), drifting = phase() === 'drifting', ready = !($('#drift') && $('#drift').disabled) && !drifting;
     const rows = tiles().map(t => '<li class="va-row ' + t.st + '"><span>' + esc(t.name) + '</span><b>' + esc(t.val) + '</b></li>').join('');
-    return head(PRESS, 0, false, { hist: true, sub: 'Presse connectée · VP Predict veille' }) +
+    return head(PRESS, 0, false, { hist: true, sub: 'Surveillance d’une dérive · démonstration technique' }) +
       '<div class="va-b"><div class="va-status ' + st.cls + '"><i></i><span>' + esc(st.text) + '</span><small>Cycle ' + esc(cycle()) + '</small></div>' +
       (drifting ? '<div class="va-card va-night"><span class="va-k">Dérive en cours</span><h3 class="va-ct">Surveillance<span class="va-dots" aria-hidden="true"><i></i><i></i><i></i></span></h3><p>' + esc(txt(side().querySelector('.pane .sl'))) + '</p><p>Le téléphone sonnera dès qu’une règle d’alerte se déclenche.</p></div>' : '') +
       '<p class="va-lead">Mesures suivies, cycle par cycle.</p><ul class="va-rows">' + rows + '</ul>' +
-      (!drifting ? '<div class="va-card"><span class="va-k va-k-dk">Démonstration</span><p>Dans l’atelier, le régleur n’a rien à faire : la presse connectée envoie ses cycles et VP Predict compare chacun à sa référence. Pour voir l’alerte arriver, déclenchez une dérive.</p>' +
+      (!drifting ? '<div class="va-card"><span class="va-k va-k-dk">Démonstration</span><p>La console compare les valeurs à une référence dans le navigateur. Pour voir le scénario d’alerte, déclenchez une dérive simulée.</p>' +
         '<div class="va-stack"><button type="button" class="va-big va-gold" data-a="drift"' + (ready ? '' : ' disabled') + '>' + (ready ? 'Je simule une dérive' : 'Calcul de la référence…') + '</button></div></div>' : '<div class="va-stack">' + cancelLink() + '</div>') +
-      note('Alerte simulée : en production, elle suppose une presse connectée. Rien n’est enregistré sur serveur.') + '</div>';
+      note('Alerte simulée. Aucune presse n’est connectée et rien n’est enregistré sur serveur.') + '</div>';
   }
 
   function viewDrift() {
@@ -97,8 +97,8 @@
 
   function viewAlert() {
     const a = alertInfo();
-    return head('Alerte reçue', 1, false, { hist: true, sub: PRESS + ' · presse connectée' }) +
-      '<div class="va-b"><div class="va-card va-night va-notif"><div class="va-nt"><span>' + IC.bell + ' VP Predict</span><span>' + esc(a.time) + '</span></div>' +
+    return head('Alerte reçue', 1, false, { hist: true, sub: PRESS + ' · démonstration technique' }) +
+      '<div class="va-b"><div class="va-card va-night va-notif"><div class="va-nt"><span>' + IC.bell + ' Alerte simulée</span><span>' + esc(a.time) + '</span></div>' +
       '<h3 class="va-ct">' + esc(a.title) + '</h3><p class="va-nsub">' + esc(a.sub) + '</p></div>' +
       '<div class="va-card"><span class="va-k va-k-dk">' + esc(a.kick || (a.hors ? 'Hors tolérance' : 'Alerte préventive')) + '</span><p>' + esc(a.why) + '</p></div>' +
       '<div class="va-stack"><button type="button" class="va-big va-gold" data-a="take">Je prends en charge</button></div>' +
@@ -157,7 +157,7 @@
     return head('Dérive traitée', 0, false, { hist: true }) +
       '<div class="va-b va-center"><div class="va-check">' + IC.ok + '</div><h3 class="va-q">Résultat enregistré</h3>' +
       (r ? '<p class="va-sum"><b>' + esc(r.drift) + '</b><br>Cause : ' + esc(r.cause) + '<br>Action : ' + esc(r.action) + '<br>' + esc(r.time) + ' · action efficace : ' + (r.ok ? 'oui' : 'non') + '</p>' : '') +
-      '<p class="va-sum">Ce cas rejoint l’historique par presse, paramètre, cause et action : la mémoire de l’entreprise.</p>' +
+      '<p class="va-sum">Ce cas apparaît dans l’historique temporaire de la démonstration, par presse, paramètre, cause et action.</p>' +
       '<div class="va-stack"><button type="button" class="va-big va-out" data-a="hist">Voir l’historique</button><button type="button" class="va-big va-gold" data-a="drift">Nouvelle dérive</button><button type="button" class="va-link" data-a="close">Retour à la console</button></div>' +
       note('Résultat simulé : il illustre le parcours, il ne prouve ni une cause réelle ni l’efficacité industrielle de l’action.') + '</div>';
   }
@@ -166,7 +166,7 @@
     const rows = histRows();
     return head('Historique', 0, true, {}) + '<div class="va-b">' + (rows.length ? rows.map(r =>
       '<article class="va-h-i ' + (r.ok ? 'ok' : 'nc') + '"><div><b>' + esc(r.drift) + '</b><small>' + esc(r.time) + ' · ' + esc(r.cause) + ' · ' + esc(r.action) + '</small></div><span class="va-chip ' + (r.ok ? 'ok' : 'nc') + '">' + (r.ok ? 'Efficace' : 'Sans effet') + '</span></article>').join('') :
-      '<p class="va-empty">Aucune dérive traitée pour l’instant.</p>') + note('Historique de démonstration, non conservé. Dans l’application, il est partagé par site, presse, moule, matière et résultat vérifié.') + '</div>';
+      '<p class="va-empty">Aucune dérive traitée pour l’instant.</p>') + note('Historique de démonstration, non conservé. Il disparaît au rechargement de la page.') + '</div>';
   }
 
   /* ---------- affichage ---------- */
@@ -249,7 +249,7 @@
     const ctr = $('.console .ctrls'); if (!ctr) return;
     const b = document.createElement('button');
     b.type = 'button'; b.id = 'vp-app-launch'; b.className = 'vp-app-launch pr-launch'; b.textContent = 'Parcours téléphone';
-    b.title = 'Ce que vit le régleur sur une presse connectée : alerte reçue, prise en charge, causes, action, vérification';
+    b.title = 'Démonstration du parcours régleur : alerte simulée, prise en charge, causes, action, vérification';
     b.addEventListener('click', open);
     ctr.insertBefore(b, ctr.firstChild);
     if (/(^|[?&])app=1(&|$)/.test(location.search)) setTimeout(open, 600);

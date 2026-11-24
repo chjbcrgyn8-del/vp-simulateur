@@ -16,7 +16,7 @@ window.VellaPDF=async function(ctx){
  const line=(x1,y1,x2,y2,c=LINE,w=.25)=>{d.setDrawColor(...c);d.setLineWidth(w);d.line(x1,y1,x2,y2);};
  const wrap=(t,w)=>d.splitTextToSize(clean(t),w);
  const date=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
- const offer=r.conn?'VP Expert + VP Predict':'VP Expert';
+ const offer='Étape 1 du pilote dossier de preuve';
  const sector=RUB?'Moulage caoutchouc':'Injection plastique';
  const scen=SL[s.scenario][0].toUpperCase()+SL[s.scenario].slice(1);
 
@@ -43,8 +43,8 @@ window.VellaPDF=async function(ctx){
  kpi(M,y,kw,kh,eur(r.net),'Gain net annuel, en année pleine, après abonnement',GREEN);
  kpi(M+kw+3,y,kw,kh,eur(r.netPerPress),'Gain net par presse et par an');
  kpi(M+2*(kw+3),y,kw,kh,r.payback?r.payback+' mois':'> 36 mois','Délai de retour, démarrage compris');
- kpi(M+3*(kw+3),y,kw,kh,num(r.grossAll/r.costAll,1)+' ×','Gain brut ÷ abonnement, seuil d’engagement 2 ×');
- y+=kh+4;F(8.5,'normal',MUTE);T(M,y,`Fourchette : ${eur(ctx.range[0])} à ${eur(ctx.range[1])} par an · ${relK} valeur${relK>1?'s':''} sur ${CORE} saisie${relK>1?'s':''} par vous · montants HT, avant impôt`);y+=9;
+ kpi(M+3*(kw+3),y,kw,kh,num(r.grossAll/r.costAll,1)+' ×','Repère : gain brut estimé ÷ abonnement (2 × indicatif)');
+ y+=kh+4;F(8.5,'normal',MUTE);T(M,y,`Fourchette : ${eur(ctx.range[0])} à ${eur(ctx.range[1])} par an · ${relK} valeur${relK>1?'s':''} clé${relK>1?'s':''} sur ${CORE} saisie${relK>1?'s':''} par vous${ctx.pk?' · nombre de presses saisi':''} · montants HT, avant impôt`);y+=9;
 
  // Origine du gain
  section('D’où vient le gain','Du plus sûr au plus dépendant de vos ventes');
@@ -77,7 +77,7 @@ window.VellaPDF=async function(ctx){
 
  // Prochaine étape
  d.setFillColor(...INK);d.roundedRect(M,y,CW,24,2,2,'F');F(11,'bold',[255,255,255]);T(M+6,y+8.5,'Prochaine étape : valider ces chiffres avec vos données réelles');
- F(8.5,'normal',[200,205,215]);T(M+6,y+14,'En 30 minutes, nous remplaçons les hypothèses par les relevés de votre atelier. Puis un pilote de 3 mois mesure le reste.');
+ F(8.5,'normal',[200,205,215]);T(M+6,y+14,'En 30 minutes, nous remplaçons les hypothèses par les relevés de votre atelier. Puis le pilote, en huit semaines, vérifie le reste.');
  T(M+6,y+19,'Frédéric Vella · 06 22 15 43 62 · fvella@vella-partners.com');
 
  /* ---------- Page 2 ---------- */
@@ -87,7 +87,8 @@ window.VellaPDF=async function(ctx){
   items.forEach(it=>{const ls=wrap(it.l,colW*.5),vs=wrap(it.v,colW*.47);const n=Math.max(ls.length,vs.length);
    F(8.5,'normal',MUTE);ls.forEach((t,i)=>T(x,yy+i*3.6,t));F(8.5,'bold',INK);vs.forEach((t,i)=>T(x+colW,yy+i*3.6,t,{align:'right'}));
    if(it.src==='v'){d.setFillColor(...CHAMP);d.circle(x-2.2,yy-1,.9,'F');}
-   yy+=n*3.6+2.2;});return yy+5;}
+   yy+=n*3.6;if(it.src==='p'&&it.f){const fs=wrap(it.f,colW);F(7.5,'normal',MUTE);fs.forEach((t,i)=>T(x,yy+.4+i*3.2,t));yy+=fs.length*3.2+.6;}
+   yy+=2.2;});return yy+5;}
  const gmap=Object.fromEntries(groups.map(g=>[g[0],g[1]]));
  let yl=y,yr=y;
  yl=group(M,yl,'Votre parc et vos pertes',gmap['Votre parc et vos pertes']||[]);

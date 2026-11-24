@@ -416,6 +416,11 @@ a.btn,a.btn:hover{text-decoration:none}
 .fb.todo{color:#a8690f;background:#fdf3dc}
 .fields:not(.two):not(.three){grid-template-columns:minmax(0,1fr)}.idk{white-space:normal;text-align:left}.field{min-width:0}
 
+/* Lot offre (24/11/2026) : à 375 px, le résultat caoutchouc débordait (grille .syn en 1fr, montants à 6 chiffres dans .cash3). Spécificité relevée pour passer devant result2.css dans les packs. */
+body .syn{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:860px){body .syn{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:480px){body .cash3{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}body .cash3>div{padding:8px}body .cash3 b{font-size:14px}}
+
 /* === sim2.css?v=10 === */
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .smain{max-width:1280px;margin:0 auto;padding:12px 24px 48px}
@@ -2076,15 +2081,16 @@ main#app input:focus-visible{outline:none!important}
    Ajustement sans clavier sur tablette d'atelier, zones tactiles de 48 px utilisables avec des gants. */
 .stepwrap{display:flex;align-items:center;gap:10px}
 .stepwrap .inputrow{flex:1;min-width:0}
-.stp{flex:0 0 auto;width:48px;height:48px;display:grid;place-items:center;border:1px solid var(--vp-line2);border-radius:var(--vp-r);
+/* Sélecteurs limités aux boutons : « stp » est aussi la classe du <body> des pages de savoir technique (correction du 24/11/2026). */
+button.stp{flex:0 0 auto;width:48px;height:48px;display:grid;place-items:center;border:1px solid var(--vp-line2);border-radius:var(--vp-r);
   background:var(--vp-card);color:var(--vp-ink);font:600 24px/1 Inter,system-ui,sans-serif;cursor:pointer;touch-action:manipulation;
   -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;transition:border-color .15s var(--vp-ease),background-color .15s var(--vp-ease)}
-.stp:hover{border-color:var(--vp-amber)}
-.stp:active{background:var(--vp-bg);border-color:var(--vp-amber2)}
-.stp:focus-visible{outline:2px solid var(--vp-amber);outline-offset:2px}
+button.stp:hover{border-color:var(--vp-amber)}
+button.stp:active{background:var(--vp-bg);border-color:var(--vp-amber2)}
+button.stp:focus-visible{outline:2px solid var(--vp-amber);outline-offset:2px}
 .field .fb:not(.mine){color:var(--vp-mut)}
 .note.scanincl{margin:12px 0 4px;padding:12px 14px;border:1px solid var(--vp-line);border-left:3px solid var(--vp-amber);border-radius:var(--vp-r);background:var(--vp-card)}
-@media print{.stp{display:none}}
+@media print{button.stp{display:none}}
 /* Trois colonnes (répartition des presses) : l'unité figure déjà dans la question, on la masque pour laisser la place au chiffre */
 .fields.three .stepwrap{gap:6px}
 .fields.three .stepwrap .unit{display:none}

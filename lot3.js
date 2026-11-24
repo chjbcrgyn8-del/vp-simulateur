@@ -1,7 +1,7 @@
 (function(){'use strict';
 const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const labels={caoutchouc:'Caoutchouc',plasturgie:'Thermoplastique',decolletage:'Décolletage'};
-let D,selected='',view='rules',notes={},dirty=false;
+let D,selected='',view='rules',notes={},dirty=false,NR=0,NS=0;const HID='decolletage';
 const safeURL=s=>{try{const u=new URL(s);return ['https:','http:'].includes(u.protocol)?u.href:null;}catch{return null;}};
 const link=(u,t)=>safeURL(u)?`<a href="${esc(safeURL(u))}" target="_blank" rel="noopener noreferrer">${esc(t)}</a>`:esc(t);
 const sourceBy=id=>D.devSources[id]||D.sources.find(s=>s.id===id);
@@ -36,12 +36,12 @@ function render(){
  const sector=$('l3-sector').value,q=$('l3-search').value.trim().toLocaleLowerCase();
  if(view==='rules'){
   const list=filteredRules();if(!list.some(r=>r.id===selected))selected=list[0]?.id||'';
-  $('filter-result').textContent=`${list.length} / 48 règles candidates affichées · 0 action activée`;
+  $('filter-result').textContent=`${list.length} / ${NR} règles candidates affichées · 0 action activée`;
   $('rule-list').innerHTML=list.map(r=>`<button data-rule-id="${esc(r.id)}" aria-pressed="${r.id===selected}"><strong>${esc(r.id)} · ${esc(r.title)}</strong><small>${esc(labels[r.sector])} · ${r.priority==='P1_REVIEW'?'Revue prioritaire proposée':'Candidate'}${r.blocked?' · Bloquée':''}</small></button>`).join('');
   detail();$('l3-print').disabled=!selected;
  }else if(view==='sources'){
   const list=D.sources.filter(s=>(!sector||s.sector===sector)&&(!q||[s.id,s.title,s.scope,s.doi].join(' ').toLocaleLowerCase().includes(q)));
-  $('filter-result').textContent=`${list.length} / 178 notices affichées · 5 références privées réservées dans le registre complet`;
+  $('filter-result').textContent=`${list.length} / ${NS} notices affichées · 5 références privées réservées dans le registre complet`;
   $('source-list').innerHTML=list.map(s=>`<article class="l3-source"><h3>${link(s.url,s.id+' · '+s.title)}</h3><p>${esc(s.status)}</p>${s.private?'<p>Ni contenu, ni titre privé, ni document expert embarqué.</p>':`<p>Nature fournie : ${esc(s.nature)} · ${esc(labels[s.sector]||s.sector)}</p><p>Domaine : ${esc(s.scope)}</p><p>Limites : ${esc(s.limits)}</p><p class="l3-muted">Accès : ${esc(s.access)}. Droits : ${esc(s.rights)}.</p>${s.doi?`<p>DOI fourni : ${esc(s.doi)}</p>`:''}`}</article>`).join('')||'<p>Aucune notice pour ces filtres.</p>';
  }else{
   const list=Object.keys(labels).flatMap(sec=>(D.coverage[sec]||[]).map(x=>({...x,sector:sec}))).filter(x=>(!sector||x.sector===sector)&&(!q||JSON.stringify(x).toLocaleLowerCase().includes(q)));
@@ -57,7 +57,7 @@ const md=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/
 function markdown(active=null){
  const list=active?caseRules(active):D.rules.filter(r=>r.priority==='P1_REVIEW'||notes[r.id]?.trim());
  const scope=active?`Cas sélectionné : ${md(active.defectCode)} · ${md(labels[active.sector])} · ${md(active.defect)}.\n\nPérimètre : ${list.length} règles de cette famille et leurs notes uniquement. Les filtres d’écran ne réduisent pas cette famille ; les priorités des autres familles sont exclues. Cet export documentaire n’est pas un dossier client identifié.`:'Neuf priorités proposées et règles annotées ; les filtres d’écran ne limitent pas cet export.';
- return `# Vella Partners | ${active?'Cas documentaire '+md(active.defectCode):'Préparation de revue du référentiel candidat'}\n\n${D.version}\n\nDEV documentaire uniquement. 48 candidats ; 178 notices dont 5 réservées. Aucun texte privé ni action candidate repris. Sources non toutes revérifiées, droits non acquis. Aucun résultat terrain validé.\n\n${scope}\n\n`+list.map(r=>`## ${r.id} | ${md(r.title)}\n\nDécision : EN ATTENTE. Action approuvée : AUCUNE. ${r.blocked?'CONTENU BLOQUÉ.':''}\n\nOrigine : ${md(r.origin)}.\n\nHypothèse : ${md(r.hypothesis)}\n\nContrôle candidat à faire valider : ${md(r.check)}\n\nLimites : ${md(r.limits)}\n\nClôture à définir : ${md(r.closure)}\n\n${r.review?`Complément DEV : ${md(r.review.finding)}\n\nLimite du complément : ${md(r.review.limit)}\n\n`:''}Question : ${md(r.question)}\n\nNote préparatoire : ${md(notes[r.id]||'Non renseignée')}\n\nSources :\n${r.refs.map(id=>{const s=sourceBy(id);return `- ${safeURL(s.url)?`[${md(s.id+' · '+s.title)}](${safeURL(s.url)})`:md(s.id+' · '+s.title)}. ${md(s.status)}. Domaine : ${md(s.scope||'réservé')}. Limites : ${md(s.limits||'à instruire')}.`;}).join('\n')}\n`).join('\n')+'\n## Décision globale\n\nAucune signature, validation expert ou autorisation d’essai créée. Aucun réglage prescrit. Les notes sont déclaratives.\n';
+ return `# Vella Partners | ${active?'Cas documentaire '+md(active.defectCode):'Préparation de revue du référentiel candidat'}\n\n${D.version}\n\nDEV documentaire uniquement. ${NR} candidats ; ${NS} notices dont 5 réservées. Aucun texte privé ni action candidate repris. Sources non toutes revérifiées, droits non acquis. Aucun résultat terrain validé.\n\n${scope}\n\n`+list.map(r=>`## ${r.id} | ${md(r.title)}\n\nDécision : EN ATTENTE. Action approuvée : AUCUNE. ${r.blocked?'CONTENU BLOQUÉ.':''}\n\nOrigine : ${md(r.origin)}.\n\nHypothèse : ${md(r.hypothesis)}\n\nContrôle candidat à faire valider : ${md(r.check)}\n\nLimites : ${md(r.limits)}\n\nClôture à définir : ${md(r.closure)}\n\n${r.review?`Complément DEV : ${md(r.review.finding)}\n\nLimite du complément : ${md(r.review.limit)}\n\n`:''}Question : ${md(r.question)}\n\nNote préparatoire : ${md(notes[r.id]||'Non renseignée')}\n\nSources :\n${r.refs.map(id=>{const s=sourceBy(id);return `- ${safeURL(s.url)?`[${md(s.id+' · '+s.title)}](${safeURL(s.url)})`:md(s.id+' · '+s.title)}. ${md(s.status)}. Domaine : ${md(s.scope||'réservé')}. Limites : ${md(s.limits||'à instruire')}.`;}).join('\n')}\n`).join('\n')+'\n## Décision globale\n\nAucune signature, validation expert ou autorisation d’essai créée. Aucun réglage prescrit. Les notes sont déclaratives.\n';
 }
 function confirmImport(){return new Promise(resolve=>{const d=document.createElement('dialog');d.className='vp-confirm';d.innerHTML='<h2>Remplacer les notes en mémoire ?</h2><p>Exportez les notes actuelles si vous souhaitez les conserver. Aucune décision ni règle ne sera modifiée.</p><div class="actions"><button data-cancel>Annuler</button><button data-confirm>Remplacer les notes</button></div>';const end=v=>{d.close();d.remove();resolve(v);};d.querySelector('[data-cancel]').onclick=()=>end(false);d.querySelector('[data-confirm]').onclick=()=>end(true);d.oncancel=e=>{e.preventDefault();end(false);};document.body.appendChild(d);d.showModal();d.querySelector('[data-cancel]').focus();});}
 function validateNotes(x){
@@ -68,7 +68,10 @@ async function start(){
  try{
  const res=await fetch('lot3-catalog.json');if(!res.ok)throw Error('Catalogue indisponible');D=await res.json();
  if(D.rules.length!==48||D.sources.length!==178||D.rules.some(r=>r.canExecute!==false||r.approvedAction!==null||r.decision!=='PENDING'))throw Error('Catalogue non conforme : consultation bloquée');
- selected=D.rules[0].id;$('lot3-version').textContent=D.version;$('catalog-status').textContent='48 candidats : 12 caoutchouc · 12 thermoplastique · 24 décolletage. 9 priorités proposées. 178 notices, dont 5 réservées. 0 action approuvée.';
+  /* Dossier de preuve 2026-11-24 : le décolletage n'est plus proposé. Le catalogue reste intact (contrôle ci-dessus) ; seule la consultation est limitée au caoutchouc et au thermoplastique. */
+ D.rules=D.rules.filter(r=>r.sector!==HID);D.sources=D.sources.filter(x=>x.sector!==HID);delete D.coverage[HID];
+ NR=D.rules.length;NS=D.sources.length;const np=D.rules.filter(r=>r.priority==='P1_REVIEW').length,nb=k=>D.rules.filter(r=>r.sector===k).length;
+ selected=D.rules[0].id;$('lot3-version').textContent=D.version;$('catalog-status').textContent=`${NR} candidats : ${nb('caoutchouc')} caoutchouc · ${nb('plasturgie')} thermoplastique. ${np} priorités proposées. ${NS} notices, dont 5 réservées. 0 action approuvée.`;
  document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;render();});
  $('l3-sector').onchange=render;$('l3-priority').onchange=render;$('l3-search').oninput=render;
  $('rule-list').onclick=e=>{const b=e.target.closest('[data-rule-id]');if(b){selected=b.dataset.ruleId;render();if(innerWidth<=760)$('rule-detail').scrollIntoView({block:'start'});}};
