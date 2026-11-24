@@ -1,0 +1,203 @@
+/* === titres.css?v=1 === */
+/* Titres en Geist (police sans-serif moderne, hébergée sur le site) à la place du serif d'origine.
+   Chargée en dernier, après les feuilles de chaque page. Seul le logo (image) reste en serif. */
+h1,.hsec>h2,.hsec>div>h2,.final h2,h2.ser,.offer h3,.faq summary,.proof strong,.sx-hero h1,.sc-hero h1,.sc-big,.sc-gain,.sx-stat b,.sx-q,.sx-step .sx-q,.brand,.sitefoot .brand,.sitefoot strong:first-child,
+body.vp-ui h1,body.vp-ui .ebox h2,body.vp-ui .ebox h2.ser,body.vp-ui #hist h2,body.vp-ui #expert-dialog h2,body.vp-ui .vp-case h2,
+body.doc-app h1,body.doc-app h2,body.doc-app .doc-panel h2{font-family:var(--serif,'Inter',system-ui,sans-serif)!important;font-weight:500!important;letter-spacing:-.028em!important}
+h1 span,h1 em,.brand span,.hsec h2 em,.final h2 em{font-style:normal!important}
+.sc-big,.sc-gain,.proof strong,.sx-stat b{font-variant-numeric:tabular-nums;letter-spacing:-.035em!important}
+
+/* === pill.css?v=1 === */
+/* Boutons d'action en pilule sur tout le site (comme le bouton « Essayer VP Expert » de l'accueil).
+   Chargée en dernier. Ne touche ni les cartes, ni les filtres, ni les champs. */
+body .btn,body a.btn,body button.btn,body .topcta,
+body .vp-stage-footer button,body #vp-prev,body #vp-next,
+body .vp-case .vp-case-primary,body .vp-case .vp-case-reset,
+body .expert-tools button,body .expert-tools a,
+body.doc-app .actions button,body.doc-app .actions a,body.doc-app .doc-top nav .pill{border-radius:999px!important}
+
+/* === vp-brand.css === */
+/* Monogramme V/P — reprise de la marque de la vitrine (vella-partners.lovable.app).
+   Remplace l'image logo-vella-partners.png dans les en-têtes. Apparence seule.
+   Sélecteurs volontairement spécifiques : les feuilles existantes stylent ".brand span" avec !important. */
+a .vp-brand,.vp-brand{display:inline-flex!important;align-items:center!important;gap:12px!important;line-height:1!important;color:#fff!important;text-decoration:none!important;white-space:nowrap!important;margin:0!important;font-style:normal!important;letter-spacing:0!important;font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif!important}
+.vp-brand .vp-brand-symbol{display:inline-block!important;font-family:'Inter',system-ui,sans-serif!important;font-weight:800!important;font-size:30px!important;line-height:1!important;letter-spacing:-.01em!important;color:#fff!important;margin:0!important;font-style:normal!important}
+.vp-brand .vp-brand-symbol>span{display:inline!important;color:#f5af20!important;margin:0 2px!important;font:inherit!important;font-weight:800!important}
+.vp-brand .vp-brand-name{display:block!important;font-family:'Inter',system-ui,sans-serif!important;font-weight:800!important;font-size:17px!important;line-height:1.25!important;letter-spacing:0!important;color:#fff!important;margin:0!important;font-style:normal!important;text-transform:none!important}
+.vp-brand .vp-brand-name>span{display:block!important;font-family:'Inter',system-ui,sans-serif!important;font-weight:500!important;font-size:10px!important;line-height:1.2!important;letter-spacing:0!important;color:rgba(255,255,255,.6)!important;margin:4px 0 0!important;font-style:normal!important;text-transform:none!important}
+/* Variante compacte (barre latérale VP Scan) */
+.home-logo .vp-brand .vp-brand-symbol{font-size:26px!important}
+.home-logo .vp-brand .vp-brand-name{font-size:14px!important}
+.home-logo .vp-brand .vp-brand-name>span{font-size:9px!important}
+@media (max-width:640px){
+  .vp-brand .vp-brand-name{display:none!important}
+  .vp-brand .vp-brand-symbol{font-size:26px!important}
+}
+@media print{
+  a .vp-brand,.vp-brand,.vp-brand .vp-brand-symbol,.vp-brand .vp-brand-name{color:#000!important}
+  .vp-brand .vp-brand-name>span{color:#555!important}
+}
+
+/* === vp-premium.css?v=2 === */
+/* =====================================================================
+   vp-premium.css · Couche de finition « premium » (24 novembre 2026)
+   Chargée en dernier sur toutes les pages. Apparence et ergonomie seules :
+   aucun moteur de calcul, questionnaire ni contenu technique modifié.
+   Alignée sur la vitrine Vella Partners : graphite, ambre, Inter, fonds calmes.
+   Version de référence avant cette couche : tag ref-avant-premium-2026-11-24.
+   ===================================================================== */
+:root{
+  --vp-ink:#16191d;--vp-ink2:#3b424c;--vp-mut:#5b6472;--vp-bg:#f3f5f8;--vp-card:#fff;
+  --vp-line:#e3e7ed;--vp-line2:#d3d9e1;--vp-amber:#f5af20;--vp-amber2:#e09a12;--vp-graph:#1b1e22;
+  --vp-r:12px;--vp-r-lg:16px;
+  --vp-sh:0 1px 2px rgba(16,24,40,.04),0 1px 3px rgba(16,24,40,.06);
+  --vp-sh-h:0 2px 4px rgba(16,24,40,.05),0 16px 32px -16px rgba(16,24,40,.22);
+  --vp-ease:cubic-bezier(.2,.7,.2,1);
+}
+
+/* ---------- Fond : on retire le papier millimétré, trop chargé ---------- */
+html:not(.vp-garde) body{background-image:none!important;background-color:var(--vp-bg)!important}
+body{text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+::selection{background:rgba(245,175,32,.28)}
+
+/* ---------- Titres : graisse de la vitrine ---------- */
+main h1,.hero h1,.svhero h1,.ehero h1,.page-heading h1{font-weight:700!important;letter-spacing:-.032em!important}
+main h2{letter-spacing:-.022em}
+
+/* ---------- En-tête des simulateurs ---------- */
+.top{background:#1b1e22!important;background-image:none!important;border-bottom:1px solid rgba(255,255,255,.08)!important;box-shadow:none!important;min-height:64px;flex-shrink:0}
+.top.sc{box-shadow:0 8px 24px -16px rgba(0,0,0,.5)!important}
+.top .tabs.menu a{font-weight:500!important}
+.top .tabs a:focus-visible{outline:2px solid var(--vp-amber)!important;outline-offset:2px}
+/* Doublon « Changer de secteur » : gardé dans la pastille secteur, retiré du menu (voir vp-premium.js) */
+.top .tabs.menu a.vp-dup{display:none!important}
+@media (max-width:640px){
+  .top{min-height:56px}
+  .top .tabs.menu{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overscroll-behavior-x:contain;scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);max-width:100%}
+  .top .tabs.menu::-webkit-scrollbar{display:none}
+  .top .tabs.menu a{flex:0 0 auto!important}
+  html,body{overflow-x:clip}
+}
+
+/* ---------- Fil d'étapes Scan · Expert · Predict ---------- */
+.sx-secnav,.sx-flow{backdrop-filter:saturate(140%) blur(10px)}
+
+/* ---------- Boutons ---------- */
+.btn,button.btn,a.btn{border-radius:10px!important;min-height:44px;font-weight:600!important;letter-spacing:-.005em;
+  transition:transform .15s var(--vp-ease),box-shadow .2s var(--vp-ease),background-color .15s,border-color .15s,color .15s!important}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn.primary,button.primary{box-shadow:0 1px 2px rgba(16,24,40,.12),0 6px 16px -8px rgba(16,24,40,.4)}
+:focus-visible{outline:2px solid var(--vp-amber2);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.btn,.btn:hover{transition:none!important;transform:none!important}}
+
+/* ---------- Champs : anneau de focus ambré, sans toucher à la forme propre à chaque outil ---------- */
+main input:focus-visible,main select:focus-visible,main textarea:focus-visible{outline:2px solid rgba(245,175,32,.55)!important;outline-offset:2px}
+
+/* ---------- Cartes : relief discret, survol net ---------- */
+.card,.tile,.sx-card,.sec-card,.oc,.pcard{border-radius:var(--vp-r-lg)}
+a.card:hover,a.tile:hover,button.tile:hover{box-shadow:var(--vp-sh-h)}
+
+/* ---------- Renvoi « VP Expert · sources » (vp-documentary-entry.js) ---------- */
+.vp-xlink{box-sizing:border-box;width:min(1200px,calc(100% - 40px));margin:20px auto 0!important;padding:10px 14px!important;border:1px solid var(--vp-line)!important;border-radius:12px;
+  background:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font:500 13px/1.4 'Inter',system-ui,sans-serif!important;color:var(--vp-mut)!important;box-shadow:var(--vp-sh)}
+.vp-xlink b{font:600 11px/1 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:#8a5a0b}
+.vp-xlink a{color:var(--vp-ink)!important;text-decoration:none!important;font-weight:600;padding:6px 10px;border-radius:8px;border:1px solid var(--vp-line2)}
+.vp-xlink a:hover{border-color:var(--vp-ink);background:#f7f8fa}
+.vp-xlink.end{width:100%;margin:28px 0 0!important}
+@media print{.vp-xlink{display:none!important}}
+
+/* ---------- Pied de page : monogramme au lieu de l'ancienne image ---------- */
+.sitefoot .vp-brand{margin-bottom:14px!important}
+.sitefoot{background:#16191d!important;background-image:none!important}
+
+/* ---------- Page de garde (index) ---------- */
+html.vp-garde body{background-image:radial-gradient(1100px 560px at 82% -12%,rgba(245,175,32,.09),transparent 62%)!important;background-size:auto!important}
+.g-sect li>a,.g-sect li>button,.g-sect>li>*{transition:border-color .15s,background-color .15s,transform .15s var(--vp-ease)!important}
+.g-sect li>a:hover,.g-sect li>button:hover{transform:translateX(2px)}
+.g-intro-note{font-family:'Inter',system-ui,sans-serif!important;font-size:13px!important;letter-spacing:0!important;color:rgba(244,242,237,.5)!important}
+.g-intro h2{font-weight:700!important;letter-spacing:-.025em!important}
+.g-hero{border-radius:16px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.7)}
+
+/* ---------- Tableaux ---------- */
+main table{border-collapse:separate;border-spacing:0}
+main table th{font-weight:600}
+
+/* ---------- Mouvement réduit ---------- */
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* ---------- Barre de progression du questionnaire : invisible tant qu'elle est vide ---------- */
+.top .progress:has(> .bar[style*="width: 0%"]),.top .progress:has(> .bar:not([style])){opacity:0}
+.top .progress{transition:opacity .3s}
+
+/* ---------- Mentions de bas de page : un seul séparateur, pas d'empilement de marges ---------- */
+main .legal{margin-top:40px!important}
+main .legal + .legal,main .histo .legal,main .legal.hist-demo{margin-top:14px!important;border-top:0!important;padding-top:0!important}
+main .histo{margin-top:36px!important}
+main .histo h2{font-size:clamp(20px,1.6vw,24px)!important;margin-bottom:12px!important}
+
+/* ---------- VP Predict : pupitre en bandeau, courbe en grand ---------- */
+@media (min-width:1101px){
+  .sgrid{grid-template-columns:minmax(0,1fr) 340px!important}
+  .sgrid>.tiles{grid-column:1/-1;display:grid!important;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px!important;flex-direction:row!important}
+  .sgrid>.tiles>.tile{min-width:0;width:auto}
+}
+.chartcard{border-radius:14px!important}
+.tile{border-radius:12px!important;transition:border-color .15s,box-shadow .2s,transform .15s var(--vp-ease)!important}
+.tile:hover{transform:translateY(-1px);box-shadow:var(--vp-sh-h)}
+.console{border-radius:18px!important;overflow:hidden}
+
+/* ---------- Pages secteur : cartes à hauteur naturelle, en-tête affirmé ---------- */
+.sx-hero{border-radius:20px!important;position:relative;overflow:hidden;
+  background:radial-gradient(70% 120% at 100% 0%,rgba(245,175,32,.14),transparent 60%),#1b1e22!important}
+.sx-hero h1{font-family:'Inter',system-ui,sans-serif!important;font-weight:700!important;letter-spacing:-.035em!important}
+.sx-col{border-radius:16px!important;border-color:var(--vp-line)!important;transition:box-shadow .2s var(--vp-ease),border-color .2s}
+.sx-col:hover{box-shadow:var(--vp-sh-h);border-color:var(--vp-line2)!important}
+@media (min-width:1061px){
+  .sx-flow{align-items:start!important}
+  .sx-base{margin-top:18px!important}
+}
+.sx-btn{border-radius:10px!important}
+
+/* ---------- VP Expert : modes de démonstration regroupés en une barre ---------- */
+.vp-modes{display:flex!important;flex-wrap:wrap;justify-content:center;gap:4px!important;width:max-content;max-width:100%;margin-left:auto!important;margin-right:auto!important;
+  padding:4px!important;background:#fff!important;border:1px solid var(--vp-line)!important;border-radius:999px!important;box-shadow:var(--vp-sh)}
+.vp-modes>button{background:transparent!important;background-image:none!important;border:0!important;box-shadow:none!important;color:var(--vp-ink2)!important;
+  min-height:40px!important;padding:0 16px!important;border-radius:999px!important;font:600 13.5px/1 'Inter',system-ui,sans-serif!important;transition:background-color .15s,color .15s!important}
+.vp-modes>button:hover{background:#f1f3f6!important;color:var(--vp-ink)!important}
+.vp-modes>button.vp-demo-launch{background:#1b1e22!important;color:#fff!important}
+.vp-modes>button.vp-demo-launch:hover{background:#000!important}
+.vp-modes>button[aria-pressed=true]{background:#fdf1d6!important;color:#5a3a05!important}
+@media (max-width:640px){.vp-modes{border-radius:16px!important;width:100%}.vp-modes>button{flex:1 1 45%}}
+@media (max-width:640px){
+  body:not(.vp-ui) .top{flex-wrap:wrap!important}
+  body.vp-ui .top{flex-wrap:nowrap!important;align-items:stretch!important}
+  body.vp-ui .top .tabs.menu{display:none!important}
+  .top .tabs.sector{min-width:0;max-width:100%;flex-wrap:nowrap}
+  .top .tabs.sector a{min-width:0;overflow:hidden;text-overflow:ellipsis}
+}
+
+/* ---------- Page de garde : boutons des cartes sur une ligne ---------- */
+#g-cards a.go{white-space:nowrap;gap:10px;font-size:clamp(13.5px,1.05vw,15px)!important}
+#g-cards a.go i{flex:0 0 auto}
+/* VP Scan rapide : la carte de la question signale déjà le focus */
+main#app input:focus-visible{outline:none!important}
+
+/* ---------- Estimateur de gains : boutons − / + (retour terrain du 24/11/2026) ----------
+   Ajustement sans clavier sur tablette d'atelier, zones tactiles de 48 px utilisables avec des gants. */
+.stepwrap{display:flex;align-items:center;gap:10px}
+.stepwrap .inputrow{flex:1;min-width:0}
+.stp{flex:0 0 auto;width:48px;height:48px;display:grid;place-items:center;border:1px solid var(--vp-line2);border-radius:var(--vp-r);
+  background:var(--vp-card);color:var(--vp-ink);font:600 24px/1 Inter,system-ui,sans-serif;cursor:pointer;touch-action:manipulation;
+  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;transition:border-color .15s var(--vp-ease),background-color .15s var(--vp-ease)}
+.stp:hover{border-color:var(--vp-amber)}
+.stp:active{background:var(--vp-bg);border-color:var(--vp-amber2)}
+.stp:focus-visible{outline:2px solid var(--vp-amber);outline-offset:2px}
+.field .fb:not(.mine){color:var(--vp-mut)}
+.note.scanincl{margin:12px 0 4px;padding:12px 14px;border:1px solid var(--vp-line);border-left:3px solid var(--vp-amber);border-radius:var(--vp-r);background:var(--vp-card)}
+@media print{.stp{display:none}}
+/* Trois colonnes (répartition des presses) : l'unité figure déjà dans la question, on la masque pour laisser la place au chiffre */
+.fields.three .stepwrap{gap:6px}
+.fields.three .stepwrap .unit{display:none}
+.fields.three .stepwrap .inputrow input{text-align:center}
