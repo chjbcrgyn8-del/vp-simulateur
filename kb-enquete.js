@@ -16,7 +16,7 @@ var LBL={};[QDEF,QUI,OU,QUAND,ETENDUE,FREQ,VIS,TERME,COMBIEN,PROC].forEach(l=>l.
 var lab=(list,v)=>(list.find(x=>x[0]===v)||[,''])[1];
 
 /* ---------- Causes bavure (Ishikawa niveau 2) ----------
- t: mes = donnée de mesure (bleu), reg = paramètre de réglage (gris), cmp = paramètre compensable (*), add = complément Vella à valider */
+ t: mes = donnée de mesure (bleu), reg = paramètre de réglage (gris), cmp = paramètre compensable (*), add = complément Vella Partners à valider */
 var ISHI=[
  {id:'m1',b:'Matière',n:'Viscosité matière (lot plus fluide)',t:'cmp',ctl:'Comparer l’indice de fluidité du lot au précédent sur certificat fournisseur. Compenser par la température matière si le lot est conforme.',ind:{ou:['tout','fin'],terme:['court'],freq:['chaque']}},
  {id:'m2',b:'Matière',n:'Température matière trop haute',t:'mes',p:'tm',ctl:'Relever la température matière réelle (sonde ou purge) et la comparer à la fiche de réglage.',ind:{ou:['tout','fin'],freq:['chaque'],terme:['moyen']}},
