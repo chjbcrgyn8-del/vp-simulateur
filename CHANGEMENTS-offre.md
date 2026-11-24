@@ -25,6 +25,7 @@ Référence : offre_v2/BRIEF.md. Une ligne par changement, « avant → après �
 - État des référentiels : réécrit selon l’état réel du brief (relus par aucun tiers, aucun résultat client).
 - Comparatif des offres (VP Scan / VP Expert / VP Predict) → « Les trois temps du pilote, point par point » ; titre « Le pilote et les autres solutions ».
 - Section technologie VP Predict (schéma SVG et figure vidéo) → « Démonstration technique : la stabilité d’une presse » (texte du diagnostic de stabilité, liens presse-caoutchouc.html et presse.html). La vidéo n’est pas supprimée du dépôt, seulement plus intégrée dans la page.
+- Contenu : lien unique « Démonstration technique, caoutchouc · injection plastique » → paragraphe « Surveillance d’une dérive · démonstration technique » vers presse-caoutchouc.html, presse.html, banc-essai.html.
 - Section finale : texte et boutons alignés (« chiffrage de l’étape 1 du pilote »).
 
 ## pilote.html
@@ -66,3 +67,6 @@ Référence : offre_v2/BRIEF.md. Une ligne par changement, « avant → après �
 ## vp-scan/
 - app.js : conseil « VP Expert, puis étude VP Predict » → « VP Expert sans connexion ; diagnostic de stabilité sur ces exports possible après un premier dossier résolu, sur devis ».
 - index.html : app.js?v=henry-1 → henry-2.
+
+## style.css
+- Fin de fichier : aucune règle → `body .syn` en minmax(0,1fr) et `.cash3` resserré sous 480 px (débordement de 21 px du résultat caoutchouc à 375 px, préexistant). Packs CSS non reconstruits (propriété du chef d’équipe).
