@@ -51,10 +51,8 @@ main h2{letter-spacing:-.022em}
 :focus-visible{outline:2px solid var(--vp-amber2);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.btn,.btn:hover{transition:none!important;transform:none!important}}
 
-/* ---------- Champs ---------- */
-main input[type=text],main input[type=number],main input[type=search],main input:not([type]),main select,main textarea{
-  border-radius:10px!important;transition:border-color .15s,box-shadow .15s}
-main input:focus,main select:focus,main textarea:focus{border-color:var(--vp-amber2)!important;box-shadow:0 0 0 3px rgba(245,175,32,.22)!important;outline:none!important}
+/* ---------- Champs : anneau de focus ambré, sans toucher à la forme propre à chaque outil ---------- */
+main input:focus-visible,main select:focus-visible,main textarea:focus-visible{outline:2px solid rgba(245,175,32,.55)!important;outline-offset:2px}
 
 /* ---------- Cartes : relief discret, survol net ---------- */
 .card,.tile,.sx-card,.sec-card,.oc,.pcard{border-radius:var(--vp-r-lg)}
@@ -138,3 +136,7 @@ main .histo h2{font-size:clamp(20px,1.6vw,24px)!important;margin-bottom:12px!imp
   .top .tabs.sector{min-width:0;max-width:100%;flex-wrap:nowrap}
   .top .tabs.sector a{min-width:0;overflow:hidden;text-overflow:ellipsis}
 }
+
+/* ---------- Page de garde : boutons des cartes sur une ligne ---------- */
+#g-cards a.go{white-space:nowrap;gap:10px;font-size:clamp(13.5px,1.05vw,15px)!important}
+#g-cards a.go i{flex:0 0 auto}
