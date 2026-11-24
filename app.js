@@ -7,6 +7,7 @@ const CORE=RUB?['changes','changeDuration','tech','org','proc','performance','re
 const SECTORS=['Automobile','Emballage','Médical','Biens de consommation','Électrique et électronique','Autre'];
 /* D : la fourchette reste à ± 35 % tant que les valeurs n'ont pas été vérifiées avec le client. Saisir des valeurs ne les valide pas. */
 const U_UNVERIFIED=.35;
+function PK(){return [...KNOWN].some(k=>k==='nTotal'||k==='presses'||k.startsWith('presses.'));}
 function rel(){const k=CORE.filter(x=>KNOWN.has(x)).length,s=k/CORE.length;return s>=.7?{l:'élevée',c:'good',u:U_UNVERIFIED,k}:s>=.3?{l:'partielle',c:'mid',u:U_UNVERIFIED,k}:{l:'faible',c:'bad',u:U_UNVERIFIED,k};}
 function noSale(){const z=JSON.parse(JSON.stringify(S));z.monetization=0;return C.calculate(z);}
 function range(r,s){const u=rel().u;return [r.grossAll*(1-u)-r.costAll,r.grossAll*(1+u)-r.costAll];}
@@ -144,7 +145,7 @@ function connUpd(){const n=S.presses.reduce((a,p)=>a+(+p.n||0),0),a=+S.c77||0,b=
 
 function live(){const el=document.getElementById('live');if(!el)return;const r=C.calculate(JSON.parse(JSON.stringify(S)));
  if(r.errors&&r.errors.length||r.net==null){el.innerHTML='<span class="ll">Estimation en cours</span><strong>—</strong>';return;}
- const q=rel(),[lo,hi]=range(r,S);el.innerHTML=`<span class="ll">Gain net estimé · scénario ${SL[S.scenario]}</span><strong>${eur(r.net)}<small> / an</small></strong><span class="lp">Fourchette ${eur(lo)} à ${eur(hi)} · rentabilisé en ${r.payback?r.payback+' mois':'plus de 36 mois'}</span><span class="rel ${q.c}">${q.k}/${CORE.length} valeurs saisies · fourchette ± ${Math.round(q.u*100)} % avant vérification avec vous</span>${(()=>{const z=noSale();return z&&z.net!=null?`<span class="lp nosale">Sans vente de la capacité récupérée : ${eur(z.net)} / an</span>`:'';})()}`;}
+ const q=rel(),[lo,hi]=range(r,S);el.innerHTML=`<span class="ll">Gain net estimé · scénario ${SL[S.scenario]}</span><strong>${eur(r.net)}<small> / an</small></strong><span class="lp">Fourchette ${eur(lo)} à ${eur(hi)} · rentabilisé en ${r.payback?r.payback+' mois':'plus de 36 mois'}</span><span class="rel ${q.c}">${q.k}/${CORE.length} valeurs clés saisies · fourchette ± ${Math.round(q.u*100)} % avant vérification avec vous</span>${(()=>{const z=noSale();return z&&z.net!=null?`<span class="lp nosale">Sans vente de la capacité récupérée : ${eur(z.net)} / an</span>`:'';})()}`;}
 function saveSum(r){const a=document.getElementById('topoc');if(!a)return;const q=new URLSearchParams();if(RUB)q.set('secteur','caoutchouc');q.set('n',r.n);q.set('net',Math.round(r.net));q.set('c77',+S.c77||0);q.set('c63',+S.c63||0);q.set('scen',S.scenario);q.set('mode','none');if(S.entry==='scan')q.set('scan','1');
  try{const x=JSON.parse(JSON.stringify(S));x.scenario='prudent';x.connMode='none';const z=C.calculate(x);
   if(!(z.errors&&z.errors.length)&&z.grossAll!=null&&z.n>0){const c=z.conn,R=v=>Math.round(v*10)/10;
@@ -207,13 +208,14 @@ async function makePDF(r,s,G){
  const b=document.getElementById('pdf');if(b){b.disabled=true;b.textContent='Préparation du PDF…';}
  try{
   const scenarios=['prudent','central','cible'].map(k=>{const x=JSON.parse(JSON.stringify(S));x.scenario=k;const q=C.calculate(x);return {k,name:SL[k][0].toUpperCase()+SL[k].slice(1),f:C.scenarioFactors[k],net:q.net,payback:q.payback,ratio:q.grossAll/q.costAll};});
-  await window.VellaPDF({r,s,G,eur,num,SL,RUB,CORE:CORE.length,relK:rel().k,range:range(r,s),groups:HYPD||[],scenarios,factors:C.scenarioFactors});
+  await window.VellaPDF({r,s,G,eur,num,SL,RUB,CORE:CORE.length,relK:rel().k,pk:PK(),range:range(r,s),groups:HYPD||[],scenarios,factors:C.scenarioFactors});
  }finally{if(b){b.disabled=false;b.textContent='Télécharger la synthèse (PDF)';}}
 }
 function hypHTML(r,s,G){if(r.grossAll==null)return '';
  const kn=k=>KNOWN.has(k),O={v:['vous','Vous'],t:['type','Valeur type'],b:['bench','Repère terrain'],h:['vella','Hypothèse Vella Partners'],p:['tarif','Tarif Vella Partners'],c:['calc','Calculé']};
  const o=(k,d)=>kn(k)?'v':d,pc=v=>num(v,v%1?1:0)+' %',row=(l,v,src,f='')=>({l,v,src,f});
- const parc=[row('Presses',r.n+' presses',s.profile==='custom'||kn('presses')?'v':'t',s.profile==='custom'?'Répartition saisie':'Profil '+(PROFILES[s.profile]?PROFILES[s.profile].label.toLowerCase():'type')),
+ const pk=PK(),pp=s.profile!=='custom'&&PROFILES[s.profile];
+ const parc=[row('Presses',r.n+' presses',pk||pp?'v':'t',pk?'Répartition saisie':pp?'Profil '+PROFILES[s.profile].label.toLowerCase():'Répartition type, à remplacer'),
   row('Heures requises par presse',num(s.presses[0].h)+' h/an',o('hours','t')),
   row(RUB?'Changements de moule':'Changements de série',num(s.changes)+' par an',o('changes','t')),
   row('Durée d’un changement',num(s.changeDuration)+' min',o('changeDuration','t')),
@@ -235,7 +237,7 @@ function hypHTML(r,s,G){if(r.grossAll==null)return '';
   row('Temps de recherche de cause évité',pc(s.targetDiag),o('targetDiag','h'))];
  if(RUB)obj.push(row('Vulcanisation visée',num(s.cureTarget,1)+' min',o('cureTarget','h'),'À valider au rhéomètre'),row('Réduction lots de mélange · ébavurage',`${pc(s.targetMix)} · ${pc(s.targetDeflash)}`,'h'));
  obj.push(row('Part adressable par VP Expert',`changements ${s.addressChange} · techniques ${s.addressTech} · organisation ${s.addressOrg} · process ${s.addressProc} · performance ${s.addressPerf} · qualité ${s.addressQuality}${RUB?` · cuisson ${s.addressCure} · mélange ${s.addressMix} · ébavurage ${s.addressDeflash}`:''} (%)`,'h','Ce que l’outil peut traiter, le reste dépend d’autres leviers'));
- const cal=[row('Abonnement par site',eur(s.annualCost)+' / an','p',`${C.priceTier(Math.max(r.n,1),s.activity).label} · après le pilote, au prix écrit dans le devis`),
+ const cal=[row('Abonnement par site',eur(s.annualCost)+' / an','p',`Palier correspondant aux ${r.n} presses de l’estimation (${C.priceTier(Math.max(r.n,1),s.activity).label}) · grille de 300 à 800 € HT par mois selon le parc · indicatif, à confirmer par devis`),
   row('Pilote dossier de preuve',eur(s.investment),'p','Huit semaines, VP Scan inclus · 3 115 € HT dus si arrêt après la qualification · indicatif, à confirmer par devis'),row('Temps interne au démarrage',eur(s.internalCost),'t'),
   row('Premiers gains et début de l’abonnement','Mois '+s.startMonth,'h'),row('Montée en charge',s.rampMonths+' mois','h','Gain linéaire jusqu’à la pleine charge')];
  if(r.conn)cal.push(row('VP Predict · rebuts restants évités','25 %','h'),row('VP Predict · énergie','1 000 € par presse connectée','h','Forfait, à mesurer au pilote'),row('VP Predict · aléas restants traités','30 % process · 10 % techniques','h'),row('VP Predict · presses critiques',r.conn.focus?`${r.conn.k} presses portent ${num(r.conn.lossShare*100)} % des pertes restantes`:`${r.conn.k} presses sur ${r.n}, au prorata`,'h','Hypothèse Pareto modérée : (k ÷ n)^0,5, à mesurer au pilote'),row('Option VP Predict',`${eur(r.conn.abo)} / an`,'p',`${r.conn.billed} presse${r.conn.billed>1?'s':''} × 150 € HT par mois, en complément de l’abonnement VP Expert`),row('Pilote VP Predict',eur(r.conn.pocBase)+(r.conn.aid?` − ${eur(r.conn.aid)} d’aide`:''),'p','Dès 15 000 € HT sur 1 à 3 presses, sous réserve de faisabilité'),row('Connexion des presses',eur(r.conn.hw[1]),'t','Valeur centrale'));
@@ -269,7 +271,7 @@ function renderResult(){
  nav.style.display='none';
  const s=JSON.parse(JSON.stringify(S)),r=C.calculate(s);if(!r.errors||!r.errors.length)setTimeout(()=>saveSum(r),0);
  if(r.errors&&r.errors.length){app.innerHTML=`<section class="screen"><h2>Il manque une information</h2><div class="err">${r.errors.join('<br>')}</div></section>`;return;}
- const ratio=r.grossAll/r.costAll,cls=ratio>=3?'good':ratio>=2?'mid':'bad',rtxt=ratio>=3?'Objectif atteint':ratio>=2?'Seuil d’engagement':'Sous le seuil';const mtxt=ratio>2.5?['good','Marge confortable']:ratio>=2?['mid','Marge réduite']:['bad','Marge faible'];
+ const ratio=r.grossAll/r.costAll,cls=ratio>=3?'good':ratio>=2?'mid':'bad',rtxt=ratio>=3?'Au-dessus du repère':ratio>=2?'Au niveau du repère':'Sous le repère';const mtxt=ratio>2.5?['good','Marge confortable']:ratio>=2?['mid','Marge réduite']:['bad','Marge faible'];
  const contrib=r.contribution;
  const G=(()=>{const c=r.conn||{scrap:0,energy:0,other:0,predH:0},eco=(r.qualityGain||0)+c.scrap+c.energy,op=(r.diagGain||0)+(r.deflashGain||0),cap=(r.capacityGain||0)+c.other,capH=(r.equivalent||0)+(r.conn&&r.P!=null?c.predH*r.P*r.Q:0);
   const pb=g=>{let cash=-r.upfront;for(let m=1;m<=36;m++){const ramp=m<s.startMonth?0:Math.min(1,(m-s.startMonth+1)/s.rampMonths);cash+=g/12*ramp-(m>=s.startMonth?r.costAll/12-(m<s.startMonth+12?(r.credit||0)/12:0):0);if(cash>=0)return m;}return null;};
@@ -283,10 +285,10 @@ function renderResult(){
   <div><p class="lbl">Gain net annuel, en année pleine</p><p class="big">${eur(r.net)}</p>
    <p class="sub">Soit <b>${eur(r.netPerPress)} par presse et par an</b>, après ${r.conn?`les abonnements de ${eur(r.costAll)} HT par an`:`l’abonnement de ${eur(s.annualCost)} HT par an`}, pour ${r.n} presses${r.conn?` dont ${r.conn.k} en VP Predict`:''}. Montants HT, avant impôt.</p>
    <p class="rng">Fourchette : <b>${eur(range(r,s)[0])}</b> à <b>${eur(range(r,s)[1])}</b> par an · ± 35 % avant vérification de vos chiffres</p>${(()=>{const z=noSale();if(!z||z.net==null)return '';const ratio=r.costAll>0?(z.net+r.costAll)/r.costAll:null;return `<p class="nosale"><b>Sans vente de la capacité récupérée :</b> ${eur(z.net)} net par an${ratio!=null?` (${num(ratio,1)} × l’abonnement)`:''} · ${z.net>=0?'économies et temps libéré couvrent l’abonnement':'dépend de la vente de capacité'}.</p>`;})()}
-   <p class="relbox"><span class="rel ${rel().c}">${rel().k} valeur${rel().k>1?'s':''} sur ${CORE.length} ${rel().k>1?'viennent':'vient'} de vous</span>${rel().k<CORE.length?' <button type="button" class="idk" id="tighten">Préciser mes valeurs</button>':''}</p></div>
+   <p class="relbox"><span class="rel ${rel().c}">${rel().k} valeur${rel().k>1?'s':''} clé${rel().k>1?'s':''} sur ${CORE.length} ${rel().k>1?'viennent':'vient'} de vous${PK()?' · nombre de presses saisi':''}</span>${rel().k<CORE.length?' <button type="button" class="idk" id="tighten">Préciser mes valeurs</button>':''}</p></div>
   <div class="kpis k3">
    <div class="kpi"><div class="v">${r.payback?r.payback+' mois':'> 36 mois'}</div><div class="k">Délai de retour, démarrage de ${eur(r.upfront)} compris</div></div>
-   <div class="kpi"><div class="v">${num(ratio,1)} ×</div><div class="k">Gain brut ÷ abonnement${r.conn?"s":""}</div><span class="badge ${cls}">${rtxt}</span></div>
+   <div class="kpi"><div class="v">${num(ratio,1)} ×</div><div class="k">Repère : gain brut estimé ÷ abonnement</div><span class="badge ${cls}">${rtxt}</span></div>
    <div class="kpi"><div class="v">${num(r.projectedTrs,1)} %</div><div class="k">TRS projeté, contre ${num(r.trs,1)} % aujourd’hui</div></div>
   </div>
  </div>
@@ -315,7 +317,7 @@ ${(()=>{if(r.grossAll==null)return '';const K=['prudent','central','cible'];cons
   <div class="scrow sch"><span class="scl"></span>${K.map(k=>`<button type="button" data-s="${k}" class="${k===s.scenario?'on':''}" aria-pressed="${k===s.scenario}">${SL[k][0].toUpperCase()+SL[k].slice(1)}<small>${num(C.scenarioFactors[k]*100)} % des objectifs</small>${k==='prudent'?'<em>Recommandé</em>':''}</button>`).join('')}</div>
   ${row('Gain net annuel',v=>`<b>${eur(v.q.net)}</b>`,'Après abonnement'+(r.conn?'s':''))}
   ${row('Délai de retour',v=>v.q.payback?v.q.payback+' mois':'> 36 mois','Démarrage compté')}
-  ${row('Gain brut ÷ abonnement',v=>num(v.q.grossAll/v.q.costAll,1)+' ×','Seuil d’engagement : 2 ×')}
+  ${row('Gain brut ÷ abonnement',v=>num(v.q.grossAll/v.q.costAll,1)+' ×','Repère interne indicatif : 2 ×')}
   ${row('Économies évitables seules',v=>eur(v.eco),'Dépenses en moins, par an')}
   ${row('Retour sur économies seules',v=>v.pe?v.pe+' mois':'> 36 mois','Sans capacité ni temps libéré')}
   ${row('Heures de presse récupérées',v=>num(v.h)+' h','Équivalentes, par an')}
@@ -354,7 +356,7 @@ ${(()=>{if(r.grossAll==null)return '';const K=['prudent','central','cible'];cons
    ${r.conn?`<div class="line"><div><div class="n">VP Predict · ratio propre</div><div class="f">Gains VP Predict ${eur(r.conn.gross)} ÷ abonnement ${eur(r.conn.abo)} · ${eur(r.conn.perPress)} de gain par presse surveillée${r.conn.ratio<2?' · sous le seuil de 2 fois : l’abonnement ne démarre pas tant que le pilote ne mesure pas ce niveau':''}</div></div><div class="a">${num(r.conn.ratio,1)} ×</div></div>`:''}
    <div class="line"><div><div class="n">Gain brut annuel</div><div class="f">Capacité + rebuts + temps régleurs${r.RUB?' + ébavurage':''}${r.conn?' + gains VP Predict':''}</div></div><div class="a">${eur(r.grossAll)}</div></div>
    ${r.modeledLosses>0?`<p class="cap" style="margin:6px 0 10px">Gain brut = <b>${num(r.grossAll/r.modeledLosses*100,1)} %</b> des ${eur(r.modeledLosses)} de pertes analysées.</p>`:''}
-   <div class="line"><div><div class="n">Abonnement par site</div><div class="f">${C.priceTier(Math.max(r.n,1),s.activity).label} · après le pilote, au prix écrit dans le devis</div></div><div class="a">− ${eur(s.annualCost)}</div></div>
+   <div class="line"><div><div class="n">Abonnement par site</div><div class="f">Palier correspondant aux ${r.n} presses de l’estimation (${C.priceTier(Math.max(r.n,1),s.activity).label}) · grille de 300 à 800 € HT par mois · indicatif, à confirmer par devis</div></div><div class="a">− ${eur(s.annualCost)}</div></div>
    ${r.conn?`<div class="line"><div><div class="n">Option VP Predict</div><div class="f">${r.conn.billed} presse${r.conn.billed>1?'s':''} × 150 € × 12 mois, en complément de l’abonnement VP Expert</div></div><div class="a">− ${eur(r.conn.abo)}</div></div>`:''}
    <div class="line total"><div><div class="n">Gain net annuel</div><div class="f">Brut − abonnement${r.conn?'s':''}</div></div><div class="a">${eur(r.net)}</div></div>
    <h3 style="margin-top:22px">Coûts de démarrage, payés une fois</h3>
