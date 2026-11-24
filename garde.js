@@ -104,7 +104,8 @@
     history.replaceState(null, '', location.pathname);
   }
 
-  $('g-reset').addEventListener('click', reset);
+  /* Le bouton « Changer de secteur » oublie aussi le secteur mémorisé ; la touche Échap ne fait que refermer. */
+  $('g-reset').addEventListener('click', function(){ try { localStorage.removeItem('vp-secteur'); } catch (e) {} reset(); });
 
   /* ---- Visionneuse (un seul lecteur ; rien n'est chargé avant le clic) ---- */
   var dlg = $('g-video'), vid = dlg ? dlg.querySelector('video') : null;
