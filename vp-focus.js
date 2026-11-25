@@ -11,7 +11,7 @@
   const main = document.querySelector('main');
   if (!api || !main || !document.getElementById('s3')) return;
   const $ = (s, r = document) => r.querySelector(s);
-  const txt = el => (el ? el.textContent.replace(/\s+/g, ' ').trim() : '');
+  const txt = el => (el ? (window.vpOriginalLabel ? window.vpOriginalLabel(el) : el.textContent).replace(/\s+/g, ' ').trim() : '');
 
   /* 0. Défaut présélectionné signalé « exemple » jusqu'au premier choix du régleur */
   let exemple = true;
@@ -70,14 +70,14 @@
     const c = card();
     const ok = c && $('[data-ok]', c), nc = c && $('[data-nc]', c);
     const src = !c && $('#sit [data-b="sans"]') && $('#sit [data-b="sans"]').getAttribute('aria-pressed') !== 'true' ? $('#sit [data-b="sans"]') : null;
-    const res = $('#res'), need = !c && !src && res && /au moins deux questions/i.test(res.textContent);
+    const res = $('#res'), need = !c && !src && res && /au moins deux questions/i.test(txt(res));
     $('#vf-ctx').hidden = !need;
     $('#vf-src').hidden = !src; $('.vf-meta').hidden = !c;
     if (c) {
       const title = c.querySelector('.ch b').cloneNode(true);
       title.querySelectorAll('.tg').forEach(t => t.remove());
       $('#vf-ctl-name').textContent = txt(title).replace(/([^\s·])((?:DC|TS)\d{2}-R\d{2})/, '$1 · $2');
-      const p = [...c.querySelectorAll('p')].find(x => /Contrôle\s*:/.test(x.textContent));
+      const p = [...c.querySelectorAll('p')].find(x => /Contrôle\s*:/.test(txt(x)));
       $('#vf-ctl-what').textContent = p ? txt(p).replace(/^.*?Contrôle\s*:\s*/, '') : '';
       $('#vf-rank').textContent = 'Rang ' + txt($('.rk', c));
       $('#vf-score').textContent = 'score indicatif ' + txt($('.ind', c));

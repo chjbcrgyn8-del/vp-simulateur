@@ -3,7 +3,7 @@
   'use strict';
   const source=document.currentScript.src, key='vp-simulateur:language';
   const norm=s=>s.replace(/\s+/g,' ').trim();
-  const attrs=['title','aria-label','alt','placeholder','aria-description'];
+  const attrs=['title','aria-label','alt','placeholder','aria-description','data-t'];
   const skip='script,style,noscript,textarea,[contenteditable]:not([contenteditable=false]),.vp-langbar,[translate=no],code,pre';
   const originals=new WeakMap(), attributes=new WeakMap();
   let dict,phrases,request,language='fr',version=0;
@@ -25,6 +25,12 @@
   }
   function translate(raw){
     const k=norm(raw);if(!k||!/\p{L}/u.test(k))return raw;
+    const protectedText=/(?:https?:\/\/[^\s<>()]+|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}|(?:www\.)[\w./%-]+)/gi;
+    const parts=raw.match(protectedText);
+    if(parts&&(!dict[k]||parts.some(s=>!dict[k].includes(s)))){
+      let start=0,out='';for(const m of raw.matchAll(protectedText)){out+=translate(raw.slice(start,m.index))+m[0];start=m.index+m[0].length;}
+      return out+translate(raw.slice(start));
+    }
     let v=dict[k];
     if(v===undefined){
       // Compose newly rendered counters, labels and sentences from known source fragments.
@@ -40,9 +46,33 @@
     }
     return raw.match(/^\s*/)[0]+v+raw.match(/\s*$/)[0];
   }
+  window.vpEnglishText=s=>language==='en'&&typeof s==='string'?translate(s):s;
   window.vpSearchLabel=(...xs)=>xs.map(s=>language==='en'&&s?translate(s):s).join(' ');
+  const assetMap={
+    'VP-Scan-Fiche-Releve-Terrain-Presses-Non-Connectees.pdf':'VP-Expert-Field-Sheet-Offline-Presses-EN.pdf',
+    'banc-modele-import.csv':'test-bench-import-template-en.csv'
+  };
+  function linkEdition(e){
+    if(!e.matches('a[href]'))return;
+    const raw=e.getAttribute('href'), last=raw.split('/').pop();
+    if(assetMap[last])e.dataset.vpSourceHref=raw;
+    const orig=e.dataset.vpSourceHref;if(!orig)return;
+    const url=language==='en'?orig.replace(/[^/]+$/,s=>assetMap[s]):orig;
+    if(raw!==url)e.setAttribute('href',url);
+  }
+  function clipEdition(){
+    const v=document.querySelector('video[data-vp-operator]');if(!v)return;
+    const en=language==='en',dir=en?'video/en/':'video/';
+    v.querySelectorAll('track').forEach(t=>t.remove());
+    v.controls=en;
+    if(en){
+      const t=document.createElement('track');t.kind='captions';t.label='English';t.srclang='en';t.src=dir+'regleur-extrait.vtt';t.default=true;v.append(t);
+    }
+    v.poster=dir+'regleur-extrait.jpg';v.src=dir+'regleur-extrait.mp4';v.load();
+    if(v.autoplay)v.play().catch(()=>{});
+  }
   function pair(old,current){
-    const original=old&&old[1]===current?old[0]:current;
+    const original=old&&norm(old[1])===norm(current)?old[0]:current;
     return [original,language==='en'?translate(original):original];
   }
   function node(n){
@@ -56,6 +86,7 @@
   }
   function props(e){
     if(e.closest(skip))return;
+    linkEdition(e);
     for(const k of attrs){if(!e.hasAttribute(k))continue;
       let store=attributes.get(e);if(!store){store={};attributes.set(e,store);}
       const current=e.getAttribute(k),a=pair(store[k],current);
@@ -66,7 +97,7 @@
     if(root.nodeType===3){node(root);return;}if(root.nodeType!==1||root.closest(skip))return;
     props(root);
     const t=document.createTreeWalker(root,5,{acceptNode:n=>n.nodeType===1&&n.matches(skip)?2:1});let n;
-    while((n=t.nextNode())){if(n.nodeType===3)node(n);else if(attrs.some(k=>n.hasAttribute(k)))props(n);}
+    while((n=t.nextNode())){if(n.nodeType===3)node(n);else if(n.tagName==='A'||attrs.some(k=>n.hasAttribute(k)))props(n);}
   }
   const observer=new MutationObserver(ms=>{
     observer.disconnect();
@@ -81,7 +112,7 @@
     const id=++version, msg=bar.firstChild;
     if(next==='en'&&!dict){
       msg.textContent='Loading English…';
-      try{request||=fetch(new URL('vp-language-en.json',source)).then(r=>{if(!r.ok)throw Error();return r.json()});const d=await request;if(!dict)prepare(d);}
+      try{request||=fetch(new URL('vp-language-en.json?v=media2',source)).then(r=>{if(!r.ok)throw Error();return r.json()});const d=await request;if(!dict)prepare(d);}
       catch{request=null;if(id===version)msg.textContent='English unavailable. Please try again.';return;}
     }
     if(id!==version)return;msg.textContent='';observer.disconnect();
@@ -92,7 +123,8 @@
       const u=new URL(location.href);
       if(u.searchParams.has('lang')){u.searchParams.set('lang',next);history.replaceState(history.state,'',u);}
     }
-    watch();
+    watch();clipEdition();document.dispatchEvent(new CustomEvent('vp:language',{detail:next}));
+    window.dispatchEvent(new CustomEvent('vp:languagechange',{detail:{lang:next}}));
   }
   bar.addEventListener('click',e=>{const b=e.target.closest('button');if(b)choose(b.dataset.language,true);});
   let saved;try{saved=localStorage.getItem(key)}catch{}

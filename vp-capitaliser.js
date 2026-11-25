@@ -10,7 +10,7 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const txt = el => (el ? el.textContent.replace(/\s+/g, ' ').trim() : '');
+  const txt = el => (el ? (window.vpOriginalLabel ? window.vpOriginalLabel(el) : el.textContent).replace(/\s+/g, ' ').trim() : '');
   const click = el => { if (el) el.click(); return !!el; };
   const fire = (el, types) => types.forEach(t => el.dispatchEvent(new Event(t, { bubbles: true })));
 
@@ -35,7 +35,7 @@
   const blank = () => ({ step: 'intro', closed: false, decision: null, cond: { machine: '', material: '' }, reuse: '', example: false, tool: '', machine: '', err: '' });
 
   /* ---------- lecture du dossier affiché ---------- */
-  const isGate = c => /Avant toute correction/.test(c.textContent);
+  const isGate = c => /Avant toute correction/.test(txt(c));
   const cardState = c => c.classList.contains('found') ? 'nc' : c.classList.contains('done') ? 'ok' : c.classList.contains('unver') ? 'nv' : 'open';
   /* Nom de la cause : attribut data-name en plasturgie, titre de la carte sans ses étiquettes dans les autres métiers. */
   function cardName(c) {
@@ -45,7 +45,7 @@
     return txt(t);
   }
   function cardInfo(c) {
-    const p = $$('p', c).find(x => /Contrôle\s*:/.test(x.textContent));
+    const p = $$('p', c).find(x => /Contrôle\s*:/.test(txt(x)));
     return { name: cardName(c), what: p ? txt(p).replace(/^.*?Contrôle\s*:\s*/, '') : '', state: cardState(c), gate: isGate(c) };
   }
   const ctxEl = k => $('textarea[data-expert-group="context"][data-expert-field="' + k + '"]');

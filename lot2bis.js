@@ -81,6 +81,7 @@ function reportLegacy(){
 }
 function download(text,name,type){const u=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);}
 function report(){
+ if(document.documentElement.lang==='en')return englishReport();
  const c=documentaryCounts(),s=doc();
  const summary=`## Disponibilité et preuves\n\n${c.filled}/${c.total} champs requis remplis ; ${c.available}/${c.total} informations disponibles (déclarées) ; ${c.reviewed}/${c.total} vérifications déclarées. Aucune preuve authentifiée par l’application. Ces compteurs ne valent pas validation métier.\n\n`+fields.map(([k,l,req])=>{const p=s.documentation[k];return `- ${l}${req?' (requis)':' (facultatif, hors compteurs)'} : ${availabilityLabels[p.availability]} ; ${p.review==='declared'?'vérification déclarée, non authentifiée':'preuve non vérifiée'}. Référence : ${md(p.reference||'absente')}. Auteur déclaré : ${md(p.reviewer||'absent')}. Date : ${md(p.date||'absente')}.`;}).join('\n')+'\n\n';
  const cited=ids=>ids.map(id=>`[${D.sources[id].name}](${D.sources[id].url})`).join(' ; ');
@@ -88,7 +89,24 @@ function report(){
  const guide=(D.collectionGuide[current().sector]||[]).map(x=>`- ${x.title} : ${x.text} (${cited(x.refs)})`).join('\n');
  return reportLegacy().replace(/Informations requises manquantes : [^\n]*\n/,summary).replace('## Décision',`## Compléments documentaires du ${D.reviewed}\n\nCes constats portent sur les publications, pas sur le cas saisi. Règles toujours candidates ; aucune approbation métier.\n\n${supplements||'Pas de complément spécifique pour ces règles.'}\n\n## Précisions de collecte proposées\n\n${guide}\n\n## Décision`);
 }
-$('export-md').onclick=()=>{download(report(),`VP_Lot2bis_${selected}_synthese.md`,'text/markdown;charset=utf-8');$('feedback').textContent='Synthèse Markdown générée pour cette fiche. Elle ne vaut pas validation métier.';};
+function englishReport(){
+ const d=current(),s=doc(),c=documentaryCounts(),tr=v=>window.vpEnglishText?.(String(v??''))??String(v??'');
+ const ids=[...new Set([...d.refs,...d.rules.flatMap(r=>r.refs)])],links=refs=>refs.map(id=>`[${id}](${D.sources[id].url})`).join('; ');
+ const L=[`# Vella Partners | Documentary summary ${d.id}`,'',`Version ${D.version} | Generated on ${new Date().toISOString()}`,'','DEVELOPMENT. No expert approval, trial authorisation or operational action. Cause undetermined. Demonstration data is self-reported and unverified.','','## Defect and scope','',tr(d.name),'',tr(d.summary),'',tr(d.scope),'',tr(d.exclude),'','## Reported context',''];
+ fields.forEach(([k,l])=>L.push('- '+tr(l)+': '+(s.context[k]?md(k==='process'?tr(s.context[k]):s.context[k]):'Not provided')));
+ L.push('','## Availability and evidence','',`${c.filled}/${c.total} required fields completed; ${c.available}/${c.total} items reported available; ${c.reviewed}/${c.total} checks reported. The application does not authenticate evidence. These counts do not constitute technical approval.`,'');
+ fields.forEach(([k,l,req])=>{const p=s.documentation[k];L.push('- '+tr(l)+(req?' (required)':' (optional, excluded from totals)')+': '+tr(availabilityLabels[p.availability])+'; '+(p.review==='declared'?'verification reported, not authenticated':'evidence unverified')+'. Reference: '+(md(p.reference)||'none')+'. Reported reviewer: '+(md(p.reviewer)||'none')+'. Date: '+(md(p.date)||'none')+'.');});
+ L.push('','Reported process: '+(compatible()?'no reported contradiction; applicability remains to be verified.':'OUTSIDE SCOPE; a specific review is required.'),'','## Hypotheses and observations');
+ d.rules.forEach(r=>{const o=s.observations[r.id]||{};L.push('',`### ${r.id} | ${tr(r.title)}`,'','Rule status: '+(r.blocked?'BLOCKED; content not incorporated.':'documentary candidate; not approved.'),'',tr(r.hypothesis),'','Proposed data collection; not authorised by this document: '+tr(r.collect),'','Limits: '+tr(r.caution),'','Recorded status: '+(r.blocked?'unavailable':tr(states[o.status||'unknown'])),'','Reported observation: '+(md(o.evidence)||'Not provided'),'','Closure to prepare: '+tr(r.closure),'','Basis: '+(links(r.refs)||'insufficient published support available')+'.');});
+ L.push('','## Questions for review','',md(s.note)||'Not provided','','## References and limits of applicability','');
+ ids.forEach(id=>{const x=D.sources[id];L.push(`- [${id} | ${tr(x.name)}](${x.url}): ${tr(x.type)}. Location: ${tr(x.locator)}. Scope: ${tr(x.scope)} Limits: ${tr(x.limit)}`);});
+ L.push('',`## Documentary updates: ${D.reviewed}`,'','These findings concern publications, not the reported case. Rules remain candidates without technical approval.');
+ const revised=d.rules.filter(r=>r.review);if(!revised.length)L.push('','No specific update for these rules.');
+ revised.forEach(r=>{const x=r.review;L.push('',`### ${r.id} | ${tr(x.status)}`,'',tr(x.finding),'','Basis: '+links(x.refs),'','Proposed collection: '+tr(x.collect),'','Limits: '+tr(x.limit));});
+ L.push('','## Proposed collection details','');(D.collectionGuide[d.sector]||[]).forEach(x=>L.push(`- ${tr(x.title)}: ${tr(x.text)} (${links(x.refs)})`));
+ L.push('','## Decision','','Cause undetermined. No settings prescribed or field results validated. Any intervention is subject to site procedures and authorisation.','');return L.join('\n');
+}
+$('export-md').onclick=()=>{download(report(),`VP_Lot2bis_${selected}_${document.documentElement.lang==='en'?'summary':'synthese'}.md`,'text/markdown;charset=utf-8');$('feedback').textContent='Synthèse Markdown générée pour cette fiche. Elle ne vaut pas validation métier.';};
 $('export-json').onclick=()=>{const payload={schema:'vp-l2bis-draft-2',version:D.version,selected,dossiers};try{validateDraft(payload);}catch(err){$('feedback').textContent='Export refusé : '+err.message+' Vérifiez notamment les dates ; vos saisies restent en mémoire.';return;}download(JSON.stringify(payload,null,2),'VP_Lot2bis_brouillon.json','application/json');dirty=false;$('feedback').textContent='Brouillon JSON v2 généré pour les six dossiers. Conservez le fichier avant de fermer la page ; cette version ne se réimporte pas dans l’ancienne DEV v1.';};
 const isObj=o=>o!==null&&typeof o==='object'&&!Array.isArray(o);
 function askConfirmation(message){
@@ -133,7 +151,7 @@ function preparePrint(){
  document.querySelectorAll('.print-value').forEach(x=>x.remove());
  document.querySelectorAll('.rule details,.proof-controls details,#collection-guide').forEach(x=>x.open=true);
  document.querySelectorAll('#context-form input,#context-form select,#context-form textarea,#rules select,#rules textarea,#review-note').forEach(el=>{
-  const text=document.createElement('div');text.className='print-value';text.textContent=(el.tagName==='SELECT'?el.selectedOptions[0]?.textContent:el.value)||'Non renseigné';el.after(text);
+  const text=document.createElement('div');text.className='print-value';text.setAttribute('translate','no');text.textContent=(el.tagName==='SELECT'?el.selectedOptions[0]?.textContent:el.value)||(document.documentElement.lang==='en'?'Not provided':'Non renseigné');el.after(text);
  });
 }
 addEventListener('beforeprint',preparePrint);

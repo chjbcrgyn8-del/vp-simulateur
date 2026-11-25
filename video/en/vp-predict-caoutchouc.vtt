@@ -1,0 +1,110 @@
+WEBVTT
+
+00:00:00.400 --> 00:00:04.514
+On rubber press C four, the fixed
+platen temperature begins to rise.
+
+00:00:04.884 --> 00:00:07.043
+An individual cycle can look ordinary.
+
+00:00:07.043 --> 00:00:09.306
+It is the movement
+across successive cycles
+
+00:00:09.306 --> 00:00:11.362
+that tells the setter where to look.
+
+00:00:12.072 --> 00:00:17.091
+On an unconnected press, VP Expert
+starts when the operator sees a defect.
+
+00:00:17.461 --> 00:00:21.858
+On a connected press, VP Predict compares
+measurements as they arrive. Here,
+
+00:00:21.858 --> 00:00:24.312
+the drift and the phone
+alert are simulated.
+
+00:00:25.022 --> 00:00:28.273
+Select the fixed platen temperature
+and choose an upward drift.
+
+00:00:28.643 --> 00:00:32.043
+The simulator establishes a
+reference during stable running.
+
+00:00:32.043 --> 00:00:33.743
+Each new point is one cycle.
+
+00:00:33.743 --> 00:00:37.196
+Normal variation and a persistent
+trend are different things.
+
+00:00:37.906 --> 00:00:40.828
+Watch the smoothed trend
+move away from its reference.
+
+00:00:40.828 --> 00:00:44.910
+An alert can be raised before the measured
+value crosses the tolerance limit.
+
+00:00:45.280 --> 00:00:49.413
+That does not mean the part has failed.
+It is a reason to inspect the process.
+
+00:00:50.123 --> 00:00:52.676
+The phone identifies the
+press and the signal.
+
+00:00:52.676 --> 00:00:55.024
+The setter acknowledges
+the alert and decides
+
+00:00:55.024 --> 00:00:57.322
+how to handle the press during diagnosis.
+
+00:00:57.692 --> 00:01:00.362
+If no one responds, the
+demonstration describes
+
+00:01:00.362 --> 00:01:02.771
+a simulated escalation to the team leader.
+
+00:01:03.481 --> 00:01:06.236
+VP Expert takes over.
+In this rubber example,
+
+00:01:06.236 --> 00:01:10.104
+the checks include the platen
+temperature controller or thermocouple.
+
+00:01:10.474 --> 00:01:13.001
+The ranking is a guide, not a probability.
+
+00:01:13.001 --> 00:01:16.197
+Test one authorised action and
+watch the following cycles.
+
+00:01:16.907 --> 00:01:20.118
+Confirm whether the signal has
+returned to its reference zone.
+
+00:01:20.118 --> 00:01:23.668
+Record the drift, the cause
+checked, the action and the result.
+
+00:01:24.038 --> 00:01:26.211
+The demonstration history is temporary.
+
+00:01:26.211 --> 00:01:29.243
+Here it illustrates what a
+reviewed case should contain.
+
+00:01:29.953 --> 00:01:33.972
+VP Predict adds cycle monitoring to
+VP Expert on connectable presses.
+
+00:01:33.972 --> 00:01:38.101
+An alert starts an investigation;
+it does not approve an adjustment.

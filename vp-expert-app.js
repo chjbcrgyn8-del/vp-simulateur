@@ -8,7 +8,7 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const txt = el => (el ? el.textContent.replace(/\s+/g, ' ').trim() : '');
+  const txt = el => (el ? (window.vpOriginalLabel ? window.vpOriginalLabel(el) : el.textContent).replace(/\s+/g, ' ').trim() : '');
   const click = el => { if (el) el.click(); return !!el; };
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -35,10 +35,10 @@
   }
   const cards = () => $$('#res .cc');
   const nextCard = () => $('#res .cc.next') || $('#res .cc:not(.done):not(.found):not(.unver):not(.lock)');
-  const isGate = c => !!c && /Avant toute correction/.test(c.textContent);
+  const isGate = c => !!c && /Avant toute correction/.test(txt(c));
   function cardInfo(c) {
     const t = c.querySelector('.ch b').cloneNode(true); $$('.tg,.rtag', t).forEach(x => x.remove());
-    const p = $$('p', c).find(x => /Contrôle\s*:/.test(x.textContent));
+    const p = $$('p', c).find(x => /Contrôle\s*:/.test(txt(x)));
     const why = c.querySelector('.why');
     return { name: txt(t), what: p ? txt(p).replace(/^.*?Contrôle\s*:\s*/, '') : '', why: why ? txt(why) : '', gate: isGate(c) };
   }
@@ -58,7 +58,7 @@
 
   function viewDefect() {
     const all = defects(), q = query.trim().toLowerCase();
-    const list = q ? all.filter(d => (d.name + ' ' + d.hint).toLowerCase().includes(q)) : all;
+    const list = q ? all.filter(d => (d.name + ' ' + d.hint + ' ' + (window.vpSearchLabel?.(d.name,d.hint)||'')).toLowerCase().includes(q)) : all;
     const tiles = list.map((d, i) => {
       const k = window.VPSchemas && window.VPSchemas.keyFor(d.name);
       return '<button type="button" class="va-tile' + (d.on ? ' on' : '') + '" data-a="def" data-i="' + all.indexOf(d) + '">' +

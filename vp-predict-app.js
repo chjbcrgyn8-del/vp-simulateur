@@ -9,7 +9,7 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const txt = el => (el ? el.textContent.replace(/\s+/g, ' ').trim() : '');
+  const txt = el => (el ? (window.vpOriginalLabel ? window.vpOriginalLabel(el) : el.textContent).replace(/\s+/g, ' ').trim() : '');
   const click = el => { if (el) el.click(); return !!el; };
   const CFG = window.SIM_CFG || {};
   const PARAMS = CFG.params || [];
@@ -36,7 +36,7 @@
     if (s.querySelector('.pane.done')) return 'done';
     if (s.querySelector('.phone2')) {
       if (s.querySelector('#take')) return 'alert';
-      if (s.querySelector('.ptq') && /pendant le diagnostic/.test(txt(s.querySelector('.ptq')))) return 'stop';
+      if (s.querySelector('.ptb #pstop') && s.querySelector('.ptb #pgo')) return 'stop';
       if (s.querySelector('.cr')) return 'actions';
       return 'causes';
     }

@@ -111,7 +111,8 @@
    const k=card.dataset.id?.split('_').pop(),ids=DCMAP[k]||[];
    return all.filter(r=>ids.includes(r.id));
   }
-  const text=card.querySelector('.ch b')?.textContent.toLowerCase()||'';
+  const heading=card.querySelector('.ch b');
+  const text=(window.vpOriginalLabel?window.vpOriginalLabel(heading):heading?.textContent||'').toLowerCase();
   // This is a thematic association for review, never a claim that a source
   // experimentally validates the complete legacy lever.
   const words={
@@ -170,7 +171,8 @@
    const status=t=>$('expert-status').textContent=t;
    window.addEventListener('vp:storage-error',()=>status('Stockage local indisponible ou saturé : la mémoire atelier ne peut pas être conservée. Exportez le dossier JSON.'));
    /* ----- Lecture de l'état des causes dans la liste rendue ----- */
-   function causes(){return [...document.querySelectorAll('#res .cc')].map((el,i)=>({id:el.dataset.id,name:el.dataset.name||nameOf(el),rank:i+1,state:el.classList.contains('lock')?'lock':el.classList.contains('found')?'nc':el.classList.contains('done')?'ok':el.classList.contains('unver')?'nv':'open',ctl:(el.querySelector('p')?.textContent||'').replace(/^.*Contrôle :\s*/,''),rex:el.classList.contains('rex')}))}
+   const originalLabel=el=>window.vpOriginalLabel?.(el)??el?.textContent??'';
+   function causes(){return [...document.querySelectorAll('#res .cc')].map((el,i)=>({id:el.dataset.id,name:el.dataset.name||nameOf(el),rank:i+1,state:el.classList.contains('lock')?'lock':el.classList.contains('found')?'nc':el.classList.contains('done')?'ok':el.classList.contains('unver')?'nv':'open',ctl:originalLabel(el.querySelector('p')).replace(/^.*Contrôle :\s*/,''),rex:el.classList.contains('rex')}))}
    function nameOf(el){const b=el.querySelector('.ch b');if(!b)return '';return [...b.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent).join('').trim()}
    /* ----- Question « Pourquoi » (QQOQCP) injectée dans l'enquête ----- */
    function pourquoi(){const qs=$('qs');if(!qs||qs.querySelector('[data-k="pourquoi"]'))return;
@@ -190,9 +192,9 @@
     if(b.dataset.rmcustom){window.VPCustom.remove(api.sector,api.S.def,b.dataset.rmcustom);api.render();return}
     if(b.dataset.outcome){data.bilan.outcome=data.bilan.outcome===b.dataset.outcome?'':b.dataset.outcome;dirty=true;drawBilan();drawSyn();return}
     if(b.id==='rex-save'){saveRex();return}
-    if(b.id==='rex-clear'){if(confirm('Effacer la mémoire atelier de ce navigateur pour ce secteur ?')){window.VPREX.clear(api.sector);api.render();status('Mémoire atelier effacée.')}return}
-    if(b.id==='syn-copy'){if(!navigator.clipboard){status('Copie indisponible : utilisez le téléchargement.');return}navigator.clipboard.writeText(synText()).then(()=>status('Synthèse copiée.'),()=>status('Copie impossible : utilisez le téléchargement.'));return}
-    if(b.id==='syn-dl'){download('Vella_Partners_Synthese_VP_Expert_'+api.sector+'.md',synText()+'\n\n---\n\n'+report(snapshot()),'text/markdown');return}
+    if(b.id==='rex-clear'){if(confirm(document.documentElement.lang==='en'?'Clear this sector’s shop-floor knowledge from this browser?':'Effacer la mémoire atelier de ce navigateur pour ce secteur ?')){window.VPREX.clear(api.sector);api.render();status('Mémoire atelier effacée.')}return}
+    if(b.id==='syn-copy'){if(!navigator.clipboard){status('Copie indisponible : utilisez le téléchargement.');return}navigator.clipboard.writeText(exportSummary()).then(()=>status('Synthèse copiée.'),()=>status('Copie impossible : utilisez le téléchargement.'));return}
+    if(b.id==='syn-dl'){downloadMarkdown();return}
     if(b.id==='syn-pdf'){makePdf('synthese');return}
     if(b.id==='syn-pdf-full'){makePdf('dossier');return}
     if(b.id==='syn-export'){$('expert-export').click();return}
@@ -212,7 +214,7 @@
    /* ----- Synthèse ----- */
    function synData(){const C=causes(),nc=C.filter(c=>c.state==='nc'),ok=C.filter(c=>c.state==='ok'),nv=C.filter(c=>c.state==='nv'),open=C.filter(c=>c.state==='open');
     const M=api.measures?api.measures():[];const b=data.bilan;const def=defLabel();
-    const fiche=[...document.querySelectorAll('#fiche span')].map(s=>{const i=s.querySelector('i');return [i?i.textContent:'',s.textContent.replace(i?i.textContent:'','').trim()]});
+    const fiche=[...document.querySelectorAll('#fiche span')].map(s=>{const k=originalLabel(s.querySelector('i'));return [k,originalLabel(s).replace(k,'').trim()]});
     const ctx=[data.context.machine&&'machine '+data.context.machine,data.context.material&&'matière '+data.context.material,data.context.equipment&&'outillage '+data.context.equipment].filter(Boolean);
     let probable,statusTxt,statusCls;
     if(b.outcome==='disparu'&&b.cause){probable=[b.cause];statusTxt=`Hypothèse étayée par un résultat déclaré : « ${b.cause} ». Le défaut a disparu après l’action${b.action?' « '+b.action+' »':''}. À faire valider par la qualité ; ${rexSaved[api.KEY()]?'retour d’expérience mémorisé.':'retour d’expérience à mémoriser (étape '+nFollow+').'}`;statusCls='ok'}
@@ -269,7 +271,7 @@ ${api.measures?`<div class="syn-card"><h3>${esc(api.mesTitle||'Mesures de la pre
    }
    function fill(){document.querySelectorAll('[data-expert-group]').forEach(el=>el.value=data[el.dataset.expertGroup][el.dataset.expertField]);document.querySelectorAll('.expert-proof').forEach(el=>el.remove());enhance();bar.querySelector('strong').textContent='Dossier VP Expert'+(data.fictional?' · CAS ENTIÈREMENT FICTIF':'')}
    function snapshot(){
-    const key=api.KEY(),native={state:clone(api.S),description:$('fiche')?.textContent.trim()||'',key,nonconforming:clone(api.REC[key]||{}),conforming:clone(api.OK[key]||{}),unverified:clone((api.NV||{})[key]||{}),history:clone(api.HIST.filter(h=>h.key===key))};
+    const key=api.KEY(),native={state:clone(api.S),description:originalLabel($('fiche')).trim(),key,nonconforming:clone(api.REC[key]||{}),conforming:clone(api.OK[key]||{}),unverified:clone((api.NV||{})[key]||{}),history:clone(api.HIST.filter(h=>h.key===key))};
     if(native.state.mes){const params=api.nativeSpec(native.state).params;native.state.mes=Object.fromEntries(Object.entries(native.state.mes).filter(([p])=>params.includes(p)));}
     const evidence=Object.fromEntries(Object.entries(data.evidence).filter(([k])=>k.startsWith(key+'::')));
     const rules=rulesFor(api),refs=[...new Set(rules.flatMap(r=>r.refs||[]))];
@@ -309,13 +311,70 @@ ${api.measures?`<div class="syn-card"><h3>${esc(api.mesTitle||'Mesures de la pre
    }
    function download(name,content,type){const url=URL.createObjectURL(content instanceof Blob?content:new Blob([content],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)}
    const SECTOR_FR={TP:'Injection plastique',CA:'Caoutchouc',DC:'Décolletage',TS:'Traitement de surface'};
+   const SECTOR_EN={TP:'Plastic injection moulding',CA:'Rubber moulding',DC:'Precision turning',TS:'Surface treatment'};
+   const english=()=>document.documentElement.lang==='en';
+   const tr=v=>window.vpEnglishText?.(String(v??''))??String(v??'');
+   let sample=null;
+   const reportValue=(g,k,v)=>sample&&sample[g]?.[k]===v&&v?String(v).split('\n').map(tr).join('\n'):v;
+   // Translate reference material, not user-authored values or machine-readable case data.
+   function exportSummary(){
+    if(!english())return synText();
+    const d=synData(),b=d.b,custom=window.VPCustom.list(api.sector,api.S.def),cause=v=>custom.some(c=>c.n===v)?v:tr(v);
+    const ctx=[['machine','Machine'],['material','Material'],['equipment','Tooling']].filter(([k])=>data.context[k]).map(([k,l])=>l+': '+reportValue('context',k,data.context[k]));
+    const lines=['# VP Expert summary: '+tr(d.def),'','Vella Partners · '+new Date().toLocaleDateString('en-GB')+(ctx.length?' · '+ctx.join(' · '):''),'','**Defect:** '+tr(d.def)];
+    const profile=d.fiche.filter(([k])=>!['Quoi','What'].includes(k));if(profile.length)lines.push(profile.map(([k,v])=>tr(k)+': '+tr(v)).join('; '));
+    const supported=b.outcome==='disparu'&&b.cause;
+    lines.push('','**'+(supported?'Hypothesis supported by a reported outcome':d.nc.length||b.cause?'Hypotheses to examine':'Priority checks')+':** '+(d.probable.map(cause).join('; ')||'—'));
+    const msg=supported?'The defect reportedly disappeared after the action. Quality review is required. '+(rexSaved[api.KEY()]?'Workshop feedback was saved.':'Save the workshop feedback.'):
+     b.outcome==='attenue'&&b.cause?'The action reportedly had a partial effect. This does not establish causation. Continue checking.':
+     b.outcome==='sans'&&b.cause?'The trial did not support the hypothesis but does not rule it out. Restore the original settings where appropriate and continue checking.':
+     d.nc.length?`${d.nc.length} deviation(s) observed. Examine possible causes in an authorised trial and verify the outcome on parts. No deviation establishes a cause by itself.`:
+     d.ok.length?`${d.ok.length} check(s) passed; no deviation observed so far. Next check: ${d.open[0]?cause(d.open[0].name):'request a technical review'}.`:'Investigation in progress. No checks have been recorded yet.';
+    lines.push('','**Status:** '+msg);
+    if(d.M.length){lines.push('','**Machine measurements:**');for(const m of d.M)lines.push('- '+tr(m.name)+': '+tr(m.txt)+(m.cur?' ('+m.cur+' '+m.unit+'; setpoint '+m.set+' '+m.unit+')':''));}
+    const done=api.HIST.filter(h=>h.key===api.KEY()).slice().reverse().map(h=>cause(h.c)+': '+({nc:'deviation observed',nv:'not verified; no conclusion',ok:'passed'}[h.r])+' ('+h.t+')');
+    if(b.action)done.push('Action: '+b.action+(b.outcome?' · '+tr(lab(OUTCOME,b.outcome)):''));
+    if(data.result.execution)done.push('Intervention: '+reportValue('result','execution',data.result.execution));
+    const todo=[];if(!supported){d.nc.forEach(c=>todo.push('Prepare an authorised trial for '+cause(c.name)+', then verify on parts.'));
+     d.open.slice(0,2).forEach(c=>{const cu=custom.find(x=>x.n===c.name);todo.push('Check: '+cause(c.name)+(c.ctl?' · '+(cu?cu.ctl:tr(c.ctl)):''))});d.nv.forEach(c=>todo.push('Repeat the unverified check: '+cause(c.name)));
+     if(d.mesAlert.length)todo.push('Monitor: '+d.mesAlert.map(m=>tr(m.name)).join(', '));if(data.trial.objective)todo.push('Planned trial: '+reportValue('trial','objective',data.trial.objective));}
+    else{todo.push('Request quality review of the cause and action.',data.result.followup?'Follow-up: '+reportValue('result','followup',data.result.followup):'Verify that the result holds on subsequent production orders.');}
+    lines.push('','**Actions taken:**',...(done.length?done:['—']).map(x=>'- '+x),'','**Next actions:**',...(todo.length?todo:['—']).map(x=>'- '+x));
+    if(d.rex.length)lines.push('','Workshop history: '+d.rex.length+' recorded case(s) for this defect.');
+    lines.push('','Indicative ranking based on workshop-reported checks. Quality review is necessary before drawing conclusions.');return lines.join('\n');
+   }
+   function englishReport(x){const c=x.case,n=c.native,txt=v=>String(v??'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const cause=v=>c.custom?.some(k=>k.n===v)?txt(v):tr(v);
+    const L=['# Vella Partners | VP Expert case file',''];
+    if(c.fictional)L.push('ENTIRELY FICTITIOUS CASE. Measurements, interventions, authorisations and conclusions are invented.','');
+    L.push('Documentary demonstration. Information is self-reported and unverified. A publication, click or authorisation reference does not approve an action. No automatic settings, calibrated causal model or machine connection.','','Sector: '+SECTOR_EN[x.sector]+'; defect: '+n.state.def+'.');
+    for(const [group,title,labels] of [['context','Context',CONTEXT],['trial','Proposed trial, not authorised by this application',TRIAL],['result','Reported results',RESULT]]){
+     L.push('','## '+title,'');for(const [k,l]of Object.entries(labels))L.push('- '+tr(l)+': '+(c[group][k]?txt(reportValue(group,k,c[group][k])):'Not provided'));}
+    L.push('','## Action review','','- Selected cause: '+(cause(c.bilan?.cause)||'Not provided'),'- Action: '+(txt(c.bilan?.action)||'Not provided'),'- Outcome: '+(tr(lab(OUTCOME,c.bilan?.outcome))||'Not provided'));
+    if(x.measures?.length){L.push('','## Machine measurements','');x.measures.forEach(m=>L.push('- '+tr(m.name)+': setpoint '+m.set+' '+m.unit+(m.cur?'; measured '+m.cur+' '+m.unit:'; no reading')+(m.avg?'; previous order average '+m.avg+' '+m.unit:'')+'; '+tr(m.txt)));}
+    L.push('','## Selected case: questionnaire and checks','','Responses are self-reported by the workshop. Only explicitly fictional cases contain worked examples. The ranking is illustrative, not a probability.','');
+    const labels={def:'Defect code',br:'Investigation mode',param:'Parameter',dir:'Direction',mach:'Machine',ou:'Where',quand:'When',freq:'Frequency',terme:'Workshop term',vis:'Appearance',qui:'Who',etendue:'Extent',combien:'How many',pourquoi:'Why',crit:'Criticality'};
+    Object.entries(n.state).filter(([k])=>!['fam','qd','more','showall','mes'].includes(k)).forEach(([k,v])=>{
+     const el=[...document.querySelectorAll('[data-k] [data-v]')].find(b=>b.closest('[data-k]').dataset.k===k&&b.dataset.v===String(v));
+     const fall=k==='def'?tr(defLabel()):k==='br'?({sans:'No connected process data',conforme:'In-tolerance process data',derive:'Process drift'}[v]):k==='dir'?({up:'Up',down:'Down'}[v]):k==='mach'?({canon:'Sliding headstock with guide bush',tonneau:'Barrel plating'}[v]):'';
+     L.push('- '+(labels[k]||k)+': '+(el?tr(originalLabel(el)):fall||txt(v)));
+    });
+    L.push('');if(!n.history.length)L.push('No checks recorded.');else n.history.forEach(h=>L.push('- '+cause(h.c)+': '+({nc:'reported deviation; cause not established',ok:'reported as conforming; does not establish a cause',nv:'not verified; no conclusion'}[h.r])+' ('+h.t+')'));
+    if(c.custom?.length){L.push('','## Causes added by the workshop','');c.custom.forEach(k=>L.push('- '+txt(k.n)+' ('+tr(k.b)+'): '+(txt(k.ctl)||'check to be defined')+'; added '+txt(k.date)+', subject to expert review.'));}
+    L.push('','## Observations and supporting evidence','');Object.entries(c.evidence).forEach(([k,v])=>L.push('- '+txt(k)+': '+txt(reportValue('evidence',k,v))));
+    L.push('','## Candidate documentary references','');x.documentation.rules.forEach(r=>{L.push('- '+r.id+': '+tr(r.title)+' ('+r.status+')','  - Collect: '+tr(r.collect),'  - Limits: '+tr(r.caution),'  - Expected closure: '+tr(r.closure));if(r.review)L.push('  - Additional finding: '+tr(r.review.finding),'  - Scope: '+tr(r.review.limit));});
+    L.push('','## Sources, scope and limitations','');x.documentation.sources.forEach(s=>L.push('- ['+s.name+']('+s.url+')','  - Scope: '+tr(s.scope),'  - Limits: '+tr(s.limit)));
+    L.push('','A reported outcome does not establish a cause. Quality review, comparability and follow-up are required. Neither industrial gains nor trial authorisation are certified.','');return L.join('\n');
+   }
+   const fullReport=()=>{const x=snapshot();return exportSummary()+'\n\n---\n\n'+(english()?englishReport(x):report(x));};
+   function downloadMarkdown(){download('Vella_Partners_'+(english()?'Summary':'Synthese')+'_VP_Expert_'+api.sector+'.md',fullReport(),'text/markdown');}
    /* PDF : même contenu que le téléchargement .md (synthèse, ou synthèse + dossier), généré dans le navigateur par vp-expert-pdf.js. */
    function makePdf(kind){
     try{
      if(!window.VPExpertPDF)throw Error('le générateur PDF n’est pas chargé, rechargez la page');
-     const full=kind!=='synthese',md=full?synText()+'\n\n---\n\n'+report(snapshot()):synText();
-     const blob=window.VPExpertPDF.build(md,{secteur:SECTOR_FR[api.sector]||'',type:full?'dossier':'synthese'});
-     const name='Vella_Partners_'+(full?'Dossier':'Synthese')+'_VP_Expert_'+api.sector+'.pdf';
+     const full=kind!=='synthese',md=full?fullReport():exportSummary();
+     const blob=window.VPExpertPDF.build(md,{secteur:(english()?SECTOR_EN:SECTOR_FR)[api.sector]||'',type:full?'dossier':'synthese'});
+     const name='Vella_Partners_'+(english()?(full?'Case_File':'Summary'):(full?'Dossier':'Synthese'))+'_VP_Expert_'+api.sector+'.pdf';
      download(name,blob,'application/pdf');status('PDF téléchargé : '+name+'.');
     }catch(err){status('PDF indisponible : '+(err&&err.message||err)+'. Utilisez « Imprimer » ou le téléchargement .md.')}
    }
@@ -335,7 +394,7 @@ ${api.measures?`<div class="syn-card"><h3>${esc(api.mesTitle||'Mesures de la pre
    function replace(fn){pending=fn;dialog.showModal();$('expert-cancel').focus()}
    $('expert-cancel').onclick=()=>{pending=null;dialog.close()};
    dialog.addEventListener('cancel',()=>{pending=null});
-   $('expert-confirm').onclick=()=>{dialog.close();const fn=pending;pending=null;fn?.()};
+   $('expert-confirm').onclick=()=>{dialog.close();const fn=pending;pending=null;sample=null;fn?.()};
    $('expert-export').onclick=()=>{
     download('Vella_Partners_VP_Expert_'+api.sector+'.json',JSON.stringify(snapshot(),null,2),'application/json');
     const key=api.KEY();
@@ -343,7 +402,7 @@ ${api.measures?`<div class="syn-card"><h3>${esc(api.mesTitle||'Mesures de la pre
     status('JSON exporté : contexte, contrôles et preuves du cas sélectionné, bilan, synthèse et sources.'+(dirty?' D’autres brouillons existent en mémoire : revenez à chacun pour l’exporter avant de quitter.':''));
    };
    $('expert-pdf').onclick=()=>makePdf('dossier');
-   $('expert-report').onclick=()=>download('Vella_Partners_Synthese_VP_Expert_'+api.sector+'.md',synText()+'\n\n---\n\n'+report(snapshot()),'text/markdown');
+   $('expert-report').onclick=downloadMarkdown;
    $('expert-import').onclick=()=>$('expert-file').click();
    $('expert-file').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{if(f.size>1000000)throw Error('Fichier trop volumineux (1 Mo au maximum)');let raw;try{raw=JSON.parse(await f.text())}catch(_){throw Error('Ce fichier n’est pas un dossier VP Expert (contenu illisible). Choisissez un fichier .json exporté depuis cette page')}const x=validate(raw);replace(()=>load(x))}catch(err){status('Import refusé : '+(err instanceof SyntaxError?'contenu illisible':err.message))}};
    const newCase=()=>replace(()=>{data=blank();drafts={};rexSaved={};clearNative();for(const k of ['ou','quand','freq','terme','vis','qui','etendue','combien','pourquoi','crit','showall'])delete api.S[k];api.S.br='sans';if(api.S.mes)api.S.mes={};delete api.S.pourquoi;delete api.S.crit;activeKey=api.KEY();api.render();fill();dirty=false;status('Nouveau dossier. Aucun constat ou résultat du précédent dossier n’est conservé dans cette enquête.')});
@@ -356,7 +415,8 @@ ${api.measures?`<div class="syn-card"><h3>${esc(api.mesTitle||'Mesures de la pre
    window.addEventListener('vp:enquete-render',enhance);
    window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
    const printChanges=[];
-   window.addEventListener('beforeprint',()=>{document.querySelectorAll('.expert-panel,.expert-proof').forEach(d=>{printChanges.push([d,d.open]);d.open=true});document.querySelectorAll('[data-expert-group],[data-expert-evidence]').forEach(el=>{const p=document.createElement('p');p.className='expert-saved';p.textContent=el.value||'Non renseigné';el.after(p)})});
+   document.addEventListener('input',e=>{const el=e.target;if(sample&&el.dataset.expertGroup)delete sample[el.dataset.expertGroup][el.dataset.expertField];if(sample&&el.dataset.expertEvidence)delete sample.evidence[el.dataset.expertEvidence];});
+   window.addEventListener('beforeprint',()=>{document.querySelectorAll('.expert-panel,.expert-proof').forEach(d=>{printChanges.push([d,d.open]);d.open=true});document.querySelectorAll('[data-expert-group],[data-expert-evidence]').forEach(el=>{const p=document.createElement('p');p.className='expert-saved';p.setAttribute('translate','no');p.textContent=el.value?(english()?reportValue(el.dataset.expertGroup||'evidence',el.dataset.expertField||el.dataset.expertEvidence,el.value):el.value):(english()?'Not provided':'Non renseigné');el.after(p)})});
    window.addEventListener('afterprint',()=>{printChanges.splice(0).forEach(([d,v])=>d.open=v);document.querySelectorAll('.expert-saved').forEach(e=>e.remove())});
    function example(){
     const f=window.VPDC_COMPLETE.case,d=blank();d.fictional=true;
@@ -365,6 +425,7 @@ ${api.measures?`<div class="syn-card"><h3>${esc(api.mesTitle||'Mesures de la pre
     const state={...defaults,def:'D02',br:'sans',mach:'canon',quand:'serie',freq:'chaque',terme:'moyen',ou:'od'},key='p|D02|canon#0';
     for(const [id,o]of Object.entries(f.observations))d.evidence[key+'::'+({ 'DC01-R01':'D02_M','DC01-R02':'D02_U','DC01-R03':'D02_T','DC01-R04':'D02_C'}[id]||id)]=[o.status,o.note,o.reference].filter(Boolean).join('\n');
     load({case:{...d,native:{state,key,conforming:{},nonconforming:{},history:[]}}});
+    sample=clone(data);
     // No native status is silently promoted from fictional narrative or imported observation.
     $('expert-context').open=true;status('Cas fictif prérempli dans le même parcours. Aucun contrôle marqué automatiquement conforme ; les données et autorisations sont inventées.');
    }
@@ -376,6 +437,7 @@ ${api.measures?`<div class="syn-card"><h3>${esc(api.mesTitle||'Mesures de la pre
     const state={...defaults,...f.state};
     for(const [id,o]of Object.entries(f.observations))d.evidence[f.key+'::'+id]=[o.status,o.note,o.reference].filter(Boolean).join('\n');
     load({case:{...d,native:{state,key:f.key,conforming:{},nonconforming:{},history:[]}}});
+    sample=clone(data);
     $('expert-context').open=true;status('Cas fictif prérempli dans le même parcours. Aucun contrôle marqué automatiquement conforme ; les données et autorisations sont inventées.');
    }
    if(api.sector==='DC')$('expert-example').onclick=()=>replace(example);

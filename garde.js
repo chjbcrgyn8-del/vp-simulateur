@@ -25,8 +25,17 @@
     }
   };
   function dur(s){ var m = Math.floor(s / 60), r = s % 60; return m ? (m + ' min' + (r ? ' ' + (r < 10 ? '0' : '') + r : '')) : (r + ' s'); }
+  const EN_SECONDS={'vp-offre-complete':99,'vp-scan':74,'vp-expert-plastique':102,'vp-expert-caoutchouc':101,'vp-predict-plastique':99,'vp-predict-caoutchouc':99};
+  function english(){return document.documentElement.lang==='en';}
+  function editionPath(path){return english()?path.replace(/^video\//,'video/en/'):path;}
+  function enFilmName(v){return window.vpEnglishText?window.vpEnglishText(v.t):v.t;}
   function filmBtn(v, cls){
     if (!v) return '';
+    if(english()){
+      var actual=EN_SECONDS[v.f.split('/').pop()];
+      var length=actual?' · '+Math.floor(actual/60)+':'+String(actual%60).padStart(2,'0'):'';
+      return '<button translate="no" type="button" class="'+cls+'" data-film="'+esc(v.f)+'" data-title="'+esc(enFilmName(v))+'" aria-label="Watch video: '+esc(enFilmName(v)+length)+'"><img src="'+esc(href(editionPath(v.f)+'.jpg'))+'" alt="" loading="lazy"><span class="play" aria-hidden="true"><i></i></span><span class="vl"><b>Watch video</b>'+esc(length)+'</span></button>';
+    }
     return '<button type="button" class="' + cls + '" data-film="' + esc(v.f) + '" data-title="' + esc(v.t) + '" aria-label="Voir le film : ' + esc(v.t) + ' (' + esc(dur(v.d)) + ')">' +
       '<img src="' + esc(href(v.f + '.jpg')) + '" alt="" loading="lazy"><span class="play" aria-hidden="true"><i></i></span>' +
       '<span class="vl"><b>' + (cls.indexOf('hero') >= 0 ? 'Voir le film' : 'Film') + '</b> · ' + esc(dur(v.d)) + '</span></button>';
@@ -123,11 +132,16 @@
   /* ---- Visionneuse (un seul lecteur ; rien n'est chargé avant le clic) ---- */
   var dlg = $('g-video'), vid = dlg ? dlg.querySelector('video') : null;
   function openFilm(base, title){
+    base=editionPath(base);
     if (!dlg || !vid) { location.href = href(base + '.mp4'); return; }
     dlg.querySelector('.gv-title').textContent = title || '';
     vid.poster = href(base + '.jpg');
+    vid.querySelectorAll('track').forEach(t=>t.remove());
+    if(english()){
+      var t=document.createElement('track');t.kind='captions';t.srclang='en';t.label='English';t.src=href(base+'.vtt');t.default=true;vid.appendChild(t);
+    }
     vid.src = href(base + '.mp4');
-    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+    if(!dlg.open){if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');}
     var p = vid.play(); if (p && p.catch) p.catch(function(){});
   }
   function closeFilm(){
@@ -146,6 +160,10 @@
     if (b) { e.preventDefault(); openFilm(b.getAttribute('data-film'), b.getAttribute('data-title')); }
   });
   var hero = $('g-hero'); if (hero) hero.innerHTML = filmBtn(FILMS.general, 'vid hero');
+  document.addEventListener('vp:language',function(){
+    if(hero)hero.innerHTML=filmBtn(FILMS.general,'vid hero');
+    if(current)$('g-cards').innerHTML=cardExpert(S[current],current)+card('predict',S[current],current);
+  });
 
   document.addEventListener('keydown', function(e){
     if (e.metaKey || e.ctrlKey || e.altKey) return;

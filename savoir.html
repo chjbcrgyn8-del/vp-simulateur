@@ -15,8 +15,8 @@
 <link rel="stylesheet" href="vp-pack-009fcf53.css?v=49dbd841">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <script src="secteur-choix.js?v=4"></script><link rel="preload" href="fonts/inter-normal-400-800-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="vp-language.css?v=1">
-<script defer src="vp-language.js?v=1"></script>
+<link rel="stylesheet" href="vp-language.css?v=1&amp;edition=2">
+<script defer src="vp-language.js?v=2"></script>
 </head>
 <body class="stp">
 <a class="skip" href="#main">Aller au contenu</a>
@@ -76,7 +76,7 @@ function render(){const S=sec==='c'?rub():plast(),q=document.getElementById('q')
 document.getElementById('q').oninput=render;document.querySelectorAll('[data-sec]').forEach(a=>a.onclick=e=>{e.preventDefault();sec=a.dataset.sec;try{history.replaceState(null,'',location.pathname+(sec==='c'?'?secteur=caoutchouc':'')+location.hash)}catch(_){};if(window.vpSector)vpSector(sec==='c');render();});render();})();
 </script>
 <script src="tips.js"></script>
-<script src="typo.js"></script>
+<script src="typo.js?edition=2"></script>
 <script src="anim.js?v=17"></script><script src="signature.js?v=2"></script>
 <script src="ux.js?v=20261029-ux"></script>
 <script src="vp-documentary-entry.js?v=20261124-premium"></script>

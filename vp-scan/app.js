@@ -38,8 +38,11 @@ const blank = () => ({
     reserves:'',relu:false,reluPar:''}
 });
 let S = blank(), dirty = false, lastExport = '';
+// Only the supplied example is translated. Client-entered or imported text stays verbatim.
+const sampleFields=new WeakMap();
+function rememberSample(obj){if(!obj||typeof obj!=='object')return;sampleFields.set(obj,{...obj});Object.values(obj).forEach(rememberSample);}
 const get = p => p.split('.').reduce((o,k) => o?.[k], S);
-function set(p, v){ const a = p.split('.'), k = a.pop(); let o = S; for (const x of a) o = o[x]; o[k] = v; dirty = true; saveBadge(); }
+function set(p, v){ const a = p.split('.'), k = a.pop(); let o = S; for (const x of a) o = o[x];if(sampleFields.has(o))delete sampleFields.get(o)[k]; o[k] = v; dirty = true; saveBadge(); }
 
 /* ---------- Composants ---------- */
 const input = (p, ph = '', type = 'text', unit = '') => { const h = `<input type="${type==='number'?'text':type}" data-k="${p}" value="${esc(get(p))}" placeholder="${esc(ph)}"${type==='number'?' inputmode="decimal" autocomplete="off"':''}>`; return unit ? `<span class="unit">${h}<em>${unit}</em></span>` : h; };
@@ -166,6 +169,7 @@ ${card('Entretiens', `<p class="small muted">Cochez les entretiens réalisés. L
 
 /* ---------- Étape 5 : Restitution ---------- */
 function reportHTML(){
+  if(document.documentElement.lang==='en')return englishReportHTML();
   const m = S.mission, t = totals(), rk = ranking(), dec = D.decisions.find(d => d[0] === S.rapport.decision), items = gridItems();
   const modeCount = MODES.map(([k,l]) => [l, S.presses.filter(p => p.mode === k).length]).filter(x => x[1]);
   const docCount = DOC.map(([k,l]) => [l, Object.values(S.donnees).filter(v => v === k).length]);
@@ -202,6 +206,38 @@ ${reserves.length || S.rapport.reserves ? `<h2>Réserves</h2><ul class="small">$
 <p class="disclaimer">Estimations de pertes initiales établies à partir des sources du site, pas des gains promis. Les montants restent à confirmer avec le site. Ce diagnostic ne remplace ni un audit réglementaire, ni un audit de sécurité machine ou de cybersécurité.${S.rapport.relu ? ' Restitution relue avec ' + esc(S.rapport.reluPar || 'le sponsor') + '.' : ''}</p>
 </article>`;
 }
+function englishReportHTML(){
+ const m=S.mission,t=totals(),rows=ranking(),items=gridItems(),rep=S.rapport;
+ const tr=v=>window.vpEnglishText?.(String(v??''))??String(v??''),h=v=>esc(tr(v));
+ const val=(obj,k,fallback='')=>obj[k]?esc(sampleFields.get(obj)?.[k]===obj[k]?tr(obj[k]):obj[k]):esc(fallback);
+ const cash=v=>ok(v)?'€'+Math.round(v).toLocaleString('en-GB'):'—';
+ const levels={'À chiffrer':'Not costed','À surveiller':'Monitor','Critique':'Critical','Secondaire':'Secondary'};
+ const doclabels={recu:'received',partiel:'partial',absent:'missing',na:'not applicable'},preuves={'Mesuré':'measured','Estimé':'estimated','Déclaratif':'self-reported'};
+ const conn={acc:'Connected · data accessible',verif:'Connected · access unverified',non:'Not connected','?':'Unknown'};
+ const proof=PREUVES.map(p=>[p,S.presses.filter(v=>v.preuve===p).length]).filter(([,n])=>n).map(([p,n])=>n+' '+(preuves[p]||p));
+ const missing=D.donnees.filter(([id])=>['absent','partiel'].includes(S.donnees[id])).map(([id,l])=>h(l)+' ('+doclabels[S.donnees[id]]+')');
+ const unknown=S.presses.flatMap((p,i)=>['rebutes','hArret','hReglage'].filter(k=>nsp(p,k)).map(k=>val(p,'nom','Press '+(i+1))+': '+({rebutes:'scrap',hArret:'downtime',hReglage:'setup hours'}[k])));
+ const reactive=items.map((g,i)=>[g,S.grille[i]]).filter(([,v])=>v.d===1);
+ const tracks=rep.pistes.filter(p=>p.titre.trim()),route=rep.route.filter(r=>r.action.trim()),res=checks().filter(c=>!c[1]).map(c=>c[2]);
+ const decision=D.decisions.find(d=>d[0]===rep.decision),empty='<p class="muted">Not yet completed.</p>';
+ return `<article class="report" id="report" lang="en" translate="no"><div class="rep-head"><div><div class="eyebrow">Vella Partners · VP Expert diagnostic report</div><h1>${val(m,'client','Client')} — ${val(m,'site','Site')}</h1><div class="small muted">${h(m.secteur)}${m.dates?' · Visit: '+val(m,'dates'):''}${m.periode?' · Period: '+val(m,'periode'):''}</div></div><div class="small muted" style="text-align:right">Consultant: ${val(m,'consultant','—')}<br>Sponsor: ${val(m,'sponsor','—')}<br>${new Date().toLocaleDateString('en-GB')}</div></div>
+ ${m.objective?`<p><b>Objective:</b> ${val(m,'objective')}</p>`:''}${m.perimetre?`<p class="small muted">Scope: ${val(m,'perimetre')}</p>`:''}
+ <h2>1. Quantified losses</h2><div class="kpis">${[['Estimated annual losses',t.annual],['Scrap',t.rebuts],['Downtime',t.arrets],['Setup and start-up',t.reglage]].map(([label,v])=>`<div><span>${label}</span><b>${cash(v)}</b></div>`).join('')}</div>
+ <p class="small muted" style="margin-top:8px">${t.nComplete}/${t.n} presses fully costed${proof.length?' · Evidence: '+proof.join(', '):''}. Costs: ${ok(num(m.coutH))?'€'+num(m.coutH)+'/hour':'—'}, ${ok(num(m.coutPiece))?'€'+num(m.coutPiece)+'/part':'—'} (${m.coutsValides?'validated':'to be validated'})${num(m.mois)<12&&ok(num(m.mois))?' · annualised from '+esc(m.mois)+' months':''}.</p>
+ ${unknown.length?`<p class="small"><b>Figures unavailable on site</b> (excluded; partial total): ${unknown.join('; ')}.</p>`:''}
+ <h2>2. Critical presses</h2>${rows.length?`<div class="tbl"><table><thead><tr><th>Press</th><th>Connectivity</th><th class="num">Losses/year</th><th>Share</th><th>Priority</th><th>Proposed next step</th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${val(r.p,'nom','Press '+(r.i+1))}</b>${r.p.defaut?`<br><span class="small muted">${val(r.p,'defaut')}</span>`:''}</td><td class="small">${conn[r.p.mode]||'Unknown'}</td><td class="num">${cash(r.c.annualKnown)}${r.c.complete?'':'<br><span class="small muted">partial</span>'}</td><td><div class="bar"><i style="width:${Math.round(r.share*100)}%"></i></div>${Math.round(r.share*100)}%</td><td><span class="tag ${r.level==='Critique'?'bad':r.level==='À surveiller'?'warn':''}">${levels[r.level]}</span></td><td class="small">${h(advice(r.p,r.level))}</td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">No presses entered.</p>'}
+ <h2>3. Data and connectivity</h2><p>${MODES.map(([k])=>[k,S.presses.filter(p=>p.mode===k).length]).filter(([,n])=>n).map(([k,n])=>`<span class="tag">${n} · ${conn[k]}</span>`).join(' ')||'—'}</p>
+ <p class="small">Documents: ${DOC.map(([k])=>Object.values(S.donnees).filter(v=>v===k).length+' '+doclabels[k]).join(' · ')}.${missing.length?' To verify: '+missing.join(', ')+'.':''}</p>
+ <h2>4. Process maturity</h2><div class="tbl"><table><tbody>${D.axes.map(([k,l])=>{const v=S.axes[k];return `<tr><td style="width:40%">${h(l)}</td><td><div class="bar y"><i style="width:${v===''?0:Math.round(Number(v)/3*100)}%"></i></div></td><td class="num small">${v===''?'not assessed':esc(v)+'/3 · '+h(D.niveaux[Number(v)])}</td></tr>`}).join('')}</tbody></table></div>
+ <p class="small" style="margin-top:10px">Field checklist: ${D.blocs.map((b,bi)=>{const group=items.map((g,i)=>[g,S.grille[i]]).filter(([g])=>g[0]===bi);return `<b>${h(b)}</b> ${group.filter(([,v])=>v.d===3).length} preventive, ${group.filter(([,v])=>v.d===1).length} reactive out of ${group.length}`;}).join(' · ')}.</p>
+ ${reactive.length?`<p class="small"><b>Reactive practices:</b> ${reactive.map(([g,v])=>h(g[1])+(v.note?' — '+val(v,'note'):'')).join('; ')}.</p>`:''}
+ <h2>5. Priority actions</h2>${tracks.length?`<ol>${tracks.map(p=>`<li><b>${val(p,'titre')}</b>${p.action?' — '+val(p,'action'):''}</li>`).join('')}</ol>`:empty}
+ <h2>6. Recommendation</h2><div class="decision-box"><b>${decision?h(decision[1]):'Decision pending'}</b>${rep.justification?`<p>${val(rep,'justification')}</p>`:''}</div>
+ <h2>7. Roadmap</h2>${route.length?`<div class="tbl"><table><thead><tr><th>Time frame</th><th>Action</th><th>Owner</th><th>Due date</th></tr></thead><tbody>${route.map(r=>`<tr><td>${h(r.horizon)}</td><td>${val(r,'action')}</td><td>${val(r,'qui')}</td><td>${val(r,'quand')}</td></tr>`).join('')}</tbody></table></div>`:empty}
+ ${res.length||rep.reserves?`<h2>Reservations</h2><ul class="small">${res.map(r=>`<li>Outstanding: ${h(r)}</li>`).join('')}${rep.reserves?`<li>${val(rep,'reserves')}</li>`:''}</ul>`:''}
+ <p class="disclaimer">Baseline loss estimates use the site's sources and do not promise gains. The site must confirm the amounts. This diagnostic does not replace a regulatory, machine safety or cybersecurity audit.${rep.relu?' Report reviewed with '+val(rep,'reluPar','the sponsor')+'.':''}</p></article>`;
+}
+addEventListener('vp:languagechange',()=>{const e=$('[data-live="report"]');if(e)e.innerHTML=reportHTML();});
 function checksHTML(){ return `<ul class="checks">${checks().map(([k,v,l]) => `<li class="${v?'ok':'ko'}"><span class="ic">${v?'✓':'!'}</span><span>${l}</span>${v?'':`<a href="#${k}">Compléter</a>`}</li>`).join('')}</ul>`; }
 V.restitution = () => `${head(5,'Restitution','Choisissez la suite, trois pistes au plus et la feuille de route. Le rapport se construit à partir des étapes précédentes.')}
 <div class="no-print">
@@ -246,6 +282,7 @@ function example(){
   Object.assign(S.rapport, {decision:'fiabiliser', justification:'Compléter les relevés de P03 et obtenir un export autorisé de P07 avant d’engager VP Expert sur tout le parc.'});
   S.rapport.pistes[0] = {titre:'Arrêts thermorégulation P12', action:'Mesurer débits et écarts entrée/sortie, plan préventif thermorégulateurs'};
   S.rapport.route[0] = {...S.rapport.route[0], action:'Relevés arrêts P03 sur 4 semaines', qui:'Référent production', quand:'Fin février'};
+  rememberSample(S);
   dirty = false; lastExport = ''; render();
   toast('Exemple fictif chargé. Les chiffres ne correspondent à aucun client.');
 }
@@ -278,7 +315,7 @@ function fromV3(o){
 /* ---------- Divers ---------- */
 let tt; function toast(m){ const e = $('#toast'); e.textContent = m; e.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => e.classList.remove('show'), 3200); }
 function ask(msg, info = false, title = 'Confirmer'){ return new Promise(res => { const d = $('#ask'); $('#ask-title').textContent = info ? 'Information' : title; $('#ask-msg').textContent = msg; $('#ask-cancel').hidden = info; $('#ask-ok').textContent = info ? 'Compris' : 'Confirmer'; d.onclose = () => res(d.returnValue === 'ok'); d.returnValue = ''; d.showModal(); }); }
-function standaloneReport(){ const css = [...document.styleSheets].map(s => { try { return [...s.cssRules].map(r => r.cssText).join('\n'); } catch { return ''; } }).join('\n'); return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rapport de diagnostic VP Expert · ${esc(S.mission.client)}</title><style>${css}body{background:#fff}main{max-width:960px;margin:0 auto;padding:32px 20px}</style></head><body><main>${reportHTML()}</main></body></html>`; }
+function standaloneReport(){ const css = [...document.styleSheets].map(s => { try { return [...s.cssRules].map(r => r.cssText).join('\n'); } catch { return ''; } }).join('\n');const en=document.documentElement.lang==='en';return `<!doctype html><html lang="${en?'en':'fr'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${en?'VP Expert diagnostic report':'Rapport de diagnostic VP Expert'} · ${esc(S.mission.client)}</title><style>${css}body{background:#fff}main{max-width:960px;margin:0 auto;padding:32px 20px}</style></head><body><main>${reportHTML()}</main></body></html>`; }
 
 /* ---------- Événements ---------- */
 document.addEventListener('input', e => { const el = e.target; if (!el.dataset.k || el.type === 'checkbox') return; set(el.dataset.k, el.value); if (el.dataset.k.endsWith('.mois')) { const rk = el.dataset.k.replace(/mois$/,'represent'); const need = String(el.value).trim() !== '' && num(el.value) < 12; if (need !== !!$(`[data-k="${rk}"]`)) { clearTimeout(window._rr); window._rr = setTimeout(() => { const id = el.dataset.k; render(true); const n = $(`[data-k="${id}"]`); if (n) { n.focus(); n.setSelectionRange?.(n.value.length, n.value.length); } }, 500); } } live(); });
@@ -307,7 +344,7 @@ document.addEventListener('click', async e => {
   if (a === 'reset' && (!dirty || await ask('Effacer la mission en cours ? Exportez-la d’abord si nécessaire.'))) { S = blank(); dirty = false; lastExport = ''; location.hash = '#mission'; render(); }
   if (a === 'exemple' && (!dirty || await ask('Remplacer la saisie par l’exemple fictif ? Exportez-la d’abord si nécessaire.'))) { if (location.hash !== '#mission') location.hash = '#mission'; example(); }
   if (a === 'print') { try { window.print(); } catch { toast('Impression indisponible ici : utilisez « Télécharger le rapport ».'); } }
-  if (a === 'dlReport') { download('VP-Scan-rapport-' + slug() + '.html', standaloneReport(), 'text/html'); toast('Rapport téléchargé. Ouvrez-le puis imprimez-le en PDF si besoin.'); }
+  if (a === 'dlReport') { download('VP-Scan-'+(document.documentElement.lang==='en'?'report-':'rapport-') + slug() + '.html', standaloneReport(), 'text/html'); toast('Rapport téléchargé. Ouvrez-le puis imprimez-le en PDF si besoin.'); }
 });
 $('#file').addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return;
   try { if (f.size > 10e6) throw Error('Fichier trop volumineux.'); const j = JSON.parse(await f.text()); if (j.app !== 'vp-scan' || ![1,2,3,4].includes(j.version)) throw Error('Ce fichier n’est pas une mission de diagnostic terrain.');

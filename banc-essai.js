@@ -402,6 +402,22 @@ function renderQuality(){
 function exportCSV(){
  const ds=S.ds,R=S.res,c=ds.cols[S.v];if(!ds.chrono)return;
  const T=S.mode==='derive'&&R.test?R.test:R.raw;
+ if(document.documentElement.lang==='en'){
+  const tr=v=>window.vpEnglishText?.(v)??v,imp=ds.id==='import';
+  const cell=v=>{const text=String(v??'');return /[;"\r\n]/.test(text)?'"'+text.replace(/"/g,'""')+'"':text;};
+  const lines=['row;segment;actual_value;tested_value;origin;reference_mean;reference_sigma;smoothed_trend;signal;rules'];
+  const segNames=new Map(R.segs.map(s=>[s,s.label==='Série complète'?'Full series':imp?s.label:tr(s.label)]));
+  let k=0;
+  for(let i=0;i<R.x.length;i++){
+   while(k+1<R.segs.length&&i>=R.segs[k].b)k++;
+   const rule=T.al[i],rules=[rule&1?'outside ±3 σ':'',rule&2?'7 on the same side':'',rule&4?'smoothed trend':''].filter(Boolean).join(', ');
+   lines.push([i+1,segNames.get(R.segs[k]),R.x[i],R.y?R.y[i]:R.x[i],S.mode==='derive'&&R.y&&R.y[i]!==R.x[i]?'modified by simulator':'observed',isFinite(T.mu[i])?T.mu[i]:'',isFinite(T.sg[i])?T.sg[i]:'',isFinite(T.ew[i])?T.ew[i].toFixed(4):'',rule?1:0,rules].map(cell).join(';'));
+  }
+  const title=imp?ds.titre.replace(/^Mon fichier · /,'My file · '):tr(ds.titre),variable=imp?c.l:tr(c.l);
+  const mode=S.mode==='derive'?`injected drift (${S.drift.kind==='palier'?'step':'ramp'}, ${S.drift.amp} σ, ${S.drift.dir>0?'up':'down'}, starting at row ${S.drift.start+1})`:'raw replay, unmodified';
+  const meta=`# Vella Partners test bench · ${title} · variable: ${variable} · mode: ${mode} · reference: ${S.refN} points · segmentation: ${{aucune:'none',colonne:'column',consigne:'setpoint'}[S.segMode]||S.segMode} · ${new Date().toISOString()}`;
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+meta+'\n'+lines.join('\n')],{type:'text/csv;charset=utf-8'}));a.download=`vp-test-bench-${ds.id}-${S.mode==='derive'?'drift':'raw'}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);return;
+ }
  const lines=[['ligne','segment','valeur_reelle','valeur_testee','origine','reference_moyenne','reference_sigma','tendance_lissee','signal','regles'].join(';')];
  for(let i=0;i<R.x.length;i++){const s=segOf(R.segs,i),mod=S.mode==='derive'&&R.y&&R.y[i]!==R.x[i];
   lines.push([i+1,s?s.label:'',R.x[i],R.y?R.y[i]:R.x[i],mod?'modifiée par le simulateur':'réelle',isFinite(T.mu[i])?T.mu[i]:'',isFinite(T.sg[i])?T.sg[i]:'',isFinite(T.ew[i])?T.ew[i].toFixed(4):'',T.al[i]?1:0,rulesTxt(T.al[i])].map(v=>String(v).replace('.',',')).join(';'))}

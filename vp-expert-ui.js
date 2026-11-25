@@ -114,7 +114,8 @@
   ishi.hidden=$('s4').hidden;
   $('vp-defect-total').textContent=(api.choices.def?.length||'')+' défauts référencés';
   annotateTables();
-  const fictional=$('expert-toolbar').querySelector('strong').textContent.includes('FICTIF');
+  const badge=$('expert-toolbar').querySelector('strong');
+  const fictional=(window.vpOriginalLabel?window.vpOriginalLabel(badge):badge.textContent).includes('FICTIF');
   sidebar.classList.toggle('vp-fictional',fictional);
   sidebar.querySelector('.vp-local').textContent=fictional?'FICTIF':'LOCAL';
   $('s2').querySelector('.vp-context-intro').textContent=fictional?'Cas fictif prérempli : toutes les observations, références et conclusions sont inventées.':'Renseignez ce que vous savez. Une réponse inconnue reste vide : elle ne sera pas interprétée comme un fait.';

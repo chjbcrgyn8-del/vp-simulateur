@@ -97,7 +97,9 @@ const uriEsc=u=>encodeURI(u).replace(/[()\\]/g,m=>'\\'+m);
 
 function build(source,opt){
  opt=opt||{};
- const sectorName=opt.secteur||'',kind=opt.type==='synthese'?'Synthèse':'Dossier';
+ const en=document.documentElement.lang==='en',locale=en?'en-GB':'fr-FR';
+ const sectorName=opt.secteur||'',kind=opt.type==='synthese'?(en?'Summary':'Synthèse'):(en?'Case file':'Dossier');
+ const heading=en?'VP Expert '+kind.toLowerCase():kind+' VP Expert';
  const pages=[];let cur=null,y=0;
  const newPage=()=>{cur={ops:[],links:[]};pages.push(cur);y=MT};
  const ensure=h=>{if(!cur||y+h>PH-MB)newPage()};
@@ -146,18 +148,18 @@ function build(source,opt){
 
  /* En-tête et pied de page, une fois le nombre de pages connu. */
  const N=pages.length;
- const dateTxt=new Date().toLocaleDateString('fr-FR');
+ const dateTxt=new Date().toLocaleDateString(locale);
  pages.forEach((pg,i)=>{
-  const top=PH-44,hdr=kind+' VP Expert'+(sectorName?' · '+sectorName:'');
+  const top=PH-44,hdr=heading+(sectorName?' · '+sectorName:'');
   const right=norm(hdr);
   pg.ops.push('BT '+rg(NAVY)+' rg /F2 8.5 Tf 1.6 Tc 1 0 0 1 '+f2(ML)+' '+f2(top)+' Tm '+pdfStr('VELLA PARTNERS')+' Tj 0 Tc ET');
   pg.ops.push('BT '+rg(GREY)+' rg /F1 8.5 Tf 1 0 0 1 '+f2(PW-MR-measure(right,8.5,false))+' '+f2(top)+' Tm '+pdfStr(right)+' Tj ET');
   pg.ops.push(rg(COPPER)+' RG 1 w '+f2(ML)+' '+f2(top-9)+' m '+f2(PW-MR)+' '+f2(top-9)+' l S');
   const fy=MB-24;
   pg.ops.push(rg([.82,.82,.84])+' RG .5 w '+f2(ML)+' '+f2(fy+14)+' m '+f2(PW-MR)+' '+f2(fy+14)+' l S');
-  const note=norm('Démonstrateur public. Document déclaratif : il ne valide aucune cause ni autorisation d’essai.');
+  const note=norm(en?'Public demo. Self-reported information does not establish a cause or authorise a trial.':'Démonstrateur public. Document déclaratif : il ne valide aucune cause ni autorisation d’essai.');
   pg.ops.push('BT '+rg(GREY)+' rg /F1 7.5 Tf 1 0 0 1 '+f2(ML)+' '+f2(fy)+' Tm '+pdfStr(note)+' Tj ET');
-  const pn=norm('Généré le '+dateTxt+' · page '+(i+1)+' / '+N);
+  const pn=norm((en?'Generated on ':'Généré le ')+dateTxt+' · page '+(i+1)+' / '+N);
   pg.ops.push('BT '+rg(GREY)+' rg /F1 7.5 Tf 1 0 0 1 '+f2(PW-MR-measure(pn,7.5,false))+' '+f2(fy)+' Tm '+pdfStr(pn)+' Tj ET');
  });
 
@@ -165,13 +167,13 @@ function build(source,opt){
  const objs=[];
  const set=(id,body)=>{objs[id]=body};
  let next=6;const kids=[];
- set(1,'<< /Type /Catalog /Pages 2 0 R /Lang (fr-FR) /ViewerPreferences << /DisplayDocTitle true >> >>');
+ set(1,'<< /Type /Catalog /Pages 2 0 R /Lang ('+locale+') /ViewerPreferences << /DisplayDocTitle true >> >>');
  set(3,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>');
  set(4,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>');
  const now=new Date(),p2=n=>String(n).padStart(2,'0');
  const cd='D:'+now.getUTCFullYear()+p2(now.getUTCMonth()+1)+p2(now.getUTCDate())+p2(now.getUTCHours())+p2(now.getUTCMinutes())+p2(now.getUTCSeconds())+'Z';
- const title=opt.titre||(kind+' VP Expert'+(sectorName?' · '+sectorName:''));
- set(5,'<< /Title '+hex16(title)+' /Author '+hex16('Vella Partners')+' /Subject '+hex16('VP Expert, démonstrateur public : document déclaratif')+' /Creator '+hex16('VP Expert')+' /Producer '+hex16('Vella Partners, générateur PDF intégré')+' /CreationDate ('+cd+') >>');
+ const title=opt.titre||(heading+(sectorName?' · '+sectorName:''));
+ set(5,'<< /Title '+hex16(title)+' /Author '+hex16('Vella Partners')+' /Subject '+hex16(en?'VP Expert public demo: self-reported case information':'VP Expert, démonstrateur public : document déclaratif')+' /Creator '+hex16('VP Expert')+' /Producer '+hex16(en?'Vella Partners PDF generator':'Vella Partners, générateur PDF intégré')+' /CreationDate ('+cd+') >>');
  pages.forEach(pg=>{
   const cid=next++,annots=pg.links.map(()=>next++),pid=next++;
   const stream=pg.ops.join('\n');

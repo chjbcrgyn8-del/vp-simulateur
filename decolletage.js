@@ -25,6 +25,9 @@ const fields={
  ]
 };
 const statuses=['Non renseigné','À recueillir','Constat déclaré','Contre-indice déclaré','Non applicable déclaré'];
+const demoFields=new WeakMap();
+function rememberDemo(o){if(!o||typeof o!=='object')return;demoFields.set(o,{...o});Object.values(o).forEach(rememberDemo);}
+function shown(o,k){const v=o?.[k];return document.documentElement.lang==='en'&&v&&demoFields.get(o)?.[k]===v?(window.vpEnglishText?.(v)??v):v;}
 const rules=id=>D.rules.filter(r=>r.id.startsWith(id+'-'));
 const blank=id=>({family:id,fictional:false,context:Object.fromEntries(fields.context.map(f=>[f[0],''])),trial:{target:'',...Object.fromEntries(fields.trial.map(f=>[f[0],'']))},result:Object.fromEntries(fields.result.map(f=>[f[0],f[0]==='assessment'?'Non déterminée':''])),observations:Object.fromEntries(rules(id).map(r=>[r.id,{status:statuses[0],note:'',reference:''}]))});
 const cases=Object.fromEntries(D.families.map(f=>[f.id,blank(f.id)]));
@@ -68,16 +71,28 @@ function updateSummary(){
 document.addEventListener('input',e=>{
  const t=e.target;if(t.dataset.group){current()[t.dataset.group][t.dataset.key]=t.value;dirty=true;updateSummary()}
  if(t.dataset.observation){current().observations[t.dataset.rule][t.dataset.observation]=t.value;dirty=true;updateSummary()}
+ const o=t.dataset.group?current()[t.dataset.group]:t.dataset.observation?current().observations[t.dataset.rule]:null;if(o&&demoFields.has(o))delete demoFields.get(o)[t.dataset.key||t.dataset.observation];
 });
 $('#dc-family').addEventListener('change',e=>{selected=e.target.value;render();$('#dc-feedback').textContent='Dossier changé ; les autres dossiers restent en mémoire jusqu’au rechargement.'});
 $('#dc-target').addEventListener('change',e=>{current().trial.target=e.target.value;dirty=true;updateSummary()});
 function download(name,text,type){const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);$('#dc-feedback').textContent='Export du seul dossier '+selected+' préparé. Les autres dossiers ne sont pas sauvegardés dans ce fichier.'}
 function md(){
  const c=current(),rs=rules(selected),ss=D.sources.filter(s=>rs.some(r=>r.sources.includes(s.id)));
+ if(document.documentElement.lang==='en'){
+  const tr=v=>window.vpEnglishText?.(String(v??''))??String(v??''),L=[`# Vella Partners | ${selected}: ${tr(family().title)}`,'',`Version ${D.version}. Development case file.`];
+  if(c.fictional)L.push('','FICTIONAL CASE: invented data, not industrial evidence.');
+  L.push('','No action approved, authorisation verified or cause established by the application. Self-reported entries; scientific references do not validate this case. Export limited to the selected case.');
+  const section=(g,h)=>{L.push('','## '+h);fields[g].forEach(([k,l,t])=>L.push('','### '+tr(l),'',c[g][k]?esc(t==='select'?tr(c[g][k]):shown(c[g],k)):'Not provided.'));};
+  section('context','Reported context');L.push('','## Checks and observations');
+  rs.forEach(r=>{const o=c.observations[r.id];L.push('',`### ${r.id} | ${tr(r.title)}`,'','Documentary status: '+(r.blocked?'RESERVED; insufficient specific evidence.':'unapproved candidate.'),'',tr(r.hypothesis),'','Check requiring authorisation: '+tr(r.check),'','Follow-up to propose: '+tr(r.proposal),'','Limits: '+tr(r.caution),'','Expected evidence: '+tr(r.proof),'','Basis: '+r.sources.map(id=>{const s=D.sources.find(v=>v.id===id);return `[${s.title}](${s.url})`}).join('; '),'','Collection: '+tr(o.status)+'. '+(o.note.trim()&&o.reference.trim()?'Statement supplied, not verified.':'Statement missing or incomplete.'),'','Observation: '+(esc(shown(o,'note'))||'Not provided.'),'','Reported reference, author and date: '+(esc(shown(o,'reference'))||'Not provided.'));});
+  L.push('','Selected investigation track: '+(c.trial.target||'None'));section('trial','Proposed trial, not authorised by VP');L.push('','Proposed criterion: '+tr(family().outcome));section('result','Reported result, not validated');
+  L.push('','Cause not established by the application. No industrial resolution validated.','','## Documentary register and limitations','','Consulted on 29 October 2026. This subset does not validate all 178 entries in the candidate reference catalogue.');
+  ss.forEach(s=>L.push('',`### ${s.id} | ${s.title}`,'',tr(s.type)+'. '+tr(s.scope),'','Limit: '+tr(s.limit),'',`[Public document](${s.url})`));return L.join('\n')+'\n';
+ }
  const group=g=>fields[g].map(([k,l])=>`### ${l}\n\n${esc(c[g][k])||'Non renseigné.'}\n`).join('\n');
  return `# Vella Partners | ${selected} : ${family().title}\n\nVersion ${D.version}. Export documentaire DEV. ${c.fictional?'CAS FICTIF : données inventées, aucune preuve industrielle.':''}\n\nAucune action approuvée, aucune autorisation vérifiée, aucune cause démontrée par l’application. Saisies déclaratives ; les liens scientifiques ne valident pas ce cas. Export limité au dossier sélectionné.\n\n## Contexte déclaré\n\n${group('context')}\n## Contrôles et observations\n\n${rs.map(r=>{let o=c.observations[r.id];return `### ${r.id} | ${r.title}\n\nStatut documentaire : ${r.blocked?'RÉSERVÉE, preuve spécifique insuffisante':'candidate non approuvée'}.\n\n${r.hypothesis}\n\nContrôle à faire autoriser : ${r.check}\n\nSuite à soumettre : ${r.proposal}\n\nLimites : ${r.caution}\n\nÉléments attendus : ${r.proof}\n\nFondements : ${r.sources.map(id=>{const s=D.sources.find(s=>s.id===id);return `[${s.title}](${s.url})`}).join(' ; ')}.\n\nCollecte : ${o.status}. Déclaration ${o.note.trim()&&o.reference.trim()?'renseignée, non vérifiée':'incomplète ou non renseignée'}.\n\nConstat : ${esc(o.note)||'Non renseigné.'}\n\nRéférence, auteur et date déclarés : ${esc(o.reference)||'Non renseignés.'}\n`}).join('\n')}\n## Essai proposé, non autorisé par VP\n\nPiste : ${c.trial.target||'Aucune'}.\n\n${group('trial')}\n## Résultat déclaré, non validé\n\nCritère proposé : ${family().outcome}\n\n${group('result')}\nCause non déterminée par l’application. Aucune résolution industrielle validée.\n\n## Registre documentaire et limites\n\nConsultation le 29 octobre 2026. Ce sous-ensemble ne valide pas les 178 notices du référentiel candidat.\n\n${ss.map(s=>`### ${s.id} | ${s.title}\n\n${s.type}. ${s.scope}\n\nLimite : ${s.limit}\n\n[Document public](${s.url})\n`).join('\n')}`;
 }
-$('#dc-export-md').onclick=()=>download(`VP_${selected}_Dossier_DEV.md`,md(),'text/markdown;charset=utf-8');
+$('#dc-export-md').onclick=()=>download(`VP_${selected}_${document.documentElement.lang==='en'?'Case_File':'Dossier'}_DEV.md`,md(),'text/markdown;charset=utf-8');
 $('#dc-export-json').onclick=()=>download(`VP_${selected}_Dossier_DEV.json`,JSON.stringify({schema:'vp-dc-dossier',version:1,documentaryVersion:D.version,case:current()},null,2),'application/json');
 const exact=(o,keys)=>o&&typeof o==='object'&&!Array.isArray(o)&&Object.keys(o).length===keys.length&&keys.every(k=>Object.hasOwn(o,k));
 function validate(raw){
@@ -110,12 +125,12 @@ $('#dc-example').onclick=async()=>{
  Object.assign(c.observations['DC01-R02'],{status:'Constat déclaré',note:'Trois valeurs croissantes inventées. Cette pente ne suffit pas à démontrer une usure.',reference:'Jeu fictif F01, auteur : démonstrateur, 29/10/2026'});
  Object.assign(c.observations['DC01-R03'],{status:'À recueillir',note:'Collecter régime thermique et température pièce pour départager thermique et outil.',reference:'Scénario fictif, pas de relevé réel'});
  c.trial.target='DC01-R01';c.trial.objective='Établir d’abord si les mesures sont comparables avant de préparer une modification de réglage.';
- cases.DC01=c;selected='DC01';dirty=true;render();$('#dc-feedback').textContent='Cas fictif chargé : incertitude, thermique et état d’arête restent à instruire. Aucun offset proposé.';
+ rememberDemo(c);cases.DC01=c;selected='DC01';dirty=true;render();$('#dc-feedback').textContent='Cas fictif chargé : incertitude, thermique et état d’arête restent à instruire. Aucun offset proposé.';
 };
-function loadComplete(){cases.DC01=structuredClone(COMPLETE.case);selected='DC01';dirty=true;render();$('#dc-feedback').textContent='Cas complet fictif chargé : observations, essai, résultats et suivi inventés. Aucune action réelle ni cause validée.'}
+function loadComplete(){cases.DC01=structuredClone(COMPLETE.case);rememberDemo(cases.DC01);selected='DC01';dirty=true;render();$('#dc-feedback').textContent='Cas complet fictif chargé : observations, essai, résultats et suivi inventés. Aucune action réelle ni cause validée.'}
 $('#dc-complete-case').onclick=async()=>{if(await ask('Remplacer uniquement DC01 par le cas fictif complet usure / thermique ? Les autres dossiers restent intacts.')){loadComplete();$('#dc-case-story').scrollIntoView({behavior:'smooth',block:'start'})}};
 let detailsBeforePrint=[],printActive=false;
-window.addEventListener('beforeprint',()=>{if(printActive)return;printActive=true;detailsBeforePrint=[...document.querySelectorAll('details')].map(d=>[d,d.open]);detailsBeforePrint.forEach(([d])=>d.open=true);document.querySelectorAll('input:not([type=file]),textarea,select').forEach(t=>{const s=document.createElement('div');s.className='print-value';s.textContent=t.tagName==='SELECT'?t.selectedOptions[0]?.textContent:t.value;t.after(s)})});
+window.addEventListener('beforeprint',()=>{if(printActive)return;printActive=true;detailsBeforePrint=[...document.querySelectorAll('details')].map(d=>[d,d.open]);detailsBeforePrint.forEach(([d])=>d.open=true);document.querySelectorAll('input:not([type=file]),textarea,select').forEach(t=>{const s=document.createElement('div');s.className='print-value';s.setAttribute('translate','no');s.textContent=t.tagName==='SELECT'?t.selectedOptions[0]?.textContent:t.value;t.after(s)})});
 window.addEventListener('afterprint',()=>{document.querySelectorAll('.print-value').forEach(s=>s.remove());detailsBeforePrint.forEach(([d,open])=>d.open=open);printActive=false});
 $('#dc-print').onclick=()=>window.print();
 window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});

@@ -6,3 +6,7 @@
 .vp-langbar svg{width:22px;height:15px;overflow:hidden;border-radius:2px;box-shadow:0 0 0 1px #ffffff36}
 .vp-langbar [role=status]{margin-right:auto}
 @media print{.vp-langbar{display:none!important}}
+@media print{html[lang=en] .vp-doc-entry{display:none!important}}
+html[lang=en] .scc.on::after{content:"Shown above"}
+html[lang=en] body.revue .emain::before{content:"Review mode: changes in version 9.5 are shown in blue"}
+html[lang=en] body.revue.rc .emain::before{content:"Review mode: the investigation format shared with the plastics simulator is shown in blue"}

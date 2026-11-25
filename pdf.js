@@ -10,12 +10,21 @@ window.VellaPDF=async function(ctx){
  await load();
  const {jsPDF}=window.jspdf;const d=new jsPDF({unit:'mm',format:'a4',compress:true});
  const W=210,M=16,CW=W-2*M;let y=0;
- const {r,s,G,eur,num,SL,RUB,CORE,relK,groups,scenarios,factors}=ctx;
+ const {r,s,G,SL,RUB,CORE,relK,groups,scenarios,factors}=ctx;
+ const en=document.documentElement.lang==='en',locale=en?'en-GB':'fr-FR';
+ const eur=en?v=>v==null?'—':'€'+Math.round(v).toLocaleString(locale):ctx.eur;
+ const num=en?(v,dp=0)=>Number(v).toLocaleString(locale,{minimumFractionDigits:dp,maximumFractionDigits:dp}):ctx.num;
+ const titles={'Votre estimation de gains':'Your estimated savings','Hypothèses, coûts et points de vigilance':'Assumptions, costs and caveats','D’où vient le gain':'Sources of savings','Du plus sûr au plus dépendant de vos ventes':'From direct cost savings to sales-dependent gains','Économies évitables':'Avoidable costs','Temps régleur libéré':'Technician time freed up','Recherche de cause évitée, à réaffecter':'Time freed from troubleshooting for other work','Capacité récupérée et vendue':'Recovered capacity sold','Trois scénarios, mêmes données':'Three scenarios, same inputs','Seule change la part des objectifs d’amélioration atteinte':'Only the share of improvement targets achieved changes','Trésorerie cumulée sur 3 ans':'Cumulative cash flow over three years','Gain brut ÷ abonnement':'Gross savings / fee','Gain net annuel':'Annual net savings','Délai de retour':'Payback period','Scénario':'Scenario','Votre parc et vos pertes':'Equipment and losses','Valeur économique':'Economic value','Objectifs d’amélioration':'Improvement targets','Coûts et calendrier':'Costs and timing','Gain net annuel, en année pleine, après abonnement':'Annual net savings after subscription fees','Gain net par presse et par an':'Annual net savings per press','Délai de retour, démarrage compris':'Payback, including start-up','Gain brut ÷ abonnement, seuil d’engagement 2 ×':'Gross savings / fee; target: 2×','Pertes analysées':'Loss breakdown','Points de vigilance':'Caveats','Aucun point particulier.':'No specific caveats.','Estimation non contractuelle, calculée à partir de vos réponses. Les valeurs non saisies sont des valeurs types, à remplacer par vos relevés.':'Non-binding estimate based on your answers. Replace default assumptions with site measurements.','Prochaine étape : valider ces chiffres avec vos données réelles':'Next step: verify the figures against your site data','En 30 minutes, nous remplaçons les hypothèses par les relevés de votre atelier. Puis un pilote de 3 mois mesure le reste.':'In a 30-minute review, we replace assumptions with workshop figures. A three-month pilot measures the rest.','Valeur saisie par vous. Les autres sont des valeurs types ou des hypothèses de méthode Vella Partners, mesurées pendant le pilote.':'Value entered by you. Other values are defaults or Vella Partners assumptions to verify during the pilot.'};
+ Object.assign(titles,{'Presses':'Presses','Heures requises par presse':'Required hours per press','Changements de moule':'Mould changes','Changements de série':'Production changeovers','Durée d’un changement':'Changeover duration','Maintenance préventive':'Preventive maintenance','Aléas techniques · organisationnels · process':'Technical, organisational and process losses','Performance':'Performance','Rebuts en pièces':'Scrap rate by part count','Vulcanisation · manutention':'Curing and handling','Lots de mélange non conformes':'Nonconforming compound batches','Ébavurage':'Deflashing','Coût annuel des rebuts':'Annual scrap cost','Part évitable par le réglage':'Share avoidable through setup','Chiffre d’affaires par heure de presse':'Revenue per press hour','Marge sur coûts variables':'Contribution margin','Marge par heure de presse':'Contribution per press hour','Part de la capacité gagnée réellement vendue':'Share of recovered capacity sold','Recherche de cause · coût régleur':'Troubleshooting time and technician rate','Durée de changement visée':'Target changeover duration','Réduction des aléas techniques · organisationnels · process':'Target reduction in technical, organisational and process losses','Performance visée':'Target performance','Réduction du coût évitable des rebuts':'Reduction in avoidable scrap cost','Temps de recherche de cause évité':'Troubleshooting time avoided','Vulcanisation visée':'Target curing time','Réduction lots de mélange · ébavurage':'Reduction: compound batches and deflashing','Part adressable par VP Expert':'Share that VP Expert can address','Abonnement VP Expert':'VP Expert annual subscription','Pilote VP Expert (mise en place)':'VP Expert pilot setup','Temps interne au démarrage':'Internal start-up cost','Premiers gains et début de l’abonnement':'First savings and subscription start','Montée en charge':'Ramp-up period','VP Predict · rebuts restants évités':'VP Predict: remaining scrap avoided','VP Predict · énergie':'VP Predict: energy','VP Predict · aléas restants traités':'VP Predict: remaining losses addressed','VP Predict · presses critiques':'VP Predict: critical presses','Option VP Predict':'VP Predict option','Pilote VP Predict':'VP Predict pilot','Connexion des presses':'Connecting the presses','Changements de fabrication':'Production changeovers','Aléas techniques':'Technical disruptions','Aléas organisationnels':'Organisational disruptions','Aléas process':'Process disruptions','Les valeurs de départ sont illustratives. Elles ne constituent pas des références sectorielles.':'Starting figures are illustrative, not industry benchmarks.','Réduire le temps de cuisson se valide au rhéomètre (T90) et sur pièces, lot par lot : c’est un objectif à confirmer, pas un réglage automatique.':'Validate shorter curing time by rheometer (T90) and part testing for each batch. This is a target, not an automatic setting.'});
+ const tr=t=>en?(titles[t]??window.vpEnglishText?.(String(t))??String(t)):t;
+ const scenarioEn={prudent:'Conservative',central:'Moderate',cible:'Ambitious'};
+ const duration=v=>v?v+(en?' months':' mois'):(en?'> 36 months':'> 36 mois');
+ d.setLanguage?.(locale);if(en)d.setProperties({title:'Vella Partners | Estimated savings',author:'Vella Partners'});
  const F=(size,style='normal',color=INK)=>{d.setFont('helvetica',style);d.setFontSize(size);d.setTextColor(...color);};
- const T=(x,yy,t,o)=>d.text(clean(t),x,yy,o);
+ const raw=(x,yy,t,o)=>d.text(clean(t),x,yy,o),T=(x,yy,t,o)=>raw(x,yy,tr(t),o);
  const line=(x1,y1,x2,y2,c=LINE,w=.25)=>{d.setDrawColor(...c);d.setLineWidth(w);d.line(x1,y1,x2,y2);};
- const wrap=(t,w)=>d.splitTextToSize(clean(t),w);
- const date=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+ const wrap=(t,w)=>d.splitTextToSize(clean(tr(t)),w);
+ const date=new Date().toLocaleDateString(locale,{day:'numeric',month:'long',year:'numeric'});
  const offer=r.conn?'VP Expert + VP Predict':'VP Expert';
  const sector=RUB?'Moulage caoutchouc':'Injection plastique';
  const scen=SL[s.scenario][0].toUpperCase()+SL[s.scenario].slice(1);
@@ -24,17 +33,17 @@ window.VellaPDF=async function(ctx){
   d.setFillColor(...INK);d.rect(0,0,W,24,'F');
   // logo officiel Vella Partners (PNG, fond transparent) sur le bandeau nuit
   d.addImage(LOGO_VP,'PNG',M,4.5,51.7,15,undefined,'FAST');
-  F(8.5,'normal',[200,205,215]);T(W-M,12,'Synthèse d’estimation · '+offer,{align:'right'});T(W-M,16.8,date,{align:'right'});
+  F(8.5,'normal',[200,205,215]);raw(W-M,12,(en?'Estimate summary · ':'Synthèse d’estimation · ')+offer,{align:'right'});raw(W-M,16.8,date,{align:'right'});
   y=36;F(20,'bold',INK);T(M,y,title);y+=7;
-  F(9.5,'normal',MUTE);T(M,y,`${sector} · ${r.n} presses${r.conn?` dont ${r.conn.k} en VP Predict`:''} · scénario ${scen} (${num(factors[s.scenario]*100)} % des objectifs d’amélioration)`);y+=9;
+  F(9.5,'normal',MUTE);raw(M,y,en?`${RUB?'Rubber moulding':'Plastic injection moulding'} · ${r.n} presses${r.conn?`, ${r.conn.k} with VP Predict`:''} · ${scenarioEn[s.scenario]} (${num(factors[s.scenario]*100)}% of target)`:`${sector} · ${r.n} presses${r.conn?` dont ${r.conn.k} en VP Predict`:''} · scénario ${scen} (${num(factors[s.scenario]*100)} % des objectifs d’amélioration)`);y+=9;
   // footer
   line(M,281,W-M,281);F(7.5,'normal',MUTE);
   T(M,285.5,'Estimation non contractuelle, calculée à partir de vos réponses. Les valeurs non saisies sont des valeurs types, à remplacer par vos relevés.');
-  T(M,289.5,'Vella Partners · Lyon · 06 22 15 43 62 · fvella@vella-partners.com');T(W-M,289.5,`Page ${page} / ${total}`,{align:'right'});
+  raw(M,289.5,'Vella Partners · Lyon · 06 22 15 43 62 · fvella@vella-partners.com');raw(W-M,289.5,`Page ${page} / ${total}`,{align:'right'});
  }
- function section(t,sub){F(12.5,'bold',INK);T(M,y,t);if(sub){F(8.5,'normal',MUTE);T(W-M,y,sub,{align:'right'});}y+=2.5;line(M,y,W-M,y,LINE,.3);y+=6;}
+ function section(t,sub){F(12.5,'bold',INK);T(M,y,t);if(sub){F(8.5,'normal',MUTE);raw(W-M,y,titles[sub]&&en?titles[sub]:sub,{align:'right'});}y+=2.5;line(M,y,W-M,y,LINE,.3);y+=6;}
  function kpi(x,yy,w,h,v,l,accent){d.setFillColor(...PANEL);d.setDrawColor(...LINE);d.roundedRect(x,yy,w,h,2,2,'FD');if(accent){d.setFillColor(...accent);d.rect(x,yy+3,1.4,h-6,'F');}
-  F(16,'bold',INK);T(x+5,yy+10,v);F(8,'normal',MUTE);wrap(l,w-8).slice(0,2).forEach((t,i)=>T(x+5,yy+15.5+i*3.8,t));}
+  F(16,'bold',INK);raw(x+5,yy+10,v);F(8,'normal',MUTE);wrap(l,w-8).slice(0,2).forEach((t,i)=>raw(x+5,yy+15.5+i*3.8,t));}
 
  /* ---------- Page 1 ---------- */
  header('Votre estimation de gains',1,2);
@@ -42,50 +51,57 @@ window.VellaPDF=async function(ctx){
  const kw=(CW-9)/4,kh=23;
  kpi(M,y,kw,kh,eur(r.net),'Gain net annuel, en année pleine, après abonnement',GREEN);
  kpi(M+kw+3,y,kw,kh,eur(r.netPerPress),'Gain net par presse et par an');
- kpi(M+2*(kw+3),y,kw,kh,r.payback?r.payback+' mois':'> 36 mois','Délai de retour, démarrage compris');
+ kpi(M+2*(kw+3),y,kw,kh,duration(r.payback),'Délai de retour, démarrage compris');
  kpi(M+3*(kw+3),y,kw,kh,num(r.grossAll/r.costAll,1)+' ×','Gain brut ÷ abonnement, seuil d’engagement 2 ×');
- y+=kh+4;F(8.5,'normal',MUTE);T(M,y,`Fourchette : ${eur(ctx.range[0])} à ${eur(ctx.range[1])} par an · ${relK} valeur${relK>1?'s':''} sur ${CORE} saisie${relK>1?'s':''} par vous · montants HT, avant impôt`);y+=9;
+ y+=kh+4;F(8.5,'normal',MUTE);raw(M,y,en?`Range: ${eur(ctx.range[0])} to ${eur(ctx.range[1])} per year · ${relK} of ${CORE} inputs supplied by you · before VAT and tax`:`Fourchette : ${eur(ctx.range[0])} à ${eur(ctx.range[1])} par an · ${relK} valeur${relK>1?'s':''} sur ${CORE} saisie${relK>1?'s':''} par vous · montants HT, avant impôt`);y+=9;
 
  // Origine du gain
  section('D’où vient le gain','Du plus sûr au plus dépendant de vos ventes');
  const g=r.grossAll,bw=CW,bh=7;let bx=M;
  [[G.eco,GREEN],[G.op,COPPER],[G.cap,NAVY]].forEach(([v,c])=>{const w=Math.max(0,v/g*bw);d.setFillColor(...c);d.rect(bx,y,w,bh,'F');bx+=w;});
- const ax=M+Math.min(1,r.costAll/g)*bw;line(ax,y-2,ax,y+bh+2,INK,.5);F(7.5,'normal',INK);T(Math.min(ax,W-M-30),y+bh+6,`Abonnement${r.conn?'s':''} ${eur(r.costAll)}`,{align:ax>W-M-40?'right':'left'});
+ const ax=M+Math.min(1,r.costAll/g)*bw;line(ax,y-2,ax,y+bh+2,INK,.5);F(7.5,'normal',INK);raw(Math.min(ax,W-M-30),y+bh+6,en?'Subscription fees '+eur(r.costAll):`Abonnement${r.conn?'s':''} ${eur(r.costAll)}`,{align:ax>W-M-40?'right':'left'});
  y+=bh+12;
- const rows=[[GREEN,'Économies évitables',`Rebuts, matière${r.conn?', énergie':''} : des dépenses en moins`,G.eco],[COPPER,'Temps régleur libéré','Recherche de cause évitée, à réaffecter',G.op],[NAVY,'Capacité récupérée et vendue',`${num(G.capH)} h de presse retrouvées, ${s.monetization} % vendues`,G.cap]];
- rows.forEach(([c,l,sub,v])=>{d.setFillColor(...c);d.circle(M+2,y-1.2,1.6,'F');F(10,'bold',INK);T(M+6.5,y,l);F(8,'normal',MUTE);T(M+6.5,y+4,sub);F(10.5,'bold',INK);T(W-M,y,eur(v),{align:'right'});y+=9.5;line(M,y-3,W-M,y-3);});
- F(9.5,'normal',MUTE);T(M,y,`Gain brut ${eur(r.grossAll)}   -   abonnement${r.conn?'s':''} ${eur(r.costAll)}`);F(10.5,'bold',GREEN);T(W-M,y,`= ${eur(r.net)} net par an`,{align:'right'});y+=11;
+ const rows=[[GREEN,'Économies évitables',en?`Lower scrap and material${r.conn?' and energy':''} costs`:`Rebuts, matière${r.conn?', énergie':''} : des dépenses en moins`,G.eco],[COPPER,'Temps régleur libéré','Recherche de cause évitée, à réaffecter',G.op],[NAVY,'Capacité récupérée et vendue',en?`${num(G.capH)} press hours recovered, ${s.monetization}% sold`:`${num(G.capH)} h de presse retrouvées, ${s.monetization} % vendues`,G.cap]];
+ rows.forEach(([c,l,sub,v])=>{d.setFillColor(...c);d.circle(M+2,y-1.2,1.6,'F');F(10,'bold',INK);T(M+6.5,y,l);F(8,'normal',MUTE);raw(M+6.5,y+4,en&&titles[sub]?titles[sub]:sub);F(10.5,'bold',INK);raw(W-M,y,eur(v),{align:'right'});y+=9.5;line(M,y-3,W-M,y-3);});
+ F(9.5,'normal',MUTE);raw(M,y,en?`Gross savings ${eur(r.grossAll)}   -   fees ${eur(r.costAll)}`:`Gain brut ${eur(r.grossAll)}   -   abonnement${r.conn?'s':''} ${eur(r.costAll)}`);F(10.5,'bold',GREEN);raw(W-M,y,`= ${eur(r.net)} ${en?'net per year':'net par an'}`,{align:'right'});y+=11;
 
  // Scénarios
  section('Trois scénarios, mêmes données','Seule change la part des objectifs d’amélioration atteinte');
  const cols=[M,M+62,M+104,M+146];F(7.5,'normal',MUTE);['Scénario','Gain net annuel','Délai de retour','Gain brut ÷ abonnement'].forEach((h,i)=>T(cols[i],y,h));y+=2;line(M,y,W-M,y);y+=5.5;
  scenarios.forEach(sc=>{const on=sc.k===s.scenario;if(on){d.setFillColor(...PANEL);d.rect(M-2,y-4.5,CW+4,7.5,'F');}
-  F(9.5,on?'bold':'normal',INK);T(cols[0],y,sc.name);F(7.5,'normal',MUTE);T(cols[0]+22,y,`${num(sc.f*100)} %${sc.k==='prudent'?' · recommandé':''}`);
-  F(9.5,on?'bold':'normal',INK);T(cols[1],y,eur(sc.net));T(cols[2],y,sc.payback?sc.payback+' mois':'> 36 mois');T(cols[3],y,num(sc.ratio,1)+' ×');y+=7.5;});
+  F(9.5,on?'bold':'normal',INK);raw(cols[0],y,en?scenarioEn[sc.k]:sc.name);F(7.5,'normal',MUTE);raw(cols[0]+(en?26:22),y,`${num(sc.f*100)} %${sc.k==='prudent'?(en?' · recommended':' · recommandé'):''}`);
+  F(9.5,on?'bold':'normal',INK);raw(cols[1],y,eur(sc.net));raw(cols[2],y,duration(sc.payback));raw(cols[3],y,num(sc.ratio,1)+' ×');y+=7.5;});
  y+=4;
 
  // Trésorerie
- section('Trésorerie cumulée sur 3 ans',`Démarrage ${eur(r.upfront)} · gains à partir du mois ${s.startMonth} · pleine charge en ${s.rampMonths} mois`);
+ section('Trésorerie cumulée sur 3 ans',en?`Start-up ${eur(r.upfront)} · gains from month ${s.startMonth} · ramp-up: ${s.rampMonths} months`:`Démarrage ${eur(r.upfront)} · gains à partir du mois ${s.startMonth} · pleine charge en ${s.rampMonths} mois`);
  const cash=r.cash,ch=40,cx0=M+2,cx1=W-M-2,cy0=y,cy1=y+ch;const mn=Math.min(...cash,0),mx=Math.max(...cash,1);
  const X=k=>cx0+k*(cx1-cx0)/36,Y=v=>cy1-6-(v-mn)/(mx-mn||1)*(ch-12);const z=Y(0);
  line(cx0,z,cx1,z,MUTE,.25);[12,24].forEach(m=>line(X(m),cy0,X(m),cy1-6,LINE,.25));
  for(let k=0;k<36;k++){const neg=cash[k+1]<0;d.setDrawColor(...(neg?RED:GREEN));d.setLineWidth(.8);d.line(X(k),Y(cash[k]),X(k+1),Y(cash[k+1]));}
- const pb=cash.findIndex(v=>v>=0);if(pb>0){d.setFillColor(...GREEN);d.circle(X(pb),Y(cash[pb]),1.6,'F');F(8,'bold',GREEN);T(X(pb)-3,Y(cash[pb])-3.5,`Rentabilisé · mois ${pb}`,{align:'right'});}
- F(7.5,'normal',MUTE);[0,12,24,36].forEach(m=>T(X(m),cy1-1,m===0?'Mois 0':String(m),{align:m===0?'left':m===36?'right':'center'}));
+ const pb=cash.findIndex(v=>v>=0);if(pb>0){d.setFillColor(...GREEN);d.circle(X(pb),Y(cash[pb]),1.6,'F');F(8,'bold',GREEN);raw(X(pb)-3,Y(cash[pb])-3.5,(en?'Break-even · month ':'Rentabilisé · mois ')+pb,{align:'right'});}
+ F(7.5,'normal',MUTE);[0,12,24,36].forEach(m=>raw(X(m),cy1-1,m===0?(en?'Month 0':'Mois 0'):String(m),{align:m===0?'left':m===36?'right':'center'}));
  F(9,'bold',NAVY);T(cx1,Y(cash[36])-2.5,eur(cash[36]),{align:'right'});
- y=cy1+5;F(8.5,'normal',MUTE);T(M,y,[12,24,36].map(m=>`À ${m} mois : ${eur(cash[m])}`).join('     ·     '));y+=8;
+ y=cy1+5;F(8.5,'normal',MUTE);raw(M,y,[12,24,36].map(m=>en?`Month ${m}: ${eur(cash[m])}`:`À ${m} mois : ${eur(cash[m])}`).join('     ·     '));y+=8;
 
  // Prochaine étape
  d.setFillColor(...INK);d.roundedRect(M,y,CW,24,2,2,'F');F(11,'bold',[255,255,255]);T(M+6,y+8.5,'Prochaine étape : valider ces chiffres avec vos données réelles');
  F(8.5,'normal',[200,205,215]);T(M+6,y+14,'En 30 minutes, nous remplaçons les hypothèses par les relevés de votre atelier. Puis un pilote de 3 mois mesure le reste.');
- T(M+6,y+19,'Frédéric Vella · 06 22 15 43 62 · fvella@vella-partners.com');
+ raw(M+6,y+19,'Frédéric Vella · 06 22 15 43 62 · fvella@vella-partners.com');
 
  /* ---------- Page 2 ---------- */
  d.addPage();header('Hypothèses, coûts et points de vigilance',2,2);
  const colW=(CW-8)/2;
  function group(x,yy,title,items){F(10.5,'bold',INK);T(x,yy,title);yy+=2;line(x,yy,x+colW,yy,LINE,.3);yy+=5;
-  items.forEach(it=>{const ls=wrap(it.l,colW*.5),vs=wrap(it.v,colW*.47);const n=Math.max(ls.length,vs.length);
-   F(8.5,'normal',MUTE);ls.forEach((t,i)=>T(x,yy+i*3.6,t));F(8.5,'bold',INK);vs.forEach((t,i)=>T(x+colW,yy+i*3.6,t,{align:'right'}));
+  items.forEach(it=>{const ls=wrap(it.l,colW*.5);
+   let v=String(it.v);
+   if(en){
+    const substitutions=[['par presse connectée','per connected press'],['presses portent','presses account for'],['% des pertes restantes','% of remaining losses'],['des objectifs','of targets'],['au prorata','pro rata'],['par an','per year'],['/ an','/ year'],['h/an','h/year'],['h/presse','h/press'],['d’aide','aid'],['Prudent','Conservative'],['Modéré','Moderate'],['Ambitieux','Ambitious'],['changements','changeovers'],['techniques','technical'],['organisation','organisation'],['qualité','quality'],['cuisson','curing'],['mélange','mixing'],['ébavurage','deflashing'],['lots','batches'],['Mois','Month'],['mois','months'],[' sur ',' of ']];
+    for(const [f,e]of substitutions)v=v.split(f).join(e);
+    v=v.replace(/(\d),(\d)/g,'$1.$2').replace(/(\d)[\u00a0\u202f](?=\d{3}(?:\D|$))/g,'$1,').replace(/(\d[\d.,]*)\s*€(?!\/)/g,'€$1');
+   }
+   const vs=d.splitTextToSize(clean(v),colW*.47),n=Math.max(ls.length,vs.length);
+   F(8.5,'normal',MUTE);ls.forEach((t,i)=>raw(x,yy+i*3.6,t));F(8.5,'bold',INK);vs.forEach((t,i)=>raw(x+colW,yy+i*3.6,t,{align:'right'}));
    if(it.src==='v'){d.setFillColor(...CHAMP);d.circle(x-2.2,yy-1,.9,'F');}
    yy+=n*3.6+2.2;});return yy+5;}
  const gmap=Object.fromEntries(groups.map(g=>[g[0],g[1]]));
@@ -98,13 +114,13 @@ window.VellaPDF=async function(ctx){
  F(7.5,'normal',MUTE);d.setFillColor(...CHAMP);d.circle(M+1,y-1,.9,'F');T(M+4,y,'Valeur saisie par vous. Les autres sont des valeurs types ou des hypothèses de méthode Vella Partners, mesurées pendant le pilote.');y+=9;
  if(y<235){
   const half=(CW-8)/2;let ya=y,yb=y;
-  F(10.5,'bold',INK);T(M,ya,'Pertes analysées');F(8,'normal',MUTE);T(M+half,ya,`sur ${num(r.H)} h requises par an`,{align:'right'});ya+=2;line(M,ya,M+half,ya,LINE,.3);ya+=5;
+  F(10.5,'bold',INK);T(M,ya,'Pertes analysées');F(8,'normal',MUTE);raw(M+half,ya,en?`of ${num(r.H)} required hours/year`:`sur ${num(r.H)} h requises par an`,{align:'right'});ya+=2;line(M,ya,M+half,ya,LINE,.3);ya+=5;
   (r.rows||[]).forEach(x=>{F(8.5,'normal',MUTE);T(M,ya,x.name);F(8.5,'bold',INK);T(M+half,ya,`${num(x.loss)} h · ${num(x.loss/r.H*100,1)} %`,{align:'right'});ya+=5;});
   F(10.5,'bold',INK);T(M+half+8,yb,'Points de vigilance');yb+=2;line(M+half+8,yb,W-M,yb,LINE,.3);yb+=5;
   const ws=(r.warnings&&r.warnings.length?r.warnings:['Aucun point particulier.']).slice(0,5);
-  ws.forEach(w=>{const ls=wrap(w,half-4);F(8.5,'normal',INK);ls.forEach((t,i)=>T(M+half+8+(i?0:0),yb+i*3.6,(i?'   ':'– ')+t));yb+=ls.length*3.6+2;});
+  ws.forEach(w=>{const ls=wrap(w,half-4);F(8.5,'normal',INK);ls.forEach((t,i)=>raw(M+half+8+(i?0:0),yb+i*3.6,(i?'   ':'– ')+t));yb+=ls.length*3.6+2;});
  }
- const name=`Vella-Partners-synthese-${RUB?'caoutchouc':'plastique'}-${r.n}-presses.pdf`;
+ const name=en?`Vella-Partners-estimate-${RUB?'rubber':'plastics'}-${r.n}-presses.pdf`:`Vella-Partners-synthese-${RUB?'caoutchouc':'plastique'}-${r.n}-presses.pdf`;
  d.save(name);
 };
 })();

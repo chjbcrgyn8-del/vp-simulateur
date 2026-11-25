@@ -15,7 +15,7 @@
   const click = el => { if (el) el.click(); return !!el; };
   const firstBtn = k => $('#vp-step-2 .opts[data-k="' + k + '"] button');
   const next = () => $('#res .cc.next') || $('#res .cc:not(.found):not(.done):not(.unver):not(.lock)');
-  const isGate = el => !!el && /Avant toute correction/.test(el.textContent);
+  const isGate = el => !!el && /Avant toute correction/.test(window.vpOriginalLabel?window.vpOriginalLabel(el):el.textContent);
 
   function show(el) {
     if (hl) hl.classList.remove('vp-demo-hl');
