@@ -16,7 +16,7 @@
     </video>`;
   const intro = main.querySelector(':scope > .bx-intro, :scope > h1');
   if (intro) intro.after(box); else main.prepend(box);
-  const films = [box, document.getElementById('expert-video')].filter(Boolean);
+  const films = [box, ...main.querySelectorAll('details.expert-film')];
   function edition() {
     for (const film of films) film.hidden = document.documentElement.lang !== 'en';
     for (const film of films) {
