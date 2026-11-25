@@ -2,7 +2,8 @@
 (() => {
   const main = document.querySelector('main');
   if (!main) return;
-  const box = document.createElement('details');
+  const box = main.querySelector('#predict-video') || document.createElement('details');
+  if (!box.isConnected) {
   box.id = 'predict-video';
   box.lang = 'en';
   box.translate = false;
@@ -16,6 +17,7 @@
     </video>`;
   const intro = main.querySelector(':scope > .bx-intro, :scope > h1');
   if (intro) intro.after(box); else main.prepend(box);
+  }
   const films = [box, ...main.querySelectorAll('details.expert-film')];
   function edition() {
     for (const film of films) film.hidden = document.documentElement.lang !== 'en';
