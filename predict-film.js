@@ -16,16 +16,23 @@
     </video>`;
   const intro = main.querySelector(':scope > .bx-intro, :scope > h1');
   if (intro) intro.after(box); else main.prepend(box);
-  const player = box.querySelector('video');
+  const films = [box, document.getElementById('expert-video')].filter(Boolean);
   function edition() {
-    box.hidden = document.documentElement.lang !== 'en';
-    if (box.hidden) { player.pause(); box.open = false; }
-    else if (location.hash === '#predict-video') {
-      box.open = true;
-      box.scrollIntoView({block:'start'});
+    for (const film of films) film.hidden = document.documentElement.lang !== 'en';
+    for (const film of films) {
+      if (film.hidden) { film.querySelector('video').pause(); film.open = false; }
+      else if (location.hash === '#' + film.id) {
+        film.open = true;
+        film.scrollIntoView({block:'start'});
+      }
     }
   }
-  box.addEventListener('toggle', () => { if (!box.open) player.pause(); });
+  for (const film of films) {
+    film.name = 'vp-walkthroughs';
+    film.addEventListener('toggle', () => {
+      if (!film.open) film.querySelector('video').pause();
+    });
+  }
   document.addEventListener('vp:language', edition);
   window.addEventListener('hashchange', edition);
   edition();
