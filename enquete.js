@@ -59,7 +59,7 @@ function q(lbl,title,body){return `<div class="q"><span class="ql">${lbl}</span>
 function draw0(){
  const f=S.fam,qd=S.qd.trim().toLowerCase();
  $('fams').innerHTML='<span class="famlab nv">3 thématiques</span>'+[['all','Tous',24],...FAM.map(([k,l])=>[k,l,DEFS.filter(x=>x[1]===k).length])].map(([k,l,n])=>`<button type="button" class="${k==='all'?'':'f-'+k}" data-fam="${k}" aria-pressed="${f===k}">${l} <small>${n}</small></button>`).join('');
- const L=DEFS.filter(([n,fa])=>(f==='all'||fa===f)&&(!qd||(n+' '+(DHINT[n]||'')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(qd.normalize('NFD').replace(/[\u0300-\u036f]/g,''))));
+ const L=DEFS.filter(([n,fa])=>(f==='all'||fa===f)&&(!qd||(n+' '+(DHINT[n]||'')+' '+(window.vpSearchLabel?.(n,DHINT[n])||'')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(qd.normalize('NFD').replace(/[\u0300-\u036f]/g,''))));
  let V=L;const cut=f==='all'&&!qd&&!S.more;if(cut){V=TOP.map(n=>L.find(x=>x[0]===n));if(!TOP.includes(S.def))V.push(L.find(x=>x[0]===S.def));}
  $('defs').innerHTML=(V.length?V.map(([n,fa])=>`<button type="button" class="dt ${fa}" data-def="${esc(n)}" aria-pressed="${S.def===n}"><b>${esc(n)}</b>${DHINT[n]?`<small>${DHINT[n]}</small>`:''}</button>`).join(''):'<p class="sl">Aucun défaut trouvé. Essayez un autre mot.</p>')+(cut?`<button type="button" class="dt more" id="more"><b>Voir les 24 défauts</b><small>${24-V.length} autres</small></button>`:'');
 }

@@ -76,7 +76,8 @@
   function decorateCards() {
     document.querySelectorAll('#defs button.dt:not([data-sch])').forEach(b => {
       b.setAttribute('data-sch', '1');
-      const t = (b.querySelector('b') || b).textContent.trim(), k = keyFor(t);
+      const label = b.querySelector('b') || b;
+      const t = (window.vpOriginalLabel ? window.vpOriginalLabel(label) : label.textContent).trim(), k = keyFor(t);
       if (!k) return;
       const s = document.createElement('span'); s.className = 'dt-sch'; s.innerHTML = svg(k, false);
       b.appendChild(s); b.classList.add('has-sch');
@@ -86,7 +87,7 @@
   function decorateCase() {
     const h = document.getElementById('vp-case-defect'); if (!h) return;
     let f = document.getElementById('vp-case-schema');
-    const k = keyFor(h.textContent.trim());
+    const k = keyFor((window.vpOriginalLabel ? window.vpOriginalLabel(h) : h.textContent).trim());
     if (!k) { if (f) f.remove(); return; }
     if (!f) { f = document.createElement('figure'); f.id = 'vp-case-schema'; f.className = 'vp-schema'; h.after(f); }
     if (f.dataset.k !== k) { f.dataset.k = k; f.innerHTML = svg(k, true) + '<figcaption>Schéma illustratif, pas une photo</figcaption>'; }

@@ -102,8 +102,9 @@
  }
  function update(){
   arrangeControls();
-  const fiche=[...document.querySelectorAll('#fiche span')].find(s=>s.querySelector('i')?.textContent==='Quoi');
-  $('vp-case-defect').textContent=fiche?fiche.textContent.replace(/^Quoi\s*/,'').trim():api.S.def;
+  const sourceLabel=e=>window.vpOriginalLabel?window.vpOriginalLabel(e):e?.textContent||'';
+  const fiche=[...document.querySelectorAll('#fiche span')].find(s=>sourceLabel(s.querySelector('i'))==='Quoi');
+  $('vp-case-defect').textContent=fiche?sourceLabel(fiche).replace(/^Quoi\s*/,'').trim():api.S.def;
   const questions=['qui','ou','quand','freq','terme','combien','pourquoi'];const n=questions.filter(k=>api.S[k]).length;
   $('vp-context-count').textContent=n+' / '+questions.length;
   $('vp-context-meter').style.width=(100*n/questions.length)+'%';

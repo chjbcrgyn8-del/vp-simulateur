@@ -1,0 +1,8 @@
+.vp-langbar{position:relative;z-index:2;display:flex;align-items:center;justify-content:flex-end;box-sizing:border-box;gap:4px;padding:2px clamp(12px,3vw,38px);background:#151a21;color:#fff;break-inside:avoid;font:600 13px/1.25 system-ui,sans-serif}
+.vp-langbar button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;min-width:58px;box-sizing:border-box;padding:6px 8px;border:0;border-radius:4px;background:transparent;color:#c0c7ce;cursor:pointer;font:inherit;letter-spacing:.025em}
+.vp-langbar button[aria-pressed=true]{color:white;box-shadow:inset 0 -2px #efb04d}
+.vp-langbar button:hover{background:#2a3038}
+.vp-langbar button:focus-visible{outline:2px solid #efb04d;outline-offset:-2px}
+.vp-langbar svg{width:22px;height:15px;overflow:hidden;border-radius:2px;box-shadow:0 0 0 1px #ffffff36}
+.vp-langbar [role=status]{margin-right:auto}
+@media print{.vp-langbar{display:none!important}}

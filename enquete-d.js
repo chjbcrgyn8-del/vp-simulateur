@@ -38,7 +38,7 @@ const q=(a,t,b)=>`<div class="q"><span class="ql">${a}</span><div><b>${t}</b>${b
 const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 function draw0(){const f=S.fam,qd=norm(S.qd.trim());
  $('fams').innerHTML='<span class="famlab nv">2 familles</span>'+[['all','Tous',REF.length],...FAM.map(([k,l])=>[k,l,REF.filter(d=>d.fam===k).length])].map(([k,l,n])=>`<button type="button" class="${k==='all'?'':'f-'+(k==='dim'?'dim':'vul')}" data-fam="${k}" aria-pressed="${f===k}">${l} <small>${n}</small></button>`).join('');
- const L=REF.filter(d=>(f==='all'||d.fam===f)&&(!qd||norm(d.defect+' '+d.hint).includes(qd)));
+ const L=REF.filter(d=>(f==='all'||d.fam===f)&&(!qd||norm(d.defect+' '+d.hint+' '+(window.vpSearchLabel?.(d.defect,d.hint)||'')).includes(qd)));
  $('defs').innerHTML=L.length?L.map(d=>`<button type="button" class="dt ${d.fam==='dim'?'dim':'vul'}" data-def="${d.tab}" aria-pressed="${S.def===d.tab}"><b>${esc(d.defect)}</b><small>${esc(d.hint)}</small></button>`).join(''):'<p class="sl">Aucun défaut trouvé. Essayez un autre mot.</p>';
  $('mach').innerHTML='<p class="ml">Type de machine</p>'+pills('mach',MACH)+(canonOn()?'':`<p class="sl hidnote">Pistes canon masquées pour ce type de machine ${rtag('DC01-R04')}.</p>`);}
 const SIT=[['sans','Relevé à la main','Le défaut est vu par une personne : contrôle pièce, calibre, micromètre. Les mesures se relèvent à la main dans la rubrique Contrôles.'],['conforme','Mesures VP Predict, sans alerte','Charge broche, température d’huile, rugosité et cotes suivies : détail mesure par mesure dans la rubrique Contrôles.'],['derive','Une mesure dérive','On cherche l’origine de la dérive, dans l’ordre de contrôle candidat.']];
