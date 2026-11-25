@@ -1,0 +1,26 @@
+WEBVTT
+
+00:00:00.380 --> 00:00:04.525
+In the VP Predict test bench, start by choosing a recorded dataset.
+
+00:00:04.825 --> 00:00:07.692
+For this walkthrough, select the rubber press cycles.
+
+00:00:08.380 --> 00:00:11.759
+In raw replay, each point is a recorded measurement.
+
+00:00:12.059 --> 00:00:18.026
+The reference is calculated within each production segment, so a planned change of setting is not mistaken for drift.
+
+00:00:18.713 --> 00:00:22.603
+Switch to injected drift. The original measurements stay unchanged.
+
+00:00:22.903 --> 00:00:27.651
+Choose a gradual ramp or a sudden step, then set the size and direction of the change.
+
+00:00:28.338 --> 00:00:34.248
+Compare the modified curve with the recorded one. The injected change is a test, not a machine fault.
+
+00:00:34.548 --> 00:00:40.097
+Use the signal to decide what to inspect on the press. It does not establish a root cause.
+

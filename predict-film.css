@@ -1,0 +1,9 @@
+#predict-video {margin:12px 0 18px;border:1px solid #536578;border-radius:10px;background:#182735;color:#f7f3ed;scroll-margin-top:76px}
+#predict-video[hidden] {display:none}
+#predict-video summary {cursor:pointer;padding:14px 18px;font-size:1rem}
+#predict-video summary:focus-visible {outline:2px solid #e4bd82;outline-offset:2px}
+#predict-video summary span {display:inline-block;margin-left:12px;font-size:.85rem;color:#e4bd82}
+#predict-video p {margin:0 18px 12px;color:#e9edf1}
+#predict-video video {display:block;width:calc(100% - 36px);max-width:920px;margin:0 auto 18px;aspect-ratio:16/9;background:#101e2b}
+@media(max-width:540px){#predict-video summary span{display:block;margin:4px 0 0 18px}}
+@media print {#predict-video{display:none}}
